@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!--
+    Document   : CorrelatedIdentifers.hbm.xml
+    Created on : January 27, 2009, 3:57 PM
+    Author     : svalluripalli
+    Description:
+        Purpose of the document follows.
+-->
+<hibernate-mapping package="gov.hhs.fha.nhinc.patientcorrelation.nhinc.model">
+  <class name="CorrelatedIdentifiers" table="correlatedidentifiers">
+    <id column="correlationid" name="correlationId" type="long">
+      <generator class="increment"/>
+    </id>
+    <property column="PatientAssigningAuthorityId" length="64" name="patientAssigningAuthorityId" not-null="true" type="string"/>
+    <property column="PatientId" length="128" name="patientId" not-null="true" type="string"/>
+    <property column="CorrelatedPatientAssignAuthId" length="64" name="correlatedPatientAssigningAuthorityId" not-null="true" type="string"/>
+    <property column="CorrelatedPatientId" length="128" name="correlatedPatientId" not-null="true" type="string"/>
+    <property column="CorrelationExpirationDate" length="45" name="correlationExpirationDate" not-null="false" type="timestamp"/>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.aurionproject</groupId>
+        <artifactId>General</artifactId>
+        <version>5.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>CONNECTAdapterWeb</artifactId>
+    <packaging>war</packaging>
+    <name>CONNECT Adapter Web</name>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.aurionproject</groupId>
+            <artifactId>SharedEngineCore</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aurionproject</groupId>
+            <artifactId>AdapterAuthenticationCore</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aurionproject</groupId>
+            <artifactId>PatientDiscoveryCore</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aurionproject</groupId>
+            <artifactId>DocRepositoryCore</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aurionproject</groupId>
+            <artifactId>ComponentWebservices</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>CONNECTAdapterWeb</finalName>
+        <plugins>
+        </plugins>
+    </build>
+</project>

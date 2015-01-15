@@ -1,0 +1,637 @@
+/**
+ *
+ */
+package gov.hhs.fha.nhinc.callback.openSAML;
+
+import gov.hhs.fha.nhinc.callback.PurposeOfForDecider;
+import gov.hhs.fha.nhinc.callback.SamlConstants;
+import gov.hhs.fha.nhinc.nhinclib.NullChecker;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.opensaml.Configuration;
+import org.opensaml.saml2.core.Assertion;
+import org.opensaml.saml2.core.Attribute;
+import org.opensaml.saml2.core.AttributeStatement;
+import org.opensaml.saml2.core.AuthnStatement;
+import org.opensaml.saml2.core.AuthzDecisionStatement;
+import org.opensaml.saml2.core.Conditions;
+import org.opensaml.saml2.core.Evidence;
+import org.opensaml.saml2.core.Issuer;
+import org.opensaml.saml2.core.Statement;
+import org.opensaml.saml2.core.Subject;
+import org.opensaml.xml.io.Marshaller;
+import org.opensaml.xml.io.MarshallerFactory;
+import org.opensaml.xml.signature.Signature;
+import org.opensaml.xml.signature.SignatureException;
+import org.opensaml.xml.signature.Signer;
+import org.w3c.dom.Element;
+
+/**
+ * @author bhumphrey
+ * 
+ */
+public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
+
+    private static final Logger LOG = Logger.getLogger(HOKSAMLAssertionBuilder.class);
+    private final CertificateManager certificateManager;
+
+    /**
+     * @param properties
+     * @throws Exception
+     */
+    public HOKSAMLAssertionBuilder() {
+        certificateManager = CertificateManagerImpl.getInstance();
+    }
+
+    HOKSAMLAssertionBuilder(CertificateManager certificateManager) {
+        this.certificateManager = certificateManager;
+    }
+
+    /**
+     * Creates the "Holder-of-Key" variant of the SAML Assertion token.
+     * 
+     * @return The Assertion element
+     * @throws Exception
+     */
+    @Override
+    public Element build(CallbackProperties properties) throws Exception {
+        LOG.debug("SamlCallbackHandler.createHOKSAMLAssertion20() -- Begin");
+        Element signedAssertion = null;
+        try {
+            Assertion assertion = null;
+            assertion = OpenSAML2ComponentBuilder.getInstance().createAssertion();
+
+            // create the assertion id
+            // Per GATEWAY-847 the id attribute should not be allowed to start
+            // with a number (UUIDs can). Direction
+            // given from 2011 specification set was to prepend with and
+            // underscore.
+            String aID = createAssertionId();
+            LOG.debug("Assertion ID: " + aID);
+
+            // set assertion Id
+            assertion.setID(aID);
+
+            // issue instant set to now.
+            DateTime issueInstant = new DateTime();
+            assertion.setIssueInstant(issueInstant);
+
+            // set issuer
+            assertion.setIssuer(createIssuer(properties));
+
+            X509Certificate certificate = certificateManager.getDefaultCertificate();
+            PublicKey publicKey = certificateManager.getDefaultPublicKey();
+
+            // set subject
+            Subject subject = createSubject(properties, certificate, publicKey);
+            assertion.setSubject(subject);
+
+            // add attribute statements
+            Subject evidenceSubject = createEvidenceSubject(properties, certificate, publicKey);
+            assertion.getStatements().addAll(createAttributeStatements(properties, evidenceSubject));
+
+            PrivateKey privateKey = certificateManager.getDefaultPrivateKey();
+            // sign the message
+            signedAssertion = sign(assertion, certificate, privateKey, publicKey);
+        } catch (Exception ex) {
+            LOG.error("Unable to create HOK Assertion: " + ex.getMessage());
+            throw ex;
+        }
+        LOG.debug("SamlCallbackHandler.createHOKSAMLAssertion20() -- End");
+        return signedAssertion;
+    }
+
+    /**
+     * @param assertion
+     * @param privateKey
+     * @param certificate
+     * @throws Exception
+     */
+    static Element sign(Assertion assertion, X509Certificate certificate, PrivateKey privateKey, PublicKey publicKey)
+            throws Exception {
+        Signature signature = OpenSAML2ComponentBuilder.getInstance().createSignature(certificate, privateKey,
+                publicKey);
+        assertion.setSignature(signature);
+
+        // marshall Assertion Java class into XML
+        MarshallerFactory marshallerFactory = Configuration.getMarshallerFactory();
+        Marshaller marshaller = marshallerFactory.getMarshaller(assertion);
+        Element assertionElement = marshaller.marshall(assertion);
+        try {
+            Signer.signObject(signature);
+        } catch (SignatureException e) {
+            e.printStackTrace();
+            throw new Exception(e);
+        }
+        return assertionElement;
+    }
+
+    static Issuer createIssuer(CallbackProperties properties) {
+        Issuer issuer = null;
+
+        String format = properties.getAssertionIssuerFormat();
+        if (format != null) {
+            LOG.debug("Setting Assertion Issuer format to: " + format);
+            String sIssuer = properties.getIssuer();
+
+            LOG.debug("Setting Assertion Issuer to: " + sIssuer);
+
+            if (isValidNameidFormat(format)) {
+                issuer = OpenSAML2ComponentBuilder.getInstance().createIssuer(format, sIssuer);
+            } else {
+                LOG.debug("Not in valid listing of formats: Using default issuer");
+                issuer = OpenSAML2ComponentBuilder.getInstance().createDefaultIssuer();
+            }
+        } else {
+            LOG.debug("Assertion issuer not defined: Using default issuer");
+            issuer = OpenSAML2ComponentBuilder.getInstance().createDefaultIssuer();
+        }
+        return issuer;
+    }
+
+    /**
+     * @param PSApk
+     * @param certificate
+     * @return
+     * @throws Exception
+     */
+    static Subject createSubject(CallbackProperties properties, X509Certificate certificate, PublicKey publicKey)
+            throws Exception {
+        String x509Name = "UID=" + properties.getUsername();
+
+        return createSubject(x509Name, certificate, publicKey);
+    }
+
+    static Subject createEvidenceSubject(CallbackProperties properties, X509Certificate certificate, PublicKey publicKey)
+            throws Exception {
+        String evidenceSubject = properties.getEvidenceSubject();
+        if (NullChecker.isNullish(evidenceSubject)) {
+            evidenceSubject = properties.getUsername();
+        }
+
+        String x509Name = "UID=" + evidenceSubject;
+
+        return createSubject(x509Name, certificate, publicKey);
+    }
+
+    static Subject createSubject(String x509Name, X509Certificate certificate, PublicKey publicKey) throws Exception {
+        Subject subject;
+        subject = OpenSAML2ComponentBuilder.getInstance().createSubject(x509Name, certificate, publicKey);
+        return subject;
+    }
+
+    /**
+     * @return
+     */
+    static List<Statement> createAttributeStatements(CallbackProperties properties, Subject subject) {
+        List<Statement> statements = new ArrayList<Statement>();
+
+        statements.addAll(createAuthenicationStatements(properties));
+
+        List<Attribute> attributes = new ArrayList<Attribute>();
+        //1. Subject ID
+        attributes.add(createUserNameAttribute(properties));
+        //2. Subject Organization
+        attributes.add(createOrganizationAttribute(properties));
+        //3. Subject Role
+        attributes.add(createUserRoleAttribute(properties));
+        //4. Purpose Of Use
+        attributes.add(createPurposeOfUseAttribute(properties));
+        //5. Home Community ID
+        attributes.add(createHomeCommunityIdAttribute(properties));
+        //6. Organization ID
+        attributes.add(createOrganizationIdAttribute(properties));
+        //7. Resource ID (Optional)
+        attributes.add(createPatientIdAttribute(properties));
+        //8. National Provider Identifier (Optional)
+        attributes.add(createNPIAttribute(properties));
+        // User defined
+        attributes.addAll(createUserDefinedAttributes(properties));
+        statements.addAll(OpenSAML2ComponentBuilder.getInstance().createAttributeStatement(attributes));
+        
+        statements.addAll(createAuthenicationDecsionStatements(properties, subject));
+
+        return statements;
+    }
+    
+    /**
+     * @param properties
+     * @return
+     */
+//    static List<AttributeStatement> createOrganizationIdAttributeStatements(CallbackProperties properties) {
+    static Attribute createOrganizationIdAttribute(CallbackProperties properties) {
+        LOG.debug("SamlCallbackHandler.createOrganizationIdAttributeStatements() -- Begin");
+        Attribute attribute = null;
+
+        // Set the Organization ID Attribute
+
+        final String organizationId = properties.getUserOrganizationId();
+        if (organizationId != null) {
+
+        	attribute = OpenSAML2ComponentBuilder.getInstance().createOrganizationIdAttribute(organizationId);
+        } else {
+            LOG.debug("User organization ID is missing");
+        }
+
+        return attribute;
+    }
+
+    static List<AuthnStatement> createAuthenicationStatements(CallbackProperties properties) {
+
+        List<AuthnStatement> authnStatements = new ArrayList<AuthnStatement>();
+
+        String cntxCls = properties.getAuthenticationContextClass();
+        if (cntxCls == null) {
+            cntxCls = X509_AUTHN_CNTX_CLS;
+        } else if (!isValidAuthnCntxCls(cntxCls)) {
+            cntxCls = UNSPECIFIED_AUTHN_CNTX_CLS;
+        }
+        String sessionIndex = properties.getAuthenticationSessionIndex();
+
+        LOG.debug("Setting Authentication session index to: " + sessionIndex);
+
+        DateTime authInstant = properties.getAuthenticationInstant();
+        if (authInstant == null) {
+            authInstant = new DateTime();
+        }
+
+        String inetAddr = properties.getSubjectLocality();
+        String dnsName = properties.getSubjectLocality();
+
+        AuthnStatement authnStatement = OpenSAML2ComponentBuilder.getInstance().createAuthenicationStatements(cntxCls,
+                sessionIndex, authInstant, inetAddr, dnsName);
+
+        authnStatements.add(authnStatement);
+
+        return authnStatements;
+    }
+
+    /**
+     * @return
+     */
+    static List<AuthzDecisionStatement> createAuthenicationDecsionStatements(CallbackProperties properties,
+            Subject subject) {
+        List<AuthzDecisionStatement> authDecisionStatements = new ArrayList<AuthzDecisionStatement>();
+
+        Boolean hasAuthzStmt = properties.getAuthenicationStatementExists();
+        // The authorization Decision Statement is optional
+        if (hasAuthzStmt) {
+            // Create resource for Authentication Decision Statement
+            String resource = properties.getAuthnicationResource();
+
+            // Options are Permit, Deny and Indeterminate
+            String decision = properties.getAuthenicationDecision();
+            if (decision == null) {
+                decision = AUTHZ_DECISION_PERMIT;
+            }
+
+            if (!isValidAuthenicationDescision(decision)) {
+                decision = AUTHZ_DECISION_PERMIT;
+            }
+
+            // As of Authorization Framework Spec 2.2 Action is a hard-coded
+            // value
+            // Therefore the value of the ACTION_PROP is no longer used
+            String action = AUTHZ_DECISION_ACTION_EXECUTE;
+
+            Evidence evidence = createEvidence(properties, subject);
+
+            authDecisionStatements.add(OpenSAML2ComponentBuilder.getInstance().createAuthzDecisionStatement(resource,
+                    decision, action, evidence));
+        }
+
+        return authDecisionStatements;
+    }
+
+    /**
+     * Creates the Evidence element that encompasses the Assertion defining the authorization form needed in cases where
+     * evidence of authorization to access the medical records must be provided along with the message request.
+     * 
+     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * @param issueInstant The calendar representing the time of Assertion issuance
+     * @return The Evidence element
+     */
+    static Evidence createEvidence(CallbackProperties properties, Subject subject) {
+        LOG.debug("SamlCallbackHandler.createEvidence() -- Begin");
+        String evAssertionID = properties.getEvidenceID();
+        DateTime issueInstant = properties.getEvidenceInstant();
+        String format = properties.getEvidenceIssuerFormat();
+        DateTime beginValidTime = properties.getEvidenceConditionNotBefore();
+        DateTime endValidTime = properties.getEvidenceConditionNotAfter();
+        List<AttributeStatement> statements = createEvidenceStatements(properties);
+
+        String issuer = properties.getEvidenceIssuer();
+
+        return buildEvidence(evAssertionID, issueInstant, format, beginValidTime, endValidTime, issuer, statements,
+                subject);
+    }
+
+    public static Evidence buildEvidence(String evAssertionID, DateTime issueInstant, String format,
+            DateTime beginValidTime, DateTime endValidTime, String issuer, List<AttributeStatement> statements,
+            Subject subject) {
+        DateTime now = new DateTime();
+
+        List<Assertion> evidenceAssertions = new ArrayList<Assertion>();
+        if (evAssertionID == null) {
+            evAssertionID = createAssertionId();
+        }
+
+        if (issueInstant == null) {
+            issueInstant = new DateTime();
+        }
+
+        if (!isValidIssuerFormat(format)) {
+            format = X509_NAME_ID;
+        }
+
+        Issuer evIssuerId = OpenSAML2ComponentBuilder.getInstance().createIssuer(format, issuer);
+
+        if (beginValidTime == null || beginValidTime.isAfter(now)) {
+            beginValidTime = now;
+        }
+
+        // If provided time is after the given issue instant,
+        // modify it to include the issue instant
+        if (beginValidTime.isAfter(issueInstant)) {
+            if (issueInstant.isAfter(now)) {
+                beginValidTime = now;
+            } else {
+                beginValidTime = issueInstant;
+            }
+        }
+
+        // Make end datetime at a minimum 5 minutes from now
+        if (endValidTime == null || endValidTime.isBefore(now.plusMinutes(5))) {
+            endValidTime = now.plusMinutes(5);
+        }
+
+        // Ensure issueInstant is contained within valid times
+        if (endValidTime.isBefore(issueInstant)) {
+            endValidTime = issueInstant.plusMinutes(5);
+        }
+
+        Conditions conditions = OpenSAML2ComponentBuilder.getInstance().createConditions(beginValidTime, endValidTime,
+                null);
+
+        Assertion evidenceAssertion = OpenSAML2ComponentBuilder.getInstance().createAssertion(evAssertionID);
+
+        evidenceAssertion.getAttributeStatements().addAll(statements);
+        evidenceAssertion.setConditions(conditions);
+        evidenceAssertion.setIssueInstant(issueInstant);
+        evidenceAssertion.setIssuer(evIssuerId);
+        evidenceAssertion.setSubject(subject);
+
+        evidenceAssertions.add(evidenceAssertion);
+
+        Evidence evidence = OpenSAML2ComponentBuilder.getInstance().createEvidence(evidenceAssertions);
+
+        LOG.debug("SamlCallbackHandler.createEvidence() -- End");
+        return evidence;
+    }
+
+    /**
+     * Creates the Attribute Statements needed for the Evidence element. These include the Attributes for the Access
+     * Consent Policy and the Instance Access Consent Policy
+     * 
+     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * @return The listing of the attribute statements for the Evidence element
+     */
+    static List<AttributeStatement> createEvidenceStatements(CallbackProperties properties) {
+        LOG.debug("SamlCallbackHandler.createEvidenceStatements() -- Begin");
+
+        List<Object> accessConstentValues = properties.getEvidenceAccessConstent();
+        List<Object> evidenceInstanceAccessConsentValues = properties.getEvidenceInstantAccessConsent();
+
+        return createEvidenceStatements(accessConstentValues, evidenceInstanceAccessConsentValues);
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static List<AttributeStatement> createEvidenceStatements(List accessConstentValues,
+            List evidenceInstanceAccessConsentValues) {
+        List<AttributeStatement> statements = null;
+        if (accessConstentValues == null) {
+            LOG.debug("No Access Consent found for Evidence");
+        }
+
+        // Set the Instance Access Consent
+        if (evidenceInstanceAccessConsentValues == null) {
+            LOG.debug("No Instance Access Consent found for Evidence");
+        }
+
+        statements = OpenSAML2ComponentBuilder.getInstance().createEvidenceStatements(accessConstentValues,
+                evidenceInstanceAccessConsentValues, NHIN_NS);
+
+        LOG.debug("SamlCallbackHandler.createEvidenceStatements() -- End");
+        return statements;
+    }
+
+    /**
+     * Creates the Attribute statements for UserName.
+     * 
+     */
+    static Attribute createUserNameAttribute(CallbackProperties properties) {
+
+        Attribute attribute = null;
+
+        // Set the User Name Attribute
+        List<String> userNameValues = new ArrayList<String>();
+        String nameConstruct = properties.getUserFullName();
+
+        if (nameConstruct.length() > 0) {
+            LOG.debug("UserName: " + nameConstruct);
+
+            userNameValues.add(nameConstruct);
+
+            attribute = OpenSAML2ComponentBuilder.getInstance().createAttribute(null, SamlConstants.USERNAME_ATTR,
+                    null, userNameValues);
+        } else {
+            LOG.warn("No information provided to fill in user name attribute");
+        }
+        return attribute;
+    }
+
+    /**
+     * Creates the Attribute statements UserRole
+     * 
+     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * @return The listing of all Attribute statements
+     */
+    static Attribute createUserRoleAttribute(CallbackProperties properties) {
+        Attribute attribute = null;
+
+        // Set the User Role Attribute
+
+        String userCode = properties.getUserCode();
+        String userSystem = properties.getUserSystem();
+        String userSystemName = properties.getUserSystemName();
+        String userDisplay = properties.getUserDisplay();
+
+        attribute = OpenSAML2ComponentBuilder.getInstance().createUserRoleAttribute(userCode, userSystem,
+                userSystemName, userDisplay);
+
+        return attribute;
+
+    }
+
+    /**
+     * Creates the Attribute statements PurposeOfUse
+     * 
+     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * @return The listing of all Attribute statements
+     */
+    static Attribute createPurposeOfUseAttribute(CallbackProperties properties) {
+        Attribute attribute = null;
+
+        final String purposeCode = properties.getPurposeCode();
+        final String purposeSystem = properties.getPurposeSystem();
+        final String purposeSystemName = properties.getPurposeSystemName();
+        final String purposeDisplay = properties.getPurposeDisplay();
+
+        /*
+         * Gateway-347 - Support for both values will remain until NHIN Specs updated Determine whether to use
+         * PurposeOfUse or PuposeForUse
+         */
+
+        // Call out to the purpose decider to determine whether to use purposeofuse or purposeforuse.
+        PurposeOfForDecider pd = new PurposeOfForDecider();
+        if (pd.isPurposeFor(properties)) {
+        	attribute = OpenSAML2ComponentBuilder.getInstance().createPurposeForUseAttribute(purposeCode,
+                    purposeSystem, purposeSystemName, purposeDisplay);
+        } else {
+        	attribute = OpenSAML2ComponentBuilder.getInstance().createPurposeOfUseAttribute(purposeCode,
+                    purposeSystem, purposeSystemName, purposeDisplay);
+        }
+
+        return attribute;
+    }
+
+    /**
+     * Creates the Attribute statements for UserName, UserOrganization, UserRole, and PurposeOfUse
+     * 
+     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * @return The listing of all Attribute statements
+     */
+    static Attribute createOrganizationAttribute(CallbackProperties properties) {
+
+        Attribute attribute = null;
+
+        final String organization = properties.getUserOrganization();
+        if (organization != null) {
+        	attribute = OpenSAML2ComponentBuilder.getInstance()
+                .createAttribute(null, SamlConstants.USER_ORG_ATTR, null,
+                Arrays.asList(organization));
+        }
+        return attribute;
+
+    }
+
+    /**
+     * Creates the Attribute statements for UserName, UserOrganization, UserRole, and PurposeOfUse
+     * 
+     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * @return The listing of all Attribute statements
+     */
+    static Attribute createHomeCommunityIdAttribute(CallbackProperties properties) {
+
+        Attribute attribute = null;
+
+        // Set the Home Community ID Attribute
+
+        final String communityId = properties.getHomeCommunity();
+        if (communityId != null) {
+
+        	attribute = OpenSAML2ComponentBuilder.getInstance().createHomeCommunityAttribute(communityId);
+        } else {
+            LOG.debug("Home Community ID is missing");
+        }
+
+        return attribute;
+
+    }
+
+    /**
+     * Creates the Attribute statements for UserName, UserOrganization, UserRole, and PurposeOfUse
+     * 
+     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * @return The listing of all Attribute statements
+     */
+    static Attribute createPatientIdAttribute(CallbackProperties properties) {
+
+        Attribute attribute = null;
+
+        // Set the Patient ID Attribute
+        final String patientId = properties.getPatientID();
+        if (patientId != null) {
+            attribute = OpenSAML2ComponentBuilder.getInstance().createPatientIDAttribute(patientId);
+        } else {
+            LOG.debug("patient id is missing");
+        }
+        return attribute;
+
+    }
+
+    /**
+     * Creates the Attribute statements for NPI
+     * 
+     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * @return The listing of all Attribute statements
+     */
+    static Attribute createNPIAttribute(CallbackProperties properties) {
+
+        Attribute attribute = null;
+
+        // Set the NPI Attribute
+        final String npi = properties.getNPI();
+        if (npi != null) {
+            attribute = OpenSAML2ComponentBuilder.getInstance().createNPIAttribute(npi);
+        } else {
+            LOG.debug("npi is missing");
+        }
+        return attribute;
+    }
+
+	/**
+	 * Creates the Attribute statements for UserName, UserOrganization,
+	 * UserRole, and PurposeOfUse
+	 *
+	 * @param factory
+	 *            The factory object used to assist in the construction of the
+	 *            SAML Assertion token
+	 * @return The listing of all Attribute statements
+	 */
+	static List<Attribute> createUserDefinedAttributes(
+			CallbackProperties properties) {
+
+		List<Attribute> attributes = new ArrayList<Attribute>();
+		Attribute attribute = null;
+
+        // Set any User Defined attributes
+		final Map<String, String> genericAttributes = properties.getGenericAttributes();
+		if(NullChecker.isNotNullish(genericAttributes)) {
+			for(String genericAttributeName : genericAttributes.keySet()) {
+				Object attributeValue = genericAttributes.get(genericAttributeName);
+				if((attributeValue != null) && (attributeValue instanceof String)) {
+					attribute = OpenSAML2ComponentBuilder.getInstance()
+							.createGenericAttribute(genericAttributeName, ((String)attributeValue));
+					attributes.add(attribute);
+				}
+			}
+        } else {
+        	LOG.debug("No User Defined Attributes were specified");
+        }
+		return attributes;
+
+	}
+	
+    private static String createAssertionId() {
+        return ID_PREFIX.concat(String.valueOf(UUID.randomUUID())).replaceAll("-", "");
+    }
+}

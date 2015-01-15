@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!--
+    Document   : Personname.hbm.xml
+    Created on : March 21, 2011, 10:29 PM
+    Author     : richard.ettema
+    Description:
+        Purpose of the document follows.
+-->
+<hibernate-mapping package="gov.hhs.fha.nhinc.patientdb.model">
+  <class name="Personname" table="personname">
+    <id name="personnameId">
+      <generator class="native"/>
+    </id>
+    <many-to-one column="patientId" lazy="false" name="patient" not-null="true"/>
+    <property column="prefix" name="prefix"/>
+    <property column="firstName" name="firstName"/>
+    <property column="middleName" name="middleName"/>
+    <property column="lastName" name="lastName"/>
+    <property column="suffix" name="suffix"/>
+  </class>
+</hibernate-mapping>

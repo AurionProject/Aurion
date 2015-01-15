@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!--
+    Document   : auditrepo.hbm.xml
+    Created on : July 15, 2008, 10:28 PM
+    Author     : svalluripalli
+    Description:
+-->
+<hibernate-mapping>
+  <class name="gov.hhs.fha.nhinc.hibernate.AuditRepositoryRecord" table="auditrepository">
+    <id column="id" name="id" type="long">
+       <generator class="increment"/>
+    </id>
+    <property   column="audit_timeStamp"  			name="timeStamp" 					type="timestamp" 				not-null="true"/>
+    <property   column="eventId" 					name="eventId" 						type="long" 					not-null="false"/>
+    <property   column="userId" 					name="userId" 						type="string" 					not-null="false"/>
+    <property   column="participationTypeCode"		name="participationTypeCode"		type="short"					not-null="false"/>
+    <property   column="participationTypeCodeRole" 	name="participationTypeCodeRole" 	type="short"					not-null="false"/>
+    <property   column="participationIDTypeCode" 	name="participationIDTypeCode"  	type="string" 	length="100"	not-null="false"/>
+    <property   column="receiverPatientId" 			name="receiverPatientId"			type="string" 	length="128"	not-null="false"/>
+    <property   column="senderPatientId" 			name="senderPatientId"				type="string" 	length="128"	not-null="false"/>
+    <property   column="communityId" 				name="communityId"					type="string" 	length="255"	not-null="false"/>
+    <property   column="purposeOfUse" 				name="purposeOfUse"					type="string" 	length="32"		not-null="false"/>
+    <property   column="messageType" 				name="messageType"					type="string" 	length="100"	not-null="false"/>
+    <property   column="message"					name="message"						type="blob"						not-null="false"/>
+	<one-to-one cascade="all" name="advancedAuditRecord" class="gov.hhs.fha.nhinc.hibernate.AdvancedAuditRecord"/>
+  </class>
+</hibernate-mapping>

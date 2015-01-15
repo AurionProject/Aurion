@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.aurionproject</groupId>
+        <artifactId>Services</artifactId>
+        <version>5.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>AuditRepositoryCore</artifactId>
+    <packaging>jar</packaging>
+    <name>CONNECT Audit Repository Core</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.aurionproject</groupId>
+            <artifactId>AuditRepositoryWebservices</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.10</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Used to copy auditrepo.hibernate.cfg.xml from Common Properties -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>initialize</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+			  				<outputDirectory>${project.build.directory}/test-classes/hibernate</outputDirectory>
+			  					<resources>
+									<resource>
+										<directory>../../Common/Properties/src/main/resources/hibernate</directory>
+										<include>**/auditrepo.hibernate.cfg.xml</include>
+									</resource>
+									<resource>
+										<directory>../../Common/CONNECTCoreLib/src/main/resources/></directory>
+										<include>**/auditrepo.hbm.xml</include>
+										<include>**/advanced_audit.hbm.xml</include>
+									</resource>
+                	  			</resources>
+                        </configuration>
+                    </execution>
+				</executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

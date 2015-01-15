@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<!--
+    Document   : hibernate.cfg.xml
+    Created on : July 15, 2008, 10:20 PM
+    Author     : svalluripalli
+    Description:
+        Purpose of the document follows.
+-->
+
+<hibernate-configuration>
+  <session-factory>
+      <!-- Database connection settings -->
+      <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+      <property name="connection.url">jdbc:mysql://localhost/auditrepo</property>
+      <property name="connection.username">nhincuser</property>
+      <property name="connection.password">nhincpass</property>
+
+      <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+      <!-- Enable Hibernate's automatic session context management -->
+      <!-- <property name="current_session_context_class">thread</property> -->
+
+      <!-- Disable the second-level cache  -->
+      <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
+      <!-- Mapping files -->
+      <mapping resource="auditrepo.hbm.xml"/>
+      <mapping resource="advanced_audit.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

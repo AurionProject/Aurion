@@ -1,0 +1,33 @@
+<web-app xmlns="http://geronimo.apache.org/xml/ns/j2ee/web-2.0.1"
+         xmlns:sys="http://geronimo.apache.org/xml/ns/deployment-1.2"
+         xmlns:naming="http://geronimo.apache.org/xml/ns/naming-1.2">
+
+    <sys:environment>
+
+        <sys:moduleId>
+            <sys:groupId>CONNECT</sys:groupId>
+            <sys:artifactId>CommonWeb</sys:artifactId>
+            <sys:version>1.0</sys:version>
+            <sys:type>war</sys:type>
+        </sys:moduleId>
+
+        <sys:dependencies>
+            <sys:dependency>
+                <groupId>console.dbpool</groupId>
+                <artifactId>auditrepo_pool</artifactId>
+            </sys:dependency>
+        </sys:dependencies>
+       
+
+        <sys:inverse-classloading />
+
+    </sys:environment> 
+    
+    <context-root>CONNECTCommon</context-root>
+   
+    <naming:resource-ref>  
+    	<naming:ref-name>jdbc/auditrepo_datasource</naming:ref-name>
+        <naming:resource-link>auditrepo_pool</naming:resource-link>
+    </naming:resource-ref>
+   
+</web-app>

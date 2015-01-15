@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DocumentRepositoryLoad" default="copylibs" basedir=".">
+    <description>Copies the required libraries to load documents into the document repository</description>
+
+	<target name="clean">
+		<delete dir="lib"/>
+		<delete dir="config"/>
+		<delete dir="log"/>
+	</target>
+
+	<target name="init">
+		<mkdir dir="lib"/>
+		<mkdir dir="log"/>
+		<mkdir dir="config/hibernate"/>
+	</target>
+
+	<target name="copylibs" description="Copy required libraries" depends="clean,init">
+		<copy toDir="lib">
+			<fileset dir="../../../Common/CONNECTCoreLib/target">
+				<filename name="CONNECTCoreLib-5.0.jar"/>
+			</fileset>
+			<fileset dir="${user.home}/.m2/repository/log4j/log4j/1.2.17">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${user.home}/.m2/repository/mysql/mysql-connector-java/5.1.10">
+				<filename name="*.jar"/>
+			</fileset>
+			<fileset dir="${user.home}/.m2/repository/org/hibernate/hibernate/3.2.5.ga">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${user.home}/.m2/repository/antlr/antlr/2.7.7">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${user.home}/.m2/repository/asm/asm/3.3.1">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${user.home}/.m2/repository/cglib/cglib-nodep/2.1_3">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${user.home}/.m2/repository/commons-collections/commons-collections/3.2.1">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${user.home}/.m2/repository/dom4j/dom4j/1.6.1">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${user.home}/.m2/repository/javax/transaction/jta/1.0.1B">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${user.home}/.m2/repository/commons-logging/commons-logging/1.1.1">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		<copy toDir="config/hibernate">
+			<fileset dir=".">
+				<filename name="docrepo.hibernate.cfg.xml"/>
+			</fileset>
+		</copy>
+	</target>
+
+</project>
+
+

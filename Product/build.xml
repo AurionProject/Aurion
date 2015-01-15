@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="NHINC" basedir=".">
+
+    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+             classpath="../ThirdParty/ant/AntExtraLibs/xmltask-1.16.jar"/>
+
+    <property environment="env" />
+
+    <script language="javascript">
+        <![CDATA[
+      importClass(java.io.File);
+      var codeLinePath = new File(self.getLocation().getFileName()).getParentFile().getParent();
+      project.setProperty("codeline.directory.path", codeLinePath);
+     ]]>
+    </script>
+
+    <property name="root.project.directory.path" value="${codeline.directory.path}/Product" />
+
+    <import file="./Install/deploy.xml" />
+    
+    <condition property="progress-filepath" value="${java.io.tmpdir}/ant-progress.txt">
+        <not>
+            <isset property="progress-filepath" />
+        </not>
+    </condition>
+
+    <target name="deploy" depends="copy.deployable.artifacts" description="Deploy all projects: run ant help for more info...">
+        <antcall target="deploy.to.production" />
+    </target>
+
+    <target name="copy.deployable.artifacts">
+        <delete dir="${deployment.binaries.dir}" />
+        <mkdir dir="${deployment.binaries.dir}" />
+        <delete dir="${deployment.dir}/ValidationSuite" />
+        <mkdir dir="${deployment.dir}/ValidationSuite" />
+
+        <copy todir="${deployment.dir}/${deployment.environment.configuration.dir.name}" verbose="true" overwrite="true">
+            <fileset dir="${root.project.directory.path}/Production/Common/Properties" />
+        </copy>
+
+        <copy todir="${deployment.interfaces.dir}" verbose="true" overwrite="true">
+            <fileset dir="${root.project.directory.path}/Production/Common/Interfaces/src" />
+        </copy>
+
+        <copy todir="${deployment.dir}/ValidationSuite" verbose="true" overwrite="true">
+            <fileset dir="${root.project.directory.path}/SoapUI_Test/ValidationSuite" />
+        </copy>
+    </target>
+
+    <target name="dist" description="Create the binary distribution" depends="-maven.version, -svn.revision">
+        <echo message="Building binary distribution for maven version=${maven_version}, Subversion version=${repository.version}."/>
+        <echo message="Must be run after a mvn build that includes all application server profiles."/>
+        <property name="dist.artifact.dir" value="./target" />
+        <property name="maven_root" value="${user.home}/.m2/repository/org/aurionproject" />
+        <property name="dist.zip.filename" value="Aurion-${maven_version}.zip" />
+
+        <delete dir="${dist.artifact.dir}" failonerror="false" />
+        <mkdir dir="${dist.artifact.dir}" />
+
+        <manifest file="${dist.artifact.dir}/version.txt">
+            <attribute name="Maven-Release-Version" value="${maven_version}"/>
+            <attribute name="Subversion-Repository-Version" value="${repository.version}"/>
+        </manifest>
+
+        <zip zipfile="${dist.artifact.dir}/${dist.zip.filename}">
+            <zipfileset dir="${maven_root}/" includes="CONNECT*/${maven_version}/CONNECT*${maven_version}.ear" />
+        	<zipfileset file="${user.home}/.m2/repository/mysql/mysql-connector-java/5.1.10/mysql-connector-java-5.1.10.jar" />
+            <zipfileset prefix="Properties" src="${maven_root}/Properties/${maven_version}/Properties-${maven_version}.jar" excludes="**/META-INF/**/*" />
+            <zipfileset prefix="DBScripts" src="${maven_root}/DBScripts/${maven_version}/DBScripts-${maven_version}.jar" excludes="**/META-INF/**/*" />
+            <zipfileset prefix="FileUtils" file="${maven_root}/FileUtils/${maven_version}/FileUtils-${maven_version}.jar" />
+            <zipfileset prefix="ValidationSuite" dir="SoapUI_Test/ValidationSuite">
+                <include name="src/test/resources/chaincerts/**" />
+                <include name="*.xml" />
+                <include name="*.properties" />
+                <exclude name="pom.xml" />
+            </zipfileset>
+            <zipfileset prefix="target/wsdl" dir="SoapUI_Test/target/wsdl/"/>
+            <zipfileset prefix="target/schemas" dir="SoapUI_Test/target/schemas/"/>
+            <zipfileset prefix="glassfish_templates" dir="./Install/GlassFish/templates" />
+            <zipfileset file="${dist.artifact.dir}/version.txt"/>
+        </zip>
+    </target>
+
+    <target name="mvnloadbundle" description="Create a bundle containing Maven artifact load files" depends="-maven.version">
+        <echo message="Building a bundle containing Maven artifact load files."/>
+        <property name="mvnrepoload.artifact.dir" value="./target" />
+        <property name="maven_root" value="${user.home}/.m2/repository/org/aurionproject" />
+        <property name="mvnrepoload.zip.filename" value="Aurion-${maven_version}_RepoLoad.zip" />
+
+        <mkdir dir="${mvnrepoload.artifact.dir}/stage" />
+
+        <copy todir="${mvnrepoload.artifact.dir}/stage" flatten="true">
+            <fileset dir="${user.home}/.m2/repository/org/nhind/" >
+                <include name="agent/1.5.3.Aurion/agent-1.5.3.Aurion.jar" />
+                <include name="agent/1.5.3.Aurion/agent-1.5.3.Aurion.pom" />
+            </fileset>
+            <fileset dir="${user.home}/.m2/repository/org/nhind/" >
+                <include name="xd-common/1.2-CONNECT/xd-common-1.2-CONNECT.jar" />
+                <include name="xd-common/1.2-CONNECT/xd-common-1.2-CONNECT.pom" />
+            </fileset>
+            <fileset dir="${maven_root}/" >
+                <include name="AdapterAuthenticationCore/${maven_version}/AdapterAuthenticationCore-${maven_version}.jar" />
+                <include name="AdapterAuthenticationWebservices/${maven_version}/AdapterAuthenticationWebservices-${maven_version}.jar" />
+                <include name="AdminDistributionWebservices/${maven_version}/AdminDistributionWebservices-${maven_version}.jar" />
+                <include name="AuditRepositoryCore/${maven_version}/AuditRepositoryCore-${maven_version}.jar" />
+                <include name="AuditRepositoryWebservices/${maven_version}/AuditRepositoryWebservices-${maven_version}.jar" />
+                <include name="AurionCommonTypesLib/${maven_version}/AurionCommonTypesLib-${maven_version}.jar" />
+                <include name="ComponentWebservices/${maven_version}/ComponentWebservices-${maven_version}.jar" />
+                <include name="ConfigurationUtility/${maven_version}/ConfigurationUtility-${maven_version}.jar" />
+                <include name="AdminDistribution_10/${maven_version}/AdminDistribution_10-${maven_version}.war" />
+                <include name="AdminDistribution_20/${maven_version}/AdminDistribution_20-${maven_version}.war" />
+                <include name="AdminDistribution_a0/${maven_version}/AdminDistribution_a0-${maven_version}.war" />
+                <include name="AdminDistributionCore/${maven_version}/AdminDistributionCore-${maven_version}.jar" />
+                <include name="CONNECTAdapterPDPOpenSSO/${maven_version}/CONNECTAdapterPDPOpenSSO-${maven_version}.jar" />
+                <include name="CONNECTAdapterWeb/${maven_version}/CONNECTAdapterWeb-${maven_version}.war" />
+                <include name="CONNECTCommonWeb/${maven_version}/CONNECTCommonWeb-${maven_version}.war" />
+                <include name="CONNECTConsumerPreferencesProfileGUI/${maven_version}/CONNECTConsumerPreferencesProfileGUI-${maven_version}.war" />
+                <include name="CONNECTCoreLib/${maven_version}/CONNECTCoreLib-${maven_version}.jar" />
+                <include name="CONNECTDeferredQueueManagerGUI/${maven_version}/CONNECTDeferredQueueManagerGUI-${maven_version}.war" />
+                <include name="CONNECTGatewayWeb/${maven_version}/CONNECTGatewayWeb-${maven_version}.war" />
+                <include name="ConnectionManagerCore/${maven_version}/ConnectionManagerCore-${maven_version}.jar" />
+                <include name="ConnectionManagerWebservices/${maven_version}/ConnectionManagerWebservices-${maven_version}.jar" />
+                <include name="CONNECTUniversalClientGUI/${maven_version}/CONNECTUniversalClientGUI-${maven_version}.war" />
+                <include name="Direct/${maven_version}/Direct-${maven_version}.war" />
+                <include name="DBScripts/${maven_version}/DBScripts-${maven_version}.jar" />
+                <include name="DirectCore/${maven_version}/DirectCore-${maven_version}.jar" />
+                <include name="DirectWebservices/${maven_version}/DirectWebservices-${maven_version}.jar" />
+                <include name="DocRegistryCore/${maven_version}/DocRegistryCore-${maven_version}.jar" />
+                <include name="DocRegistryWebservices/${maven_version}/DocRegistryWebservices-${maven_version}.jar" />
+                <include name="DocRepositoryCore/${maven_version}/DocRepositoryCore-${maven_version}.jar" />
+                <include name="DocRepositoryWebservices/${maven_version}/DocRepositoryWebservices-${maven_version}.jar" />
+                <include name="DocumentQuery_20/${maven_version}/DocumentQuery_20-${maven_version}.war" />
+                <include name="DocumentQuery_30/${maven_version}/DocumentQuery_30-${maven_version}.war" />
+                <include name="DocumentQuery_a0/${maven_version}/DocumentQuery_a0-${maven_version}.war" />
+                <include name="DocumentQueryCore/${maven_version}/DocumentQueryCore-${maven_version}.jar" />
+                <include name="DocumentQueryWebservices/${maven_version}/DocumentQueryWebservices-${maven_version}.jar" />
+                <include name="DocumentRetrieve_20/${maven_version}/DocumentRetrieve_20-${maven_version}.war" />
+                <include name="DocumentRetrieve_30/${maven_version}/DocumentRetrieve_30-${maven_version}.war" />
+                <include name="DocumentRetrieve_a0/${maven_version}/DocumentRetrieve_a0-${maven_version}.war" />
+                <include name="DocumentRetrieveCore/${maven_version}/DocumentRetrieveCore-${maven_version}.jar" />
+                <include name="DocumentRetrieveWebservices/${maven_version}/DocumentRetrieveWebservices-${maven_version}.jar" />
+                <include name="DocumentSubmission_11/${maven_version}/DocumentSubmission_11-${maven_version}.war" />
+                <include name="DocumentSubmission_20/${maven_version}/DocumentSubmission_20-${maven_version}.war" />
+                <include name="DocumentSubmission_a0/${maven_version}/DocumentSubmission_a0-${maven_version}.war" />
+                <include name="DocumentSubmissionCore/${maven_version}/DocumentSubmissionCore-${maven_version}.jar" />
+                <include name="DocumentSubmissionWebervices/${maven_version}/DocumentSubmissionWebervices-${maven_version}.jar" />
+                <include name="FileUtils/${maven_version}/FileUtils-${maven_version}.jar" />
+                <include name="HIEM_20/${maven_version}/HIEM_20-${maven_version}.war" />
+                <include name="HIEMCore/${maven_version}/HIEMCore-${maven_version}.jar" />
+                <include name="HIEMWebservices/${maven_version}/HIEMWebservices-${maven_version}.jar" />
+                <include name="PatientCorrelationCore/${maven_version}/PatientCorrelationCore-${maven_version}.jar" />
+                <include name="PatientCorrelationWebservices/${maven_version}/PatientCorrelationWebservices-${maven_version}.jar" />
+                <include name="PatientDiscovery_10/${maven_version}/PatientDiscovery_10-${maven_version}.war" />
+                <include name="PatientDiscovery_a0/${maven_version}/PatientDiscovery_a0-${maven_version}.war" />
+                <include name="PatientDiscoveryCore/${maven_version}/PatientDiscoveryCore-${maven_version}.jar" />
+                <include name="PatientDiscoveryWebservices/${maven_version}/PatientDiscoveryWebservices-${maven_version}.jar" />
+                <include name="PolicyEngineCore/${maven_version}/PolicyEngineCore-${maven_version}.jar" />
+                <include name="PolicyEngineWebservices/${maven_version}/PolicyEngineWebservices-${maven_version}.jar" />
+                <include name="Properties/${maven_version}/Properties-${maven_version}.jar" />
+                <include name="RedactionEngineCore/${maven_version}/RedactionEngineCore-${maven_version}.jar" />
+                <include name="RedactionEngineWebservices/${maven_version}/RedactionEngineWebservices-${maven_version}.jar" />
+                <include name="SharedEngineCore/${maven_version}/SharedEngineCore-${maven_version}.jar" />
+                <include name="AdapterAuthenticationCore/${maven_version}/AdapterAuthenticationCore-${maven_version}.pom" />
+                <include name="AdapterAuthenticationWebservices/${maven_version}/AdapterAuthenticationWebservices-${maven_version}.pom" />
+                <include name="AdminDistributionWebservices/${maven_version}/AdminDistributionWebservices-${maven_version}.pom" />
+                <include name="AuditRepositoryCore/${maven_version}/AuditRepositoryCore-${maven_version}.pom" />
+                <include name="AuditRepositoryWebservices/${maven_version}/AuditRepositoryWebservices-${maven_version}.pom" />
+                <include name="AurionCommonTypesLib/${maven_version}/AurionCommonTypesLib-${maven_version}.pom" />
+                <include name="ComponentWebservices/${maven_version}/ComponentWebservices-${maven_version}.pom" />
+                <include name="ConfigurationUtility/${maven_version}/ConfigurationUtility-${maven_version}.pom" />
+                <include name="AdminDistribution_10/${maven_version}/AdminDistribution_10-${maven_version}.pom" />
+                <include name="AdminDistribution_20/${maven_version}/AdminDistribution_20-${maven_version}.pom" />
+                <include name="AdminDistribution_a0/${maven_version}/AdminDistribution_a0-${maven_version}.pom" />
+                <include name="AdminDistributionCore/${maven_version}/AdminDistributionCore-${maven_version}.pom" />
+                <include name="CONNECTAdapterPDPOpenSSO/${maven_version}/CONNECTAdapterPDPOpenSSO-${maven_version}.pom" />
+                <include name="CONNECTAdapterWeb/${maven_version}/CONNECTAdapterWeb-${maven_version}.pom" />
+                <include name="CONNECTCommonWeb/${maven_version}/CONNECTCommonWeb-${maven_version}.pom" />
+                <include name="CONNECTConsumerPreferencesProfileGUI/${maven_version}/CONNECTConsumerPreferencesProfileGUI-${maven_version}.pom" />
+                <include name="CONNECTCoreLib/${maven_version}/CONNECTCoreLib-${maven_version}.pom" />
+                <include name="CONNECTDeferredQueueManagerGUI/${maven_version}/CONNECTDeferredQueueManagerGUI-${maven_version}.pom" />
+                <include name="CONNECTGatewayWeb/${maven_version}/CONNECTGatewayWeb-${maven_version}.pom" />
+                <include name="ConnectionManagerCore/${maven_version}/ConnectionManagerCore-${maven_version}.pom" />
+                <include name="ConnectionManagerWebservices/${maven_version}/ConnectionManagerWebservices-${maven_version}.pom" />
+                <include name="CONNECTUniversalClientGUI/${maven_version}/CONNECTUniversalClientGUI-${maven_version}.pom" />
+                <include name="DBScripts/${maven_version}/DBScripts-${maven_version}.pom" />
+                <include name="Direct/${maven_version}/Direct-${maven_version}.pom" />
+                <include name="DirectCore/${maven_version}/DirectCore-${maven_version}.pom" />
+                <include name="DirectWebservices/${maven_version}/DirectWebservices-${maven_version}.pom" />
+                <include name="DocRegistryCore/${maven_version}/DocRegistryCore-${maven_version}.pom" />
+                <include name="DocRegistryWebservices/${maven_version}/DocRegistryWebservices-${maven_version}.pom" />
+                <include name="DocRepositoryCore/${maven_version}/DocRepositoryCore-${maven_version}.pom" />
+                <include name="DocRepositoryWebservices/${maven_version}/DocRepositoryWebservices-${maven_version}.pom" />
+                <include name="DocumentQuery_20/${maven_version}/DocumentQuery_20-${maven_version}.pom" />
+                <include name="DocumentQuery_30/${maven_version}/DocumentQuery_30-${maven_version}.pom" />
+                <include name="DocumentQuery_a0/${maven_version}/DocumentQuery_a0-${maven_version}.pom" />
+                <include name="DocumentQueryCore/${maven_version}/DocumentQueryCore-${maven_version}.pom" />
+                <include name="DocumentQueryWebservices/${maven_version}/DocumentQueryWebservices-${maven_version}.pom" />
+                <include name="DocumentRetrieve_20/${maven_version}/DocumentRetrieve_20-${maven_version}.pom" />
+                <include name="DocumentRetrieve_30/${maven_version}/DocumentRetrieve_30-${maven_version}.pom" />
+                <include name="DocumentRetrieve_a0/${maven_version}/DocumentRetrieve_a0-${maven_version}.pom" />
+                <include name="DocumentRetrieveCore/${maven_version}/DocumentRetrieveCore-${maven_version}.pom" />
+                <include name="DocumentRetrieveWebservices/${maven_version}/DocumentRetrieveWebservices-${maven_version}.pom" />
+                <include name="DocumentSubmission_11/${maven_version}/DocumentSubmission_11-${maven_version}.pom" />
+                <include name="DocumentSubmission_20/${maven_version}/DocumentSubmission_20-${maven_version}.pom" />
+                <include name="DocumentSubmission_a0/${maven_version}/DocumentSubmission_a0-${maven_version}.pom" />
+                <include name="DocumentSubmissionCore/${maven_version}/DocumentSubmissionCore-${maven_version}.pom" />
+                <include name="DocumentSubmissionWebervices/${maven_version}/DocumentSubmissionWebervices-${maven_version}.pom" />
+                <include name="FileUtils/${maven_version}/FileUtils-${maven_version}.pom" />
+                <include name="HIEM_20/${maven_version}/HIEM_20-${maven_version}.pom" />
+                <include name="HIEMCore/${maven_version}/HIEMCore-${maven_version}.pom" />
+                <include name="HIEMWebservices/${maven_version}/HIEMWebservices-${maven_version}.pom" />
+                <include name="PatientCorrelationCore/${maven_version}/PatientCorrelationCore-${maven_version}.pom" />
+                <include name="PatientCorrelationWebservices/${maven_version}/PatientCorrelationWebservices-${maven_version}.pom" />
+                <include name="PatientDiscovery_10/${maven_version}/PatientDiscovery_10-${maven_version}.pom" />
+                <include name="PatientDiscovery_a0/${maven_version}/PatientDiscovery_a0-${maven_version}.pom" />
+                <include name="PatientDiscoveryCore/${maven_version}/PatientDiscoveryCore-${maven_version}.pom" />
+                <include name="PatientDiscoveryWebservices/${maven_version}/PatientDiscoveryWebservices-${maven_version}.pom" />
+                <include name="PolicyEngineCore/${maven_version}/PolicyEngineCore-${maven_version}.pom" />
+                <include name="PolicyEngineWebservices/${maven_version}/PolicyEngineWebservices-${maven_version}.pom" />
+                <include name="Properties/${maven_version}/Properties-${maven_version}.pom" />
+                <include name="RedactionEngineCore/${maven_version}/RedactionEngineCore-${maven_version}.pom" />
+                <include name="RedactionEngineWebservices/${maven_version}/RedactionEngineWebservices-${maven_version}.pom" />
+                <include name="SharedEngineCore/${maven_version}/SharedEngineCore-${maven_version}.pom" />
+            </fileset>
+        </copy>
+        <zip destfile="${mvnrepoload.artifact.dir}/${mvnrepoload.zip.filename}">
+            <fileset dir="${mvnrepoload.artifact.dir}/stage/"/>
+        </zip>
+        <delete dir="${mvnrepoload.artifact.dir}/stage" failonerror="false" />
+    </target>
+
+    <target name="-maven.version" description="Store maven pom version in ${maven_version}.">
+        <xmltask source="pom.xml" >
+           <copy path="//*[local-name() = 'version']/text()" property="maven_version"/>
+        </xmltask>
+    </target>
+
+    <target name="-svn.revision" description="Store Subversion revision in ${repository.version}">
+        <exec executable="svnversion" outputproperty="svn.revision" failifexecutionfails="false" errorproperty=""/>
+        <condition property="repository.version" value="${svn.revision}" else="unknown">
+            <and>
+                <isset property="svn.revision"/>
+                <length string="${svn.revision}" trim="yes" length="0" when="greater"/>
+            </and>
+        </condition>
+    </target>
+</project>

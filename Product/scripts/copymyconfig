@@ -1,0 +1,14 @@
+# Use this one for standard (out of the box gatgeway 1.1 and 2.2 configured)
+#---------------------------------------------------------------------------
+cp $PRODUCT/configoverride/nhin/uddiConnectionInfo.xml $CONFIG/nhin
+
+# Uncomment this out to get a 4.4 gateway configured... (1.1, 2.2, and 4.4)
+# Note this one will break the validation test suite.  It is here for 
+# individual tests.
+#---------------------------------------------------------------------------
+#cp $PRODUCT/configoverride/nhin/uddiConnectionInfoWith4.4.xml $CONFIG/nhin/uddiConnectionInfo.xml
+
+
+cp $PRODUCT/configoverride/nhin/AuditRepositoryProxyConfig.xml $CONFIG/nhin
+cp $PRODUCT/configoverride/nhin/mpi.xml $CONFIG/nhin
+cp $PRODUCT/configoverride/logging.properties $CONFIG

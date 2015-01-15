@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!--
+    Document   : ssp_audit.hbm.xml
+    Created on : October 31, 2013
+    Author     : Reed Haslam
+    Description:
+        Hibernate mapping for the advanced_audit table.
+-->
+<hibernate-mapping>
+  <class name="gov.hhs.fha.nhinc.hibernate.AdvancedAuditRecord" table="advanced_audit">
+  	<id column="audit_id" name="id" type="long">
+  		<generator class="foreign">
+  			<param name="property">auditRepositoryRecord</param>
+  		</generator>
+  	</id>
+	<property column="service_name" 		name="serviceName" 		length="64" 	type="string" 	not-null="false"/>
+	<property column="subsystem" 			name="subsystem" 		length="16" 	type="string" 	not-null="false"/>
+	<property column="message_direction" 	name="messageDirection" length="8" 		type="string" 	not-null="false"/>
+	<property column="message_id" 			name="messageId" 		length="96" 	type="string" 	not-null="false"/>
+	<property column="user_name" 			name="userName" 		length="64" 	type="string" 	not-null="false"/>
+	<property column="user_roles" 			name="userRoles" 		length="64" 	type="string" 	not-null="false"/>
+	<property column="source_system" 		name="sourceSystem" 	length="64" 	type="string" 	not-null="false"/>
+	<property column="source_community"  	name="sourceCommunity" 	length="64"		type="string" 	not-null="false"/>
+	<property column="query_params"			name="queryParams"						type="clob"		not-null="false"/>
+	<property column="message_audited"		name="messageAudited"					type="clob"		not-null="false"/>		
+	<one-to-one name="auditRepositoryRecord"	class="gov.hhs.fha.nhinc.hibernate.AuditRepositoryRecord"	constrained="true"/>
+  </class>
+</hibernate-mapping>
