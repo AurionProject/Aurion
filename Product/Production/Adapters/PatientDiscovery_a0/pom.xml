@@ -2,7 +2,7 @@
     <parent>
         <groupId>org.aurionproject</groupId>
         <artifactId>Adapters</artifactId>
-        <version>5.0</version>
+        <version>5.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>PatientDiscovery_a0</artifactId>

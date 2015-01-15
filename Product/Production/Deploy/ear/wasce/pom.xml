@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.aurionproject</groupId>
         <artifactId>ear</artifactId>
-        <version>5.0</version>
+        <version>5.1</version>
     </parent>
     <artifactId>CONNECT-WASCE</artifactId>
     <packaging>ear</packaging>

@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.aurionproject</groupId>
         <artifactId>Bimodal</artifactId>
-        <version>5.0</version>
+        <version>5.1</version>
     </parent>
     <artifactId>CONN-376</artifactId>
     <packaging>jar</packaging>
@@ -37,7 +37,7 @@
                         <dependency>
                             <groupId>org.aurionproject</groupId>
                             <artifactId>FileUtils</artifactId>
-                            <version>5.0</version>
+                            <version>5.1</version>
                         </dependency>
                     </dependencies>
                     <configuration>
