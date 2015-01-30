@@ -110,7 +110,6 @@ public class StringUtil {
         } else {
             return "[CDATA[]]";
         }
-
     }
 
     /**
@@ -126,7 +125,6 @@ public class StringUtil {
         } else {
             return sText;
         }
-
     }
 
     /**

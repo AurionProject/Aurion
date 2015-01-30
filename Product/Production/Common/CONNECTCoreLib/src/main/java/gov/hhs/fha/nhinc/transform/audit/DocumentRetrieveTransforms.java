@@ -131,6 +131,8 @@ public class DocumentRetrieveTransforms {
 	            userInfo = assertion.getUserInfo();
 	        }
         }
+        
+        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
 
         // Create Event Identification Section
         CodedValueType eventId = AuditDataTransformHelper.createCodedValue(
@@ -147,7 +149,7 @@ public class DocumentRetrieveTransforms {
                 null);
 
         EventIdentificationType eventIdentification = AuditDataTransformHelper.createEventIdentification(
-                AuditDataTransformConstants.DR_REQUEST_EVENT_ACTION_CODE,
+        		getEventAction(isSender),
                 AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS, eventId, null);
         
         auditMsg.setEventIdentification(eventIdentification);
@@ -155,7 +157,6 @@ public class DocumentRetrieveTransforms {
         eventIdentification.getEventTypeCode().add(eventTypeCode);
 
         // Create Active Participant Section
-        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
         boolean isRecipient = isSender ? false : true;
        
         if (userInfo != null) {
@@ -313,6 +314,8 @@ public class DocumentRetrieveTransforms {
         	}
         }
       
+        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
+        
         // Create Event Identification Section
         CodedValueType eventId = AuditDataTransformHelper.createCodedValue(
                 AuditDataTransformConstants.DR_RESPONSE_EVENT_ID_CODE,
@@ -329,7 +332,7 @@ public class DocumentRetrieveTransforms {
                 null);
 
         EventIdentificationType eventIdentification = AuditDataTransformHelper.createEventIdentification(
-                AuditDataTransformConstants.DR_RESPONSE_EVENT_ACTION_CODE,
+                getEventAction(isSender),
                 AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS, 
                 eventId, 
                 null);
@@ -339,7 +342,6 @@ public class DocumentRetrieveTransforms {
         eventIdentification.getEventTypeCode().add(eventTypeCode);
 
         // Create Active Participant Section
-        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
         boolean isRecipient = isSender ? false : true;
        
         if (userInfo != null) {
@@ -566,6 +568,16 @@ public class DocumentRetrieveTransforms {
         return new Boolean(redactionEnabled);
     }
     
+    private static String getEventAction(boolean isSender) {
+    	String eventAction = null;
+    	if(isSender) {
+    		eventAction = AuditDataTransformConstants.DR_EVENT_ACTION_CODE_INITIATOR;
+    	} else {
+    		eventAction = AuditDataTransformConstants.DR_EVENT_ACTION_CODE_RESPONDER;
+    	}
+    	return eventAction;
+    }
+    
     /**
      * Parses the payload as a file URI and converts it into data handlers pointing to the actual documents.
      * 
@@ -584,4 +596,5 @@ public class DocumentRetrieveTransforms {
 			rawData = lfHandle.convertToBytes(dh);
        }
     }     */
+    
 }

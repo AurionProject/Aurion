@@ -24,8 +24,8 @@ By advancing the adoption of interoperable health IT systems and health informat
   </scm>
 -->
     <modules>
-    	<module>ThirdParty</module>
-    	<module>Product</module>
+        <module>ThirdParty</module>
+        <module>Product</module>
     </modules>
     <licenses>
         <license>
@@ -34,7 +34,7 @@ By advancing the adoption of interoperable health IT systems and health informat
         </license>
     </licenses>
     <prerequisites>
-       <maven>3.0.4</maven>
+        <maven>3.0.4</maven>
     </prerequisites>
     <distributionManagement>
         <site>
@@ -54,9 +54,9 @@ By advancing the adoption of interoperable health IT systems and health informat
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                <version>2.4</version>
-        </plugin>
-           <plugin>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>2.5</version>
@@ -76,7 +76,7 @@ By advancing the adoption of interoperable health IT systems and health informat
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.4</version>
                 </plugin>
-                 <plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>2.2.1</version>
@@ -96,16 +96,25 @@ By advancing the adoption of interoperable health IT systems and health informat
                     <artifactId>maven-war-plugin</artifactId>
                     <version>2.3</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <!-- Skipping 1.2.7 due to CPEAnalyzer ClassCastException bug -->
+                    <version>1.2.6</version>
+                    <configuration>
+                        <format>ALL</format>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
-             <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-release-plugin</artifactId>
-              <configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
                     <pushChanges>false</pushChanges>
-              </configuration>
-          </plugin>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -165,6 +174,29 @@ By advancing the adoption of interoperable health IT systems and health informat
                             <groupId>org.codehaus.mojo</groupId>
                             <artifactId>findbugs-maven-plugin</artifactId>
                             <version>2.5.2</version>
+                            <configuration>
+                                <plugins>
+                                    <plugin>
+                                        <groupId>com.h3xstream.findsecbugs</groupId>
+                                        <artifactId>plugin</artifactId>
+                                        <version>1.1.0</version>
+                                    </plugin>
+                                </plugins>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.owasp</groupId>
+                            <artifactId>dependency-check-maven</artifactId>
+                            <configuration>
+                                <aggregate>true</aggregate>
+                            </configuration>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>check</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
                         </plugin>
                     </reportPlugins>
                 </configuration>

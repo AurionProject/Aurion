@@ -18,7 +18,6 @@
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
  * DISCLAIMED. IN NO EVENT SHALL THE UNITED STATES GOVERNMENT BE LIABLE FOR ANY 
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * 
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
@@ -27,12 +26,12 @@
  */
 package gov.hhs.fha.nhinc.webserviceproxy;
 
+import org.apache.log4j.Logger;
+
 import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.properties.IPropertyAcessor;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
-
-import org.apache.log4j.Logger;
 
 public class WebServiceProxyHelperProperties {
     public static final String CONFIG_FILE = "gateway";
@@ -212,7 +211,7 @@ public class WebServiceProxyHelperProperties {
         int timeout = this.timeout;
         String propertyName = "";
         try {
-            propertyName = serviceName + "." + CONFIG_KEY_TIMEOUT;
+            propertyName = serviceName + "." + CONFIG_KEY_REQUESTTIMEOUT;
             String sValue = propertyAccessor.getProperty(propertyName);
             LOG.debug("Retrieved from config file (" + CONFIG_FILE + ".properties) " + propertyName + "='" + sValue
                     + "')");

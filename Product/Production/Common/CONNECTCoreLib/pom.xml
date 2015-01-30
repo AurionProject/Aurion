@@ -34,6 +34,10 @@
             <artifactId>cxf-bundle</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
@@ -64,35 +68,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-<!--
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate</artifactId>
-                <version>3.2.5.ga</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>antlr</groupId>
-                        <artifactId>antlr</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>asm</groupId>
-                        <artifactId>asm</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>asm</groupId>
-                        <artifactId>asm-attrs</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>cglib</groupId>
-                        <artifactId>cglib</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>net.sf.ehcache</groupId>
-                        <artifactId>ehcache</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
--->
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -134,18 +109,6 @@
                     <groupId>xalan</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.icegreen</groupId>
-            <artifactId>greenmail</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
         </dependency>
         <dependency>
             <groupId>xmlunit</groupId>

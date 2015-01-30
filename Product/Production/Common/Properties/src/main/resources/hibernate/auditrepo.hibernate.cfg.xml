@@ -12,20 +12,19 @@
 -->
 
 <hibernate-configuration>
-  <session-factory>
-      <!-- Database connection settings -->
-      <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-      <property name="connection.url">jdbc:mysql://localhost/auditrepo</property>
-      <property name="connection.username">nhincuser</property>
-      <property name="connection.password">nhincpass</property>
+<session-factory>
 
       <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 
-      <!-- Enable Hibernate's automatic session context management -->
-      <!-- <property name="current_session_context_class">thread</property> -->
+      <property name="hibernate.hbm2ddl.auto">update</property>
 
-      <!-- Disable the second-level cache  -->
-      <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+      <property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+
+      <!--  thread is the short name for      org.hibernate.context.ThreadLocalSessionContext
+      and let Hibernate bind the session automatically to the thread    -->
+      <property name="current_session_context_class">thread</property>
+
+      <property name="connection.datasource">java:comp/env/jdbc/auditrepo_datasource</property>
 
       <!-- Mapping files -->
       <mapping resource="auditrepo.hbm.xml"/>

@@ -84,14 +84,13 @@ public class AuditDataTransformHelperTest {
      */
     @Test
     public void testCreateEventIdentification() {
-    	String actionCode = AuditDataTransformConstants.EVENT_ACTION_CODE_EXECUTE;
+       String actionCode = AuditDataTransformConstants.EVENT_ACTION_CODE_CREATE;
         Integer eventOutcome = AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS;
-        
         CodedValueType eventId = new CodedValueType();
         eventId.setCode(AuditDataTransformConstants.DR_REQUEST_EVENT_ID_CODE);
-        eventId.setCodeSystem(AuditDataTransformConstants.DR_REQUEST_EVENT_ID_CODE_SYSTEM);
+        eventId.setCodeSystem(AuditDataTransformConstants.EVENT_ID_CODE_SYS_NAME_ACK);
         eventId.setCodeSystemName(AuditDataTransformConstants.DR_REQUEST_EVENT_ID_CODE_SYSTEM_NAME);
-        eventId.setDisplayName(AuditDataTransformConstants.DR_REQUEST_EVENT_ID_CODE_SYSTEM_DISPLAY_NAME);
+        eventId.setDisplayName(AuditDataTransformConstants.EVENT_ID_DISPLAY_NAME_ENTITY_SD);
 
         CodedValueType eventType = new CodedValueType();
         eventType.setCode(AuditDataTransformConstants.DR_EVENT_TYPE_CODE);
@@ -114,26 +113,26 @@ public class AuditDataTransformHelperTest {
      */
     @Test
     public void testCreateEventId() {
-        String eventCode = AuditDataTransformConstants.PD_REQUEST_EVENT_ID_CODE;
-        String eventCodeSys = AuditDataTransformConstants.PD_REQUEST_EVENT_ID_CODE_SYSTEM;
-        String eventCodeSysName = AuditDataTransformConstants.PD_REQUEST_EVENT_ID_CODE_SYSTEM_NAME;
-        String dispName = AuditDataTransformConstants.PD_REQUEST_EVENT_ID_CODE_SYSTEM_DISPLAY_NAME;
+        String eventCode = AuditDataTransformConstants.EVENT_ACTION_CODE_DELETE;
+        String eventCodeSys = "";
+        String eventCodeSysName = AuditDataTransformConstants.EVENT_ID_CODE_SYS_NAME_SDD;
+        String dispName = AuditDataTransformConstants.EVENT_ID_DISPLAY_NAME_SDREV;
         String originalText = "foobar";
         
         CodedValueType expResult = new CodedValueType();
-        expResult.setCode(eventCode);
         expResult.setCodeSystem(eventCodeSys);
         expResult.setCodeSystemName(eventCodeSysName);
         expResult.setDisplayName(dispName);
+        expResult.setCode(eventCode);
         expResult.setOriginalText(originalText);
 
 
         CodedValueType result = AuditDataTransformHelper.createCodedValue(eventCode, eventCodeSys, eventCodeSysName, dispName, originalText);
 
-        assertSame(expResult.getCode(), result.getCode());
         assertSame(expResult.getCodeSystem(), result.getCodeSystem());
         assertSame(expResult.getCodeSystemName(), result.getCodeSystemName());
         assertSame(expResult.getDisplayName(), result.getDisplayName());
+        assertSame(expResult.getCode(), result.getCode());
         assertSame(expResult.getOriginalText(), result.getOriginalText());
 
     }
@@ -161,6 +160,7 @@ public class AuditDataTransformHelperTest {
         Boolean userIsReq = true;
 
         ActiveParticipant expResult = new ActiveParticipant();
+        expResult.setNetworkAccessPointID(ipAddr);
         expResult.setUserName("John Jones");
         expResult.setUserID("tester");
 

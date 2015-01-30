@@ -27,12 +27,6 @@
 package gov.hhs.fha.nhinc.messaging.service.decorator.cxf;
 
 import static org.junit.Assert.assertEquals;
-import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
-import gov.hhs.fha.nhinc.messaging.client.CONNECTClient;
-import gov.hhs.fha.nhinc.messaging.client.CONNECTTestClient;
-import gov.hhs.fha.nhinc.messaging.service.ServiceEndpoint;
-import gov.hhs.fha.nhinc.messaging.service.port.TestServicePortDescriptor;
-import gov.hhs.fha.nhinc.messaging.service.port.TestServicePortType;
 
 import javax.xml.ws.BindingProvider;
 
@@ -40,6 +34,13 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.apache.cxf.ws.addressing.JAXWSAConstants;
 import org.apache.cxf.ws.addressing.impl.AddressingPropertiesImpl;
 import org.junit.Test;
+
+import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
+import gov.hhs.fha.nhinc.messaging.client.CONNECTClient;
+import gov.hhs.fha.nhinc.messaging.client.CONNECTTestClient;
+import gov.hhs.fha.nhinc.messaging.service.ServiceEndpoint;
+import gov.hhs.fha.nhinc.messaging.service.port.TestServicePortDescriptor;
+import gov.hhs.fha.nhinc.messaging.service.port.TestServicePortType;
 
 /**
  * @author akong
@@ -138,7 +139,7 @@ public class WsAddressingServiceEndpointDecoratorTest {
         AddressingPropertiesImpl addressingProps = (AddressingPropertiesImpl) bindingProviderPort.getRequestContext()
                 .get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES);
         HTTPClientPolicy httpClientPolicy = (HTTPClientPolicy) bindingProviderPort.getRequestContext().get(
-        		HTTPClientPolicy.class.getName());
+                HTTPClientPolicy.class.getName());
 
         assertEquals(wsAddressingTo, addressingProps.getTo().getValue());
         assertEquals(wsAddressingAction, addressingProps.getAction().getValue());

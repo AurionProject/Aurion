@@ -81,6 +81,7 @@ Available service profiles which can be excluded from the generated ear (use val
 * Document Retrieve (DR)
 * Direct(Direct)
 * CONNECTUniversalClientGUI, CONNECTConsumerPreferencesProfileGUI, CONNECTDeferredQueueManagerGUI (GUI)
+* AdapterDocRegistry2Soap12Web, AdapterDocRepository2Soap12Web (HIEOS)
 
 After CONNECT has been built from the clone directory, you can alter the composition of the CONNECT.ear at any time by turning off any combination of the available profiles as a comma-separated list
 
@@ -229,11 +230,13 @@ Then open your browser and view [file:///tmp/fullsite/index.html]
 
 Contributing
 ------------
-1. Fork it.
-2. Create a branch (`git checkout -b my_feature`)
-3. Commit your changes (`git commit -am "Added new feature"`)
-4. Push to the branch (`git push origin my_feature`)
-5. Open a [Pull Request][]
+1. Fork it
+2. Clone the repo (`git clone --recursive <REPO_URL>/CONNECT.git`)
+3. If you already have the repo and need to update to the latest, use `git pull`
+4. Create a branch (`git checkout -b my_feature`)
+5. Commit your changes (`git commit -am "Added new feature"`)
+6. Push to the branch (`git push origin my_feature`)
+7. Open a [Pull Request][]
 
 [Pull Request]: https://github.com/CONNECT-Solution/CONNECT/pulls
 [Download Maven]: http://maventest.apache.org/download.html

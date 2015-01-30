@@ -69,7 +69,7 @@ public class CONNECTTestClient<T> implements CONNECTClient<T> {
      * @see gov.hhs.fha.nhinc.messaging.client.CONNECTClient#invokePort(java.lang.Class, java.lang.String, java.lang.Object)
      */
     @Override
-    public Object invokePort(Class<T> portClass, String methodName, Object operationInput) throws Exception {
+    public Object invokePort(Class<T> portClass, String methodName, Object ... operationInput) throws Exception {
         return null;
     }
 
@@ -87,10 +87,5 @@ public class CONNECTTestClient<T> implements CONNECTClient<T> {
     @Override
     public void enableWSA(AssertionType assertion, String wsAddressingTo, String wsAddressingActionId) {
         serviceEndpoint = new WsAddressingServiceEndpointDecorator<T>(serviceEndpoint, wsAddressingTo, wsAddressingActionId, assertion);
-    }
-    
-    @Override
-    public boolean overrideDefaultTimeouts(String connectOTTag, String responseTOTag){
-    	return true;
     }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
+    version="2.1">
+
+    <application>
+        <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>            
+    </application>
+    
+    <lifecycle>
+        <phase-listener>gov.hhs.fha.nhinc.admingui.jee.jsf.UserAuthorizationListener</phase-listener>
+    </lifecycle>
+    
+    <navigation-rule>
+        <from-view-id>/*</from-view-id>
+        <navigation-case>
+            <from-outcome>login</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/*</from-view-id>
+        <navigation-case>
+            <from-outcome>status</from-outcome>
+            <to-view-id>/status.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/*</from-view-id>
+        <navigation-case>
+            <from-outcome>acctmanage</from-outcome>
+            <to-view-id>/acctmanage.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/*</from-view-id>
+        <navigation-case>
+            <from-outcome>direct</from-outcome>
+            <to-view-id>/direct.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/*</from-view-id>
+        <navigation-case>
+            <from-outcome>connectionManager</from-outcome>
+            <to-view-id>/connectionManager.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+    
+</faces-config>

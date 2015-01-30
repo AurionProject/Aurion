@@ -40,6 +40,7 @@ import java.util.UUID;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import gov.hhs.fha.nhinc.docrepository.adapter.model.Document;
@@ -48,6 +49,7 @@ import gov.hhs.fha.nhinc.docrepository.adapter.model.EventCode;
 import gov.hhs.fha.nhinc.docrepository.adapter.model.EventCodeParam;
 import gov.hhs.fha.nhinc.docrepository.adapter.service.DocumentService;
 import gov.hhs.fha.nhinc.document.DocumentConstants;
+import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.util.StringUtil;
 import gov.hhs.fha.nhinc.util.format.PatientIdFormatUtil;
 
@@ -214,32 +216,26 @@ public class AdapterComponentDocRegistryOrchImpl {
                         }
                     }
                     params = generateDocumentQueryParamsFromSlots(slots);
-
-                    List<String> docEntryTypeValues = extractDocumentEntryType(slots);
-                    if (NullChecker.isNotNullish(docEntryTypeValues)) {
-                        queryForStableDocs = hasStableDocumentsEntry(docEntryTypeValues);
-                        queryForOnDemandDocs = hasOnDemandDocumentsEntry(docEntryTypeValues);
-                    }
                 }
             }
 
             DocumentService service = getDocumentService();
 
             List<Document> docs = new ArrayList<Document>();
-            if (queryForStableDocs) {
-                params.setOnDemandParams(false);
-                docs = service.documentQuery(params);
+            Boolean isOnDemand = params.getOnDemand();
+            if (isOnDemand == null || !isOnDemand) {
+                params.setOnDemandParams(Boolean.FALSE);
+                docs.addAll(service.documentQuery(params));
             }
-
-            List<Document> onDemandDocs = new ArrayList<Document>();
-            if (queryForOnDemandDocs) {
-                params.setOnDemandParams(true);
+            
+            if (isOnDemand == null || (isOnDemand != null && isOnDemand)) {
                 params.setCreationTimeFrom(null);
                 params.setCreationTimeTo(null);
-                onDemandDocs = service.documentQuery(params);
+                params.setOnDemandParams(Boolean.TRUE);
+                docs.addAll(service.documentQuery(params));
             }
-
-            docs.addAll(onDemandDocs);
+            
+            
             LOG.debug("registryStoredQuery- docs.size: " + docs.size());
             loadResponseMessage(response, docs);
             LOG.debug("End AdapterComponentDocRegistryOrchImpl.registryStoredQuery(...)");
@@ -296,7 +292,56 @@ public class AdapterComponentDocRegistryOrchImpl {
         params.setDocumentUniqueId(documentUniqueIds);
         params.setEventCodeParams(createEventCodeParameters(eventCodeValues, eventCodeSchemeValues));
         params.setSlots(slots);
+        
+        /*
+         * params.setOnDemandParams(null) = both stable and on demand
+         * params.setOnDemandParams(false) = stable only
+         * params.setOnDemandParams(true) = on demand only
+         * 
+         * per the specification if no $XDSDocumentEntryType is in the query, the default behavior is stable only.
+         */
+        List<String> documentEntryTypes = extractDocumentEntryTypes(slots);
+        if (documentEntryTypes == null || documentEntryTypes.isEmpty()) {
+            // default case, stable only
+            params.setOnDemandParams(false);
+        } else {
+            boolean onDemandFound = false;
+            boolean stableFound = false;
+            for (String s : documentEntryTypes) {
+                if (StringUtils.contains(s, EBXML_DOCENTRY_ONDEMAND_DOCUMENTS_VALUE)) {
+                    onDemandFound = true;
+                }
+                
+                if (StringUtils.contains(s, EBXML_DOCENTRY_STABLE_DOCUMENTS_VALUE)) {
+                    stableFound = true;
+                }
+            }
+            
+            if (onDemandFound && stableFound) {
+                params.setOnDemandParams(null);
+            } else {
+                // if we found just one...
+                params.setOnDemandParams(onDemandFound);
+            }     
+            
+        }
         return params;
+    }
+
+    /**
+     * Guaranteed not to be null.
+     * 
+     * @param slots
+     * @return a list of strings with the types.
+     */
+    private List<String> extractDocumentEntryTypes(List<SlotType1> slots) {
+        List<String> types = new ArrayList<String>();
+        for (SlotType1 slot : slots) {
+            if (EBXML_DOCENTRY_ENTRY_TYPE.equals(slot.getName()) && slot.getValueList() != null) {
+                types.addAll(slot.getValueList().getValue());
+            }
+        }
+        return types;
     }
 
     /**
@@ -445,28 +490,6 @@ public class AdapterComponentDocRegistryOrchImpl {
             documentIds.add(docId);
         }
         return documentIds;
-    }
-
-    /**
-     * Extracts the document entry types from the slots if it exists.
-     * 
-     * @param slots The list of slots to extract the document entry types from
-     * @return The list of string containing the values from the document entry types
-     */
-    private List<String> extractDocumentEntryType(List<SlotType1> slots) {
-        List<String> documentEntryTypes = null;
-
-        List<String> slotValues = extractSlotValues(slots, EBXML_DOCENTRY_ENTRY_TYPE);
-        String[] entries = extractValueListFromSlotValues(slotValues);
-
-        if (entries != null && entries.length > 0) {
-            documentEntryTypes = new ArrayList<String>();
-            for (String entryType : entries) {
-                documentEntryTypes.add(entryType);
-            }
-        }
-
-        return documentEntryTypes;
     }
 
     /**
@@ -1037,10 +1060,12 @@ public class AdapterComponentDocRegistryOrchImpl {
     protected String retrieveHomeCommunityId() {
         String homeCommunityId = null;
         try {
-            homeCommunityId = "urn:oid:"
-                    + PropertyAccessor.getInstance().getProperty(PROPERTY_FILE_NAME_GATEWAY,
+            homeCommunityId = PropertyAccessor.getInstance().getProperty(PROPERTY_FILE_NAME_GATEWAY,
                             PROPERTY_FILE_KEY_HOME_COMMUNITY);
-        } catch (Throwable t) {
+            if(homeCommunityId != null && !homeCommunityId.startsWith(NhincConstants.HCID_PREFIX)){
+                homeCommunityId = NhincConstants.HCID_PREFIX + homeCommunityId;
+            }
+        } catch (PropertyAccessException t) {
             LOG.error("Error retrieving the home community id: " + t.getMessage(), t);
         }
         return homeCommunityId;

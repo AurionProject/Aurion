@@ -31,14 +31,9 @@ import gov.hhs.fha.nhinc.messaging.service.BaseServiceEndpoint;
 import gov.hhs.fha.nhinc.messaging.service.ServiceEndpoint;
 import gov.hhs.fha.nhinc.messaging.service.decorator.TimeoutServiceEndpointDecorator;
 import gov.hhs.fha.nhinc.messaging.service.decorator.URLServiceEndpointDecorator;
-import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
-import gov.hhs.fha.nhinc.nhinclib.NullChecker;
-import gov.hhs.fha.nhinc.properties.PropertyAccessException;
-import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 import gov.hhs.fha.nhinc.webserviceproxy.WebServiceProxyHelper;
 
 import org.apache.cxf.phase.PhaseInterceptorChain;
-import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 /**
  * @author akong
@@ -55,7 +50,7 @@ public abstract class CONNECTBaseClient<T> implements CONNECTClient<T> {
     public abstract T getPort();
 
     @Override
-    public Object invokePort(Class<T> portClass, String methodName, Object operationInput) throws Exception {
+    public Object invokePort(Class<T> portClass, String methodName, Object ... operationInput) throws Exception {
         Object response = proxyHelper.invokePort(getPort(), portClass, methodName, operationInput);
 
         SoapResponseInInterceptor.addResponseMessageIdToContext(getPort(), PhaseInterceptorChain.getCurrentMessage());
@@ -77,5 +72,4 @@ public abstract class CONNECTBaseClient<T> implements CONNECTClient<T> {
         
         return serviceEndpoint;
     }
-
 }

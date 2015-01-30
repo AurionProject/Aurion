@@ -11,9 +11,13 @@ import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.naming.Name;
+import javax.naming.ldap.LdapName;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.opensaml.Configuration;
@@ -36,7 +40,7 @@ import org.w3c.dom.Element;
 
 /**
  * @author bhumphrey
- * 
+ *
  */
 public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
 
@@ -57,7 +61,7 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
 
     /**
      * Creates the "Holder-of-Key" variant of the SAML Assertion token.
-     * 
+     *
      * @return The Assertion element
      * @throws Exception
      */
@@ -165,21 +169,73 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
      */
     static Subject createSubject(CallbackProperties properties, X509Certificate certificate, PublicKey publicKey)
             throws Exception {
-        String x509Name = "UID=" + properties.getUsername();
+        String x509Name = properties.getUsername();
 
+        if (NullChecker.isNullish(x509Name) || !checkDistinguishedName(x509Name)) {
+            if (null != certificate && null != certificate.getSubjectDN()) {
+                x509Name = certificate.getSubjectDN().getName();
+            }
+        }        
         return createSubject(x509Name, certificate, publicKey);
     }
 
+    /**
+     * 
+     * @param userName
+     * @return boolean
+     */
+    private static boolean checkDistinguishedName(String userName)
+    {
+        boolean isValid = true;
+        try
+        {
+            Name name = new LdapName(userName);
+        } catch(Exception e)
+        {
+            LOG.warn("Not a Valid Distinguished Name, setting the value from Certificate..");
+            isValid = false;
+        }
+        return isValid;
+    }
+    
     static Subject createEvidenceSubject(CallbackProperties properties, X509Certificate certificate, PublicKey publicKey)
             throws Exception {
         String evidenceSubject = properties.getEvidenceSubject();
+        String x509Name = null;
         if (NullChecker.isNullish(evidenceSubject)) {
-            evidenceSubject = properties.getUsername();
+            String userName = properties.getUsername();
+
+            if (NullChecker.isNullish(userName) || !checkDistinguishedName(userName)) {
+                if (null != certificate && null != certificate.getSubjectDN()) {
+                    userName = certificate.getSubjectDN().getName();
+                }
+            }
+            x509Name = userName;
+        } else
+        {
+            x509Name = evidenceSubject;
         }
-
-        String x509Name = "UID=" + evidenceSubject;
-
         return createSubject(x509Name, certificate, publicKey);
+    }
+    
+    /**
+     * 
+     * @param value
+     * @return String
+     */
+    private static String formatUID(String value) 
+    {
+        String newValue = null;
+        if(NullChecker.isNotNullish(value))
+        {
+            if(value.startsWith("UID=") || value.startsWith("CN="))
+            {
+                newValue = value;
+            } else {
+                newValue = "UID="+ value;
+            }            
+        }
+        return newValue;
     }
 
     static Subject createSubject(String x509Name, X509Certificate certificate, PublicKey publicKey) throws Exception {
@@ -191,6 +247,7 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
     /**
      * @return
      */
+    @SuppressWarnings("unchecked")
     static List<Statement> createAttributeStatements(CallbackProperties properties, Subject subject) {
         List<Statement> statements = new ArrayList<Statement>();
 
@@ -221,7 +278,7 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
 
         return statements;
     }
-    
+
     /**
      * @param properties
      * @return
@@ -312,11 +369,15 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
     }
 
     /**
-     * Creates the Evidence element that encompasses the Assertion defining the authorization form needed in cases where
-     * evidence of authorization to access the medical records must be provided along with the message request.
-     * 
-     * @param factory The factory object used to assist in the construction of the SAML Assertion token
-     * @param issueInstant The calendar representing the time of Assertion issuance
+     * Creates the Evidence element that encompasses the Assertion defining the
+     * authorization form needed in cases where evidence of authorization to
+     * access the medical records must be provided along with the message
+     * request.
+     *
+     * @param factory The factory object used to assist in the construction of
+     * the SAML Assertion token
+     * @param issueInstant The calendar representing the time of Assertion
+     * issuance
      * @return The Evidence element
      */
     static Evidence createEvidence(CallbackProperties properties, Subject subject) {
@@ -342,6 +403,10 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
         List<Assertion> evidenceAssertions = new ArrayList<Assertion>();
         if (evAssertionID == null) {
             evAssertionID = createAssertionId();
+        } else {
+            if (!evAssertionID.startsWith("_")) {
+                evAssertionID = ID_PREFIX.concat(evAssertionID);
+            }
         }
 
         if (issueInstant == null) {
@@ -398,10 +463,12 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
     }
 
     /**
-     * Creates the Attribute Statements needed for the Evidence element. These include the Attributes for the Access
-     * Consent Policy and the Instance Access Consent Policy
-     * 
-     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * Creates the Attribute Statements needed for the Evidence element. These
+     * include the Attributes for the Access Consent Policy and the Instance
+     * Access Consent Policy
+     *
+     * @param factory The factory object used to assist in the construction of
+     * the SAML Assertion token
      * @return The listing of the attribute statements for the Evidence element
      */
     static List<AttributeStatement> createEvidenceStatements(CallbackProperties properties) {
@@ -435,7 +502,7 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
 
     /**
      * Creates the Attribute statements for UserName.
-     * 
+     *
      */
     static Attribute createUserNameAttribute(CallbackProperties properties) {
 
@@ -460,8 +527,9 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
 
     /**
      * Creates the Attribute statements UserRole
-     * 
-     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     *
+     * @param factory The factory object used to assist in the construction of
+     * the SAML Assertion token
      * @return The listing of all Attribute statements
      */
     static Attribute createUserRoleAttribute(CallbackProperties properties) {
@@ -483,8 +551,9 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
 
     /**
      * Creates the Attribute statements PurposeOfUse
-     * 
-     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     *
+     * @param factory The factory object used to assist in the construction of
+     * the SAML Assertion token
      * @return The listing of all Attribute statements
      */
     static Attribute createPurposeOfUseAttribute(CallbackProperties properties) {
@@ -514,9 +583,11 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
     }
 
     /**
-     * Creates the Attribute statements for UserName, UserOrganization, UserRole, and PurposeOfUse
-     * 
-     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * Creates the Attribute statements for UserName, UserOrganization,
+     * UserRole, and PurposeOfUse
+     *
+     * @param factory The factory object used to assist in the construction of
+     * the SAML Assertion token
      * @return The listing of all Attribute statements
      */
     static Attribute createOrganizationAttribute(CallbackProperties properties) {
@@ -534,9 +605,11 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
     }
 
     /**
-     * Creates the Attribute statements for UserName, UserOrganization, UserRole, and PurposeOfUse
-     * 
-     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * Creates the Attribute statements for UserName, UserOrganization,
+     * UserRole, and PurposeOfUse
+     *
+     * @param factory The factory object used to assist in the construction of
+     * the SAML Assertion token
      * @return The listing of all Attribute statements
      */
     static Attribute createHomeCommunityIdAttribute(CallbackProperties properties) {
@@ -558,9 +631,11 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
     }
 
     /**
-     * Creates the Attribute statements for UserName, UserOrganization, UserRole, and PurposeOfUse
-     * 
-     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     * Creates the Attribute statements for UserName, UserOrganization,
+     * UserRole, and PurposeOfUse
+     *
+     * @param factory The factory object used to assist in the construction of
+     * the SAML Assertion token
      * @return The listing of all Attribute statements
      */
     static Attribute createPatientIdAttribute(CallbackProperties properties) {
@@ -580,8 +655,9 @@ public class HOKSAMLAssertionBuilder extends SAMLAssertionBuilder {
 
     /**
      * Creates the Attribute statements for NPI
-     * 
-     * @param factory The factory object used to assist in the construction of the SAML Assertion token
+     *
+     * @param factory The factory object used to assist in the construction of
+     * the SAML Assertion token
      * @return The listing of all Attribute statements
      */
     static Attribute createNPIAttribute(CallbackProperties properties) {

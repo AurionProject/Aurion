@@ -1,0 +1,36 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core">
+
+    <div>
+        <p:dialog id="domainCreateDlg" header="Create Domain" widgetVar="domainDlg" modal="true" dynamic="true" width="75%" closeOnEscape="true">
+            <div class="content">
+                <h3>Add New Domain to HISP</h3>
+                <p class="instructions">Enter the requested information below to add a new domain to configure.</p>
+                <div class="form-block center-block">                    
+                    <h:form id="domainDlgForm" class="form form-horizontal" >
+                        <p:messages id="domainAddErrors" autoUpdate="true" closable="true" redisplay="false"/> 
+                        <div class="form-group">
+                            <h:outputLabel for="input-domain" class="col-sm-3 control-label" id="input-domainLbl" value="Domain Name:" />
+                            <div class="col-sm-9">
+                                <p:inputText styleClass="form-control" id="input-domain" maxlength="255" required="true" requiredMessage="Domain name required." value="#{directDomainBean.domainName}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel for="input-email" class="col-sm-3 control-label" id="input-emailLbl" value="Postmaster E-mail Address:" />
+                            <div class="col-sm-9">
+                                <p:inputText styleClass="form-control" id="input-email" maxlength="255" required="true" requiredMessage="Postmaster address required." value="#{directDomainBean.domainPostmaster}"/>
+                            </div>
+                        </div>                        
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="form-button-row">
+                                    <p:commandButton id="submit" ajax="true" styleClass="btn btn-primary" value="Submit" actionListener="#{directDomainBean.addDomain}" update=":tabview:domain-form,domainDlgForm, domainAddErrors" oncomplete="PF('domainDlg').hide()" />
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </p:dialog>
+    </div>
+</ui:composition>

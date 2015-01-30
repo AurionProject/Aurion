@@ -106,7 +106,8 @@ public class PatientDiscoveryTransformsTest {
         PatientDiscoveryTransforms testSubject = new PatientDiscoveryTransforms();
 
         testSubject.transformNhinPRPAIN201305RequestToAuditMsg(null, null, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
-                NhincConstants.AUDIT_LOG_NHIN_INTERFACE);
+                NhincConstants.AUDIT_LOG_NHIN_INTERFACE, NhincConstants.AUDIT_LOG_SYNC_TYPE,
+                NhincConstants.AUDIT_LOG_REQUEST_PROCESS);
         context.assertIsSatisfied();
     }
 
@@ -116,7 +117,8 @@ public class PatientDiscoveryTransformsTest {
 
         RespondingGatewayPRPAIN201305UV02RequestType oPatientDiscoveryRequest = new RespondingGatewayPRPAIN201305UV02RequestType();
         testSubject.transformEntityPRPAIN201305RequestToAuditMsg(oPatientDiscoveryRequest, null,
-                NhincConstants.AUDIT_LOG_INBOUND_DIRECTION, NhincConstants.AUDIT_LOG_ENTITY_INTERFACE);
+                NhincConstants.AUDIT_LOG_INBOUND_DIRECTION, NhincConstants.AUDIT_LOG_ENTITY_INTERFACE,
+                NhincConstants.AUDIT_LOG_SYNC_TYPE, NhincConstants.AUDIT_LOG_REQUEST_PROCESS);
         context.assertIsSatisfied();
     }
 
@@ -158,13 +160,14 @@ public class PatientDiscoveryTransformsTest {
         };
 
         final LogEventRequestType expected = testSubject.transformEntityPRPAIN201305RequestToAuditMsg(
-                oPatientDiscoveryRequest, 
-                oAssertionType, 
-                NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
-                NhincConstants.AUDIT_LOG_ENTITY_INTERFACE);
+                oPatientDiscoveryRequest, oAssertionType, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
+                NhincConstants.AUDIT_LOG_ENTITY_INTERFACE, NhincConstants.AUDIT_LOG_SYNC_TYPE,
+                NhincConstants.AUDIT_LOG_REQUEST_PROCESS);
 
         Assert.assertNotNull(expected);
-        Assert.assertTrue(expected.getAuditMessage().getParticipantObjectIdentification().size() == 2);
+        Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
+        Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
+        Assert.assertTrue(expected.getAuditMessage().getParticipantObjectIdentification().size() == 1);
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification());
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification().getEventID());
     }
@@ -203,10 +206,13 @@ public class PatientDiscoveryTransformsTest {
 
         final LogEventRequestType expected = testSubject.transformNhinPRPAIN201305RequestToAuditMsg(
                 oPatientDiscoveryRequest, oAssertionType, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
-                NhincConstants.AUDIT_LOG_NHIN_INTERFACE);
+                NhincConstants.AUDIT_LOG_NHIN_INTERFACE, NhincConstants.AUDIT_LOG_SYNC_TYPE,
+                NhincConstants.AUDIT_LOG_REQUEST_PROCESS);
 
         Assert.assertNotNull(expected);
-        Assert.assertTrue(expected.getAuditMessage().getParticipantObjectIdentification().size() == 2);
+        Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
+        Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
+        Assert.assertTrue(expected.getAuditMessage().getParticipantObjectIdentification().size() == 1);
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification());
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification().getEventID());
     }
@@ -245,10 +251,13 @@ public class PatientDiscoveryTransformsTest {
 
         final LogEventRequestType expected = testSubject.transformAdapterPRPAIN201305RequestToAuditMsg(
                 oPatientDiscoveryRequest, oAssertionType, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
-                NhincConstants.AUDIT_LOG_ADAPTER_INTERFACE);
+                NhincConstants.AUDIT_LOG_ADAPTER_INTERFACE, NhincConstants.AUDIT_LOG_SYNC_TYPE,
+                NhincConstants.AUDIT_LOG_REQUEST_PROCESS);
 
         Assert.assertNotNull(expected);
-        Assert.assertTrue(expected.getAuditMessage().getParticipantObjectIdentification().size() == 2);
+        Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
+        Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
+        Assert.assertTrue(expected.getAuditMessage().getParticipantObjectIdentification().size() == 1);
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification());
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification().getEventID());
     }
@@ -300,13 +309,13 @@ public class PatientDiscoveryTransformsTest {
         };
 
         LogEventRequestType expectedResult = testSubject.transformEntityPRPAIN201306ResponseToAuditMsg(
-                oPatientDiscoveryResponse, 
-                oAssertion, 
-                NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, 
-                "Entity");
+                oPatientDiscoveryResponse, oAssertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION,
+                NhincConstants.AUDIT_LOG_ENTITY_INTERFACE, NhincConstants.AUDIT_LOG_SYNC_TYPE);
 
         Assert.assertNotNull(expectedResult);
-        Assert.assertTrue(expectedResult.getAuditMessage().getParticipantObjectIdentification().size() == 3);
+        Assert.assertTrue(expectedResult.getAuditMessage().getAuditSourceIdentification().size() == 1);
+        Assert.assertTrue(expectedResult.getAuditMessage().getAuditSourceIdentification().size() == 1);
+        Assert.assertTrue(expectedResult.getAuditMessage().getParticipantObjectIdentification().size() == 1);
         Assert.assertNotNull(expectedResult.getAuditMessage().getEventIdentification());
         Assert.assertNotNull(expectedResult.getAuditMessage().getEventIdentification().getEventID());
     }
@@ -346,14 +355,14 @@ public class PatientDiscoveryTransformsTest {
 
         pRPAIN201306UV.setControlActProcess(pRPAIN201306UVMFMIMT700711UV01ControlActProcess);
 
-        LogEventRequestType expectedResult = testSubject.transformPRPAIN201306ResponseToAuditMsg(
-        		pRPAIN201306UV,
-                oAssertionType, 
-                NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, 
-                NhincConstants.AUDIT_LOG_NHIN_INTERFACE);
+        LogEventRequestType expectedResult = testSubject.transformPRPAIN201306ResponseToAuditMsg(pRPAIN201306UV,
+                oAssertionType, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, NhincConstants.AUDIT_LOG_NHIN_INTERFACE,
+                NhincConstants.AUDIT_LOG_SYNC_TYPE);
 
         Assert.assertNotNull(expectedResult);
-        Assert.assertTrue(expectedResult.getAuditMessage().getParticipantObjectIdentification().size() == 3);
+        Assert.assertTrue(expectedResult.getAuditMessage().getAuditSourceIdentification().size() == 1);
+        Assert.assertTrue(expectedResult.getAuditMessage().getAuditSourceIdentification().size() == 1);
+        Assert.assertTrue(expectedResult.getAuditMessage().getParticipantObjectIdentification().size() == 1);
         Assert.assertNotNull(expectedResult.getAuditMessage().getEventIdentification());
         Assert.assertNotNull(expectedResult.getAuditMessage().getEventIdentification().getEventID());
 
@@ -394,7 +403,8 @@ public class PatientDiscoveryTransformsTest {
         		pRPAIN201306UV,
                 oAssertionType, 
                 NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, 
-                NhincConstants.AUDIT_LOG_NHIN_INTERFACE);
+                NhincConstants.AUDIT_LOG_NHIN_INTERFACE,
+                NhincConstants.AUDIT_LOG_SYNC_TYPE);
 
         Assert.assertNotNull(expectedResult);
         Assert.assertTrue(expectedResult.getAuditMessage().getParticipantObjectIdentification().size() == 3);
@@ -437,7 +447,8 @@ public class PatientDiscoveryTransformsTest {
         		pRPAIN201306UV,
                 oAssertionType, 
                 NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, 
-                NhincConstants.AUDIT_LOG_NHIN_INTERFACE);
+                NhincConstants.AUDIT_LOG_NHIN_INTERFACE,
+                NhincConstants.AUDIT_LOG_SYNC_TYPE);
 
         Assert.assertNotNull(expectedResult);
         Assert.assertTrue(expectedResult.getAuditMessage().getParticipantObjectIdentification().size() == 3);
@@ -481,7 +492,8 @@ public class PatientDiscoveryTransformsTest {
 
         final PRPAIN201306UV02 oPatientDiscoveryResponseMessage = new PRPAIN201306UV02();
 
-        boolean bExpectedResult = testSubject.areRequired201306fieldsNull(oPatientDiscoveryResponseMessage, oAssertionType);
+        boolean bExpectedResult = testSubject.areRequired201306fieldsNull(oPatientDiscoveryResponseMessage,
+                oAssertionType);
 
         Assert.assertFalse(bExpectedResult);
 

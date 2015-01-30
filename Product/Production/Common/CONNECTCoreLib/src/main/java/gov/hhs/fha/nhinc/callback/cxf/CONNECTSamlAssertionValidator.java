@@ -27,6 +27,7 @@
 package gov.hhs.fha.nhinc.callback.cxf;
 
 import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
+import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 
 import java.security.PublicKey;
@@ -39,6 +40,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.handler.RequestData;
@@ -47,6 +49,8 @@ import org.apache.ws.security.saml.ext.AssertionWrapper;
 import org.apache.ws.security.saml.ext.OpenSAMLUtil;
 import org.apache.ws.security.validate.Credential;
 import org.apache.ws.security.validate.SamlAssertionValidator;
+import org.opensaml.saml2.core.AuthzDecisionStatement;
+import org.opensaml.saml2.core.Issuer;
 import org.opensaml.xml.validation.ValidationException;
 import org.opensaml.xml.validation.ValidatorSuite;
 
@@ -71,6 +75,9 @@ public class CONNECTSamlAssertionValidator extends SamlAssertionValidator {
 
     /** The Constant EXCHANGE_AUTH_FRWK_VALIDATOR_SUITE. */
     private static final String EXCHANGE_AUTH_FRWK_VALIDATOR_SUITE = "exchange-authorization-framework-validator-suite";
+
+    /** The Constant TEMP_RESOURCE_FOR_VALIDATION. */
+    private static final String TEMP_RESOURCE_FOR_VALIDATION = "TEMPORARY_RESOURCE_FOR_VALIDATION";
 
     /** The property accessor. */
     private PropertyAccessor propertyAccessor;
@@ -114,6 +121,33 @@ public class CONNECTSamlAssertionValidator extends SamlAssertionValidator {
             validators.add(org.opensaml.Configuration.getValidatorSuite("saml2-core-schema-validator"));
             validators.addAll(getSaml2SpecValidators());
 
+            for (AuthzDecisionStatement auth : assertion.getSaml2().getAuthzDecisionStatements()) {
+                if (StringUtils.isBlank(auth.getResource())) {
+                    auth.setResource(TEMP_RESOURCE_FOR_VALIDATION);
+                }
+            }
+
+            Issuer issuer = assertion.getSaml2().getIssuer();
+            if (issuer.getFormat().equals("urn:oasis:names:tc:SAML:1.1:nameid-format:entity")) {
+                if (!StringUtils.isBlank(issuer.getSPProvidedID())) {
+                    throw new WSSecurityException("SOAP header element Security/Assertion/Issuer/@Format = " + ""
+                            + "urn:oasis:names:tc:SAML:1.1:nameid-format:entity" + "" + "and"
+                            + "Security/Assertion/Issuer/@SPProvidedID" + " " + "is present.");
+                }
+                if (!StringUtils.isBlank(issuer.getNameQualifier())) {
+                    throw new WSSecurityException("SOAP header element Security/Assertion/Issuer/@Format = " + ""
+                            + "urn:oasis:names:tc:SAML:1.1:nameid-format:entity" + "" + "and"
+                            + "Security/Assertion/Issuer/@NameQualifier" + " " + "is present.");
+                }
+
+                if (!StringUtils.isBlank(issuer.getSPNameQualifier())) {
+                    throw new WSSecurityException("SOAP header element Security/Assertion/Issuer/@Format = " + ""
+                            + "urn:oasis:names:tc:SAML:1.1:nameid-format:entity" + "" + "and"
+                            + "Security/Assertion/Issuer/@SPNameQualifier" + " " + "is present.");
+
+                }
+            }
+
             try {
                 for (ValidatorSuite v : validators) {
                     v.validate(assertion.getSaml2());
@@ -121,6 +155,12 @@ public class CONNECTSamlAssertionValidator extends SamlAssertionValidator {
             } catch (ValidationException e) {
                 LOG.error("Saml Validation error: " + e.getMessage(), e);
                 throw new WSSecurityException(WSSecurityException.FAILURE, "invalidSAMLsecurity");
+            }
+
+            for (AuthzDecisionStatement auth : assertion.getSaml2().getAuthzDecisionStatements()) {
+                if (StringUtils.equals(auth.getResource(), TEMP_RESOURCE_FOR_VALIDATION)) {
+                    auth.setResource(StringUtils.EMPTY);
+                }
             }
         }
     }
@@ -167,7 +207,7 @@ public class CONNECTSamlAssertionValidator extends SamlAssertionValidator {
 
     /**
      * Gets the saml2 allow no subject assertion spec validators.
-     *
+     * 
      * @return the saml2 allow no subject assertion spec validators
      */
     protected Collection<ValidatorSuite> getSaml2AllowNoSubjectAssertionSpecValidators() {
@@ -199,8 +239,7 @@ public class CONNECTSamlAssertionValidator extends SamlAssertionValidator {
      */
     protected Collection<ValidatorSuite> getSaml2DefaultAssertionSpecValidators() {
         Collection<ValidatorSuite> suites = new HashSet<ValidatorSuite>();
-        suites.add(org.opensaml.Configuration
-                .getValidatorSuite("saml2-core-spec-validator"));
+        suites.add(org.opensaml.Configuration.getValidatorSuite("saml2-core-spec-validator"));
         suites.add(getExchangeAuthFrameworkValidatorSuite());
         return suites;
     }

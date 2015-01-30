@@ -120,8 +120,8 @@ public class DocumentQueryTransformsTest {
         adhocMessage.setAssertion(assertion);
 
         logMessage.setMessage(adhocMessage);
-        logMessage.setDirection("inbound");
-        logMessage.setInterface("nhin");
+//        logMessage.setDirection("inbound");
+//        logMessage.setInterface("nhin");
 
         auditData.setReceiverPatientId("12345");
 
@@ -144,6 +144,10 @@ public class DocumentQueryTransformsTest {
         
         LogEventRequestType result = transformer.transformDocQueryReq2AuditMsg(logMessage, home.getHomeCommunityId());
 
+        assertEquals(expResult.getAuditMessage().getActiveParticipant().get(0).getUserName(), result.getAuditMessage()
+                .getActiveParticipant().get(0).getUserName());
+        assertEquals(expResult.getAuditMessage().getAuditSourceIdentification().get(0).getAuditEnterpriseSiteID(),
+                result.getAuditMessage().getAuditSourceIdentification().get(0).getAuditEnterpriseSiteID());
         assertEquals(expResult.getAuditMessage().getEventIdentification().getEventActionCode(), result
                 .getAuditMessage().getEventIdentification().getEventActionCode());
 
@@ -179,11 +183,11 @@ public class DocumentQueryTransformsTest {
 
         adhocMessage.setAdhocQueryResponse(message);
         adhocMessage.setAssertion(assertion);
+        logMessage.setMessage(adhocMessage);
         auditData.setReceiverPatientId("999999");
 
-        logMessage.setMessage(adhocMessage);
-        logMessage.setDirection("inbound");
-        logMessage.setInterface("nhin");
+//        logMessage.setDirection("inbound");
+//        logMessage.setInterface("nhin");
         
         // Build Registry Object List for response
         oasis.names.tc.ebxml_regrep.xsd.rim._3.ObjectFactory rimObjFact = new oasis.names.tc.ebxml_regrep.xsd.rim._3.ObjectFactory();
@@ -221,6 +225,11 @@ public class DocumentQueryTransformsTest {
 
         // Validate home community id
         assertNotNull("AuditSourceIdentification list", result.getAuditMessage().getAuditSourceIdentification());
+        assertFalse("AuditSourceIdentification list empty", result.getAuditMessage().getAuditSourceIdentification()
+                .isEmpty());
+        AuditSourceIdentificationType auditSrcId = result.getAuditMessage().getAuditSourceIdentification().get(0);
+        assertNotNull("AuditSourceIdentification object", auditSrcId);
+        assertEquals("AuditSourceIdentification empty", expectedHomeCommunity, auditSrcId.getAuditSourceID());
     }
 
     /**
@@ -276,11 +285,11 @@ public class DocumentQueryTransformsTest {
 
         adhocMessage.setAdhocQueryResponse(message);
         adhocMessage.setAssertion(assertion);
+        logMessage.setMessage(adhocMessage);
         auditData.setReceiverPatientId("999999");
 
-        logMessage.setMessage(adhocMessage);
-        logMessage.setDirection("inbound");
-        logMessage.setInterface("nhin");
+//        logMessage.setDirection("inbound");
+//        logMessage.setInterface("nhin");
         
         // Build expected result
         AuditMessageType expResult = new AuditMessageType();
@@ -307,6 +316,14 @@ public class DocumentQueryTransformsTest {
                 .getActiveParticipant().get(0).getUserName());
         assertEquals(expected.getAuditMessage().getEventIdentification().getEventActionCode(), result.getAuditMessage()
                 .getEventIdentification().getEventActionCode());
+
+        // Validate home community id
+        assertNotNull("AuditSourceIdentification list", result.getAuditMessage().getAuditSourceIdentification());
+        assertFalse("AuditSourceIdentification list empty", result.getAuditMessage().getAuditSourceIdentification()
+                .isEmpty());
+        AuditSourceIdentificationType auditSrcId = result.getAuditMessage().getAuditSourceIdentification().get(0);
+        assertNotNull("AuditSourceIdentification object", auditSrcId);
+        assertEquals("AuditSourceIdentification empty", expectedHomeCommunity, auditSrcId.getAuditSourceID());
     }
 
 }

@@ -26,24 +26,21 @@
  */
 package gov.hhs.fha.nhinc.util;
 
-import ihe.iti.xds_b._2007.RetrieveDocumentSetRequestType;
-import ihe.iti.xds_b._2007.RetrieveDocumentSetResponseType;
-import oasis.names.tc.ebxml_regrep.xsd.query._3.AdhocQueryResponse;
-import oasis.names.tc.ebxml_regrep.xsd.rim._3.AdhocQueryType;
-
-import org.apache.log4j.Logger;
-import org.uddi.api_v3.BusinessEntity;
-
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.common.nhinccommon.NhinTargetCommunitiesType;
 import gov.hhs.fha.nhinc.common.nhinccommon.NhinTargetSystemType;
 import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
 import gov.hhs.fha.nhinc.connectmgr.ConnectionManagerCache;
-import gov.hhs.fha.nhinc.connectmgr.ConnectionManagerCacheHelper;
 import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
+import ihe.iti.xds_b._2007.RetrieveDocumentSetRequestType;
+import ihe.iti.xds_b._2007.RetrieveDocumentSetResponseType;
+import oasis.names.tc.ebxml_regrep.xsd.query._3.AdhocQueryResponse;
+import oasis.names.tc.ebxml_regrep.xsd.rim._3.AdhocQueryType;
+import org.apache.log4j.Logger;
+import org.uddi.api_v3.BusinessEntity;
 
 /**
  * This class is used to map a home community ID to the textual name of the home community. The information is stored in
@@ -57,15 +54,9 @@ import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 public class HomeCommunityMap {
 
     private static final Logger LOG = Logger.getLogger(HomeCommunityMap.class);
+    private static ConnectionManagerCache connection = ConnectionManagerCache.getInstance();
+    private static PropertyAccessor propertyAccessor = PropertyAccessor.getInstance();
 
-    protected ConnectionManagerCache getConnectionManagerCache() {
-        return ConnectionManagerCache.getInstance();
-    }
-
-
-	protected ConnectionManagerCacheHelper getConnectionManagerCacheHelper() {
-		return new ConnectionManagerCacheHelper();
-	}
 
     /**
      * This method retrieves the name of the home community baased on the home community Id.
@@ -73,20 +64,18 @@ public class HomeCommunityMap {
      * @param sHomeCommunityId The home community ID to be looked up.
      * @return The textual name of the home community.
      */
-    public String getHomeCommunityName(String sHomeCommunityId) {
+    public static String getHomeCommunityName(String sHomeCommunityId) {
         String sHomeCommunityName = "";
-        ConnectionManagerCacheHelper helper = getConnectionManagerCacheHelper();
-        try {
-            ConnectionManagerCache connectionManagerCache = getConnectionManagerCache();
 
-            BusinessEntity oEntity = connectionManagerCache.getBusinessEntity(sHomeCommunityId);
+        try {
+
+            BusinessEntity oEntity = connection.getBusinessEntity(sHomeCommunityId);
             if ((oEntity != null) && (oEntity.getName() != null) && (oEntity.getName().size() > 0)
-                    && (oEntity.getName().get(0) != null) && (oEntity.getName().get(0).getValue().length() > 0)
-                    && (oEntity.getBusinessKey().length() > 0)) {
-                sHomeCommunityName = helper.getCommunityId(oEntity);
+                    && (oEntity.getName().get(0) != null) && (oEntity.getName().get(0).getValue().length() > 0)) {
+                sHomeCommunityName = oEntity.getName().get(0).getValue();
             }
         } catch (Exception e) {
-            LOG.warn("Failed to retrieve textual name for home community ID: " + sHomeCommunityId, e);
+            LOG.warn("Failed to retrieve textual name for home community ID ", e);
         }
 
         return sHomeCommunityName;
@@ -144,27 +133,28 @@ public class HomeCommunityMap {
                 }
             }
         }
-        
-        if (communityId == null){
-        	communityId = getHomeCommunityIdFromAssertion(assertion);
+
+        if (communityId == null) {
+            communityId = getHomeCommunityIdFromAssertion(assertion);
         }
         return formatHomeCommunityId(communityId);
     }
-    
+
     /**
-     * This method retrieves the home community id from the homeCommunityId property of
-     * the assertion.
+     * This method retrieves the home community id from the homeCommunityId property of the assertion.
+     *
      * @param assertion
      * @return
      */
-    public static String getHomeCommunityIdFromAssertion(AssertionType assertion){
-    	String homeCommunity = null;
-    	try{
-    	 	 homeCommunity = assertion.getHomeCommunity().getHomeCommunityId();
-    	}catch (NullPointerException ex){
-    		LOG.warn("Could not obtain HCID from HomeCommunity in assertion.", ex);
-    	}
-    	return homeCommunity;
+    public static String getHomeCommunityIdFromAssertion(AssertionType assertion) {
+        String homeCommunity = null;
+        try {
+            if (NullChecker.isNotNullish(assertion.getHomeCommunity().getHomeCommunityId()))
+                homeCommunity = assertion.getHomeCommunity().getHomeCommunityId();
+        } catch (NullPointerException ex) {
+            LOG.warn("Could not obtain HCID from HomeCommunity in assertion.", ex);
+        }
+        return homeCommunity;
     }
 
     /**
@@ -251,16 +241,24 @@ public class HomeCommunityMap {
      */
     public static String getLocalHomeCommunityId() {
         String sHomeCommunity = null;
+        sHomeCommunity = getHomeCommunityFromPropFile();
+        return sHomeCommunity;
+    }
 
+    /**
+     * @return
+     */
+    private static String getHomeCommunityFromPropFile() {
+        String sHomeCommunity = null;
         try {
-            sHomeCommunity = PropertyAccessor.getInstance().getProperty(NhincConstants.GATEWAY_PROPERTY_FILE,
+            sHomeCommunity = propertyAccessor.getProperty(NhincConstants.GATEWAY_PROPERTY_FILE,
                     NhincConstants.HOME_COMMUNITY_ID_PROPERTY);
         } catch (PropertyAccessException ex) {
             LOG.error(ex.getMessage());
         }
-
         return sHomeCommunity;
     }
+
     /**
      * Returns the home community id by with 'urn:oid:' prefix if it doesn't exists.
      *
@@ -270,10 +268,20 @@ public class HomeCommunityMap {
     public static String getHomeCommunityIdWithPrefix(String communityId) {
         if (communityId != null) {
             if (!communityId.startsWith("urn:oid:")) {
-                communityId = "urn:oid:"+communityId;
+                LOG.trace("Prefixing communityId with urn:oid");
+                communityId = "urn:oid:" + communityId;
             }
         }
         LOG.debug("Returning communityId with the urn:oid prefix: " + communityId);
         return communityId;
     }
+
+    protected static void setPropertyAccessor(PropertyAccessor propAccessor) {
+        propertyAccessor = propAccessor;
+    }
+
+    protected static void setConnectionManager(ConnectionManagerCache connectionManager) {
+        connection = connectionManager;
+    }
+
 }

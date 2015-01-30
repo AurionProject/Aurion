@@ -186,7 +186,10 @@ public class XDRTransformsTest {
         assertNotNull(result.getAuditMessage().getActiveParticipant());
         assertNotNull(result.getAuditMessage().getAuditSourceIdentification());
 
-        assertEquals(3, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
+
+        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(1, result.getAuditMessage().getAuditSourceIdentification().size());
 
         assertEquals(NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, result.getDirection());
         assertEquals(_interface, result.getInterface());
@@ -194,7 +197,11 @@ public class XDRTransformsTest {
         assertEquals(CONST_USER_NAME, result.getAuditMessage().getActiveParticipant().get(0).getUserID());
 
         assertNotNull(result.getAuditMessage());
+        assertNotNull(result.getAuditMessage().getAuditSourceIdentification());
 
+        assertEquals(CONST_HCID, result.getAuditMessage().getAuditSourceIdentification().get(0).getAuditSourceID());
+        assertEquals(CONST_HCID, result.getAuditMessage().getAuditSourceIdentification().get(0)
+                .getAuditEnterpriseSiteID());
         // TODO review the generated test code and remove the default call to fail.
 
     }
@@ -261,7 +268,10 @@ public class XDRTransformsTest {
         assertNotNull(result.getAuditMessage().getActiveParticipant());
         assertNotNull(result.getAuditMessage().getAuditSourceIdentification());
 
-        assertEquals(3, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
+
+        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(1, result.getAuditMessage().getAuditSourceIdentification().size());
 
         assertEquals(NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, result.getDirection());
         assertEquals(_interface, result.getInterface());
@@ -270,6 +280,10 @@ public class XDRTransformsTest {
 
         assertNotNull(result.getAuditMessage());
         assertNotNull(result.getAuditMessage().getAuditSourceIdentification());
+
+        assertEquals(CONST_HCID, result.getAuditMessage().getAuditSourceIdentification().get(0).getAuditSourceID());
+        assertEquals(CONST_HCID, result.getAuditMessage().getAuditSourceIdentification().get(0)
+                .getAuditEnterpriseSiteID());
         // TODO review the generated test code and remove the default call to fail.
 
     }

@@ -26,11 +26,19 @@
  */
 package gov.hhs.fha.nhinc.transform.audit;
 
+import com.services.nhinc.schema.auditmessage.AuditMessageType;
+import com.services.nhinc.schema.auditmessage.AuditMessageType.ActiveParticipant;
+import com.services.nhinc.schema.auditmessage.AuditSourceIdentificationType;
+import com.services.nhinc.schema.auditmessage.CodedValueType;
+import com.services.nhinc.schema.auditmessage.EventIdentificationType;
+import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationType;
+
 import gov.hhs.fha.nhinc.common.auditlog.LogAdhocQueryRequestType;
 import gov.hhs.fha.nhinc.common.auditlog.LogAdhocQueryResultRequestType;
 import gov.hhs.fha.nhinc.common.auditlog.LogEventRequestType;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
+import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.transform.marshallers.JAXBContextHandler;
 import gov.hhs.healthit.nhin.DocQueryAcknowledgementType;
 
@@ -51,12 +59,6 @@ import oasis.names.tc.ebxml_regrep.xsd.rim._3.ObjectRefType;
 import oasis.names.tc.ebxml_regrep.xsd.rim._3.SlotType1;
 
 import org.apache.log4j.Logger;
-
-import com.services.nhinc.schema.auditmessage.AuditMessageType;
-import com.services.nhinc.schema.auditmessage.AuditMessageType.ActiveParticipant;
-import com.services.nhinc.schema.auditmessage.CodedValueType;
-import com.services.nhinc.schema.auditmessage.EventIdentificationType;
-import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationType;
 
 /**
  *
@@ -143,8 +145,10 @@ public class DocumentQueryTransforms {
         
         CodedValueType eventTypeCode = getEventTypeCode();
 
+        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
+        	
         EventIdentificationType eventIdentification = AuditDataTransformHelper.createEventIdentification(
-            AuditDataTransformConstants.DQ_REQUEST_EVENT_ACTION_CODE,
+        	getEventAction(isSender),
             AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS, 
             eventId, 
             eventTypeCode);
@@ -152,7 +156,6 @@ public class DocumentQueryTransforms {
         auditMsg.setEventIdentification(eventIdentification);
         
         // Create Active Participant Section
-        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
         boolean isRecipient = isSender ? false : true;
        
         if (userInfo != null) {
@@ -339,8 +342,10 @@ public class DocumentQueryTransforms {
         
         CodedValueType eventTypeCode = getEventTypeCode();
 
+        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
+
         EventIdentificationType eventIdentification = AuditDataTransformHelper.createEventIdentification(
-            AuditDataTransformConstants.DQ_RESPONE_EVENT_ACTION_CODE,
+        	getEventAction(isSender),
             AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS, 
             eventId, 
             eventTypeCode);
@@ -348,7 +353,6 @@ public class DocumentQueryTransforms {
         auditMsg.setEventIdentification(eventIdentification);
 
         // Create Active Participant Section
-        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
         boolean isRecipient = isSender ? false : true;
        
         if (userInfo != null) {
@@ -583,9 +587,11 @@ public class DocumentQueryTransforms {
             null);
         
         CodedValueType eventTypeCode = getEventTypeCode();
-        
+
+        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
+
         EventIdentificationType eventIdentification = AuditDataTransformHelper.createEventIdentification(
-            AuditDataTransformConstants.DQ_RESPONE_EVENT_ACTION_CODE,
+        	getEventAction(isSender),
             AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS, 
             eventId, 
             eventTypeCode);
@@ -594,7 +600,6 @@ public class DocumentQueryTransforms {
 
         // Create Active Participant Section
         UserType userInfo = assertion.getUserInfo();
-        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
         boolean isRecipient = isSender ? false : true;
        
         if (userInfo != null) {
@@ -727,5 +732,15 @@ public class DocumentQueryTransforms {
             LOG.warn("Marshalling the AdhocQueryResponse message generated an I/O Exception closing the stream.");
         }
     	return messageBytes;
+    }
+    
+    private String getEventAction(boolean isSender) {
+        String eventAction = null;
+        if(isSender) {
+        	eventAction = AuditDataTransformConstants.DQ_EVENT_ACTION_CODE_INITIATOR;
+        } else {
+        	eventAction = AuditDataTransformConstants.DQ_EVENT_ACTION_CODE_RESPONDER;
+        }
+    	return eventAction;
     }
 }

@@ -107,8 +107,8 @@ public class DocumentRetrieveTransformsTest {
         docReqMessage.setAssertion(assertion);
         docReqMessage.setRetrieveDocumentSetRequest(message);
         logMessage.setMessage(docReqMessage);
-        logMessage.setDirection("inbound");
-        logMessage.setInterface("nhin");
+//        logMessage.setDirection("inbound");
+//        logMessage.setInterface("nhin");
 
         AuditData auditData = new AuditData();
         auditData.setReceiverPatientId("999999");
@@ -127,12 +127,14 @@ public class DocumentRetrieveTransformsTest {
                 .setParticipantObjectID(auditData.getReceiverPatientId() + "^^^&" + home.getHomeCommunityId() + "&ISO");
         expResult.getParticipantObjectIdentification().add(partObjId);
         EventIdentificationType eventId = new EventIdentificationType();
-        eventId.setEventActionCode(AuditDataTransformConstants.EVENT_ACTION_CODE_CREATE);
+        eventId.setEventActionCode(AuditDataTransformConstants.EVENT_ACTION_CODE_READ);
         expResult.setEventIdentification(eventId);
         LogEventRequestType expected = new LogEventRequestType();
         expected.setAuditMessage(expResult);
         LogEventRequestType result = DocumentRetrieveTransforms.transformDocRetrieveReq2AuditMsg(logMessage);
 
+        assertEquals(expected.getAuditMessage().getActiveParticipant().get(0).getUserName(), result.getAuditMessage()
+                .getActiveParticipant().get(0).getUserName());
         // assertEquals(expected.getAuditMessage().getAuditSourceIdentification().get(0).getAuditEnterpriseSiteID(),
         // result.getAuditMessage().getAuditSourceIdentification().get(0).getAuditEnterpriseSiteID());
         assertEquals(expected.getAuditMessage().getEventIdentification().getEventActionCode(), result.getAuditMessage()
@@ -172,8 +174,8 @@ public class DocumentRetrieveTransformsTest {
         docRespMessage.setAssertion(assertion);
         docRespMessage.setRetrieveDocumentSetResponse(message);
         logMessage.setMessage(docRespMessage);
-        logMessage.setDirection("inbound");
-        logMessage.setInterface("nhin");
+//        logMessage.setDirection("inbound");
+//        logMessage.setInterface("nhin");
         
         AuditData auditData = new AuditData();
         auditData.setReceiverPatientId("78987");
@@ -198,6 +200,8 @@ public class DocumentRetrieveTransformsTest {
 
         LogEventRequestType result = DocumentRetrieveTransforms.transformDocRetrieveResp2AuditMsg(logMessage);
 
+        assertEquals(expected.getAuditMessage().getActiveParticipant().get(0).getUserName(), result.getAuditMessage()
+                .getActiveParticipant().get(0).getUserName());
         // assertEquals(expected.getAuditMessage().getAuditSourceIdentification().get(0).getAuditEnterpriseSiteID(),
         // result.getAuditMessage().getAuditSourceIdentification().get(0).getAuditEnterpriseSiteID());
         assertEquals(expected.getAuditMessage().getEventIdentification().getEventActionCode(), result.getAuditMessage()

@@ -87,7 +87,6 @@ public class FindAuditEventsTransformsTest {
         auditData.setReceiverPatientId("909090");
         auditData.setMessageType("findAuditEvents");
         message.setPatientId("4321");
-     
 
         UserType userInfo = new UserType();
         home.setHomeCommunityId("2.16.840.1.113883.3.200");
@@ -103,8 +102,8 @@ public class FindAuditEventsTransformsTest {
         FAEMessage.setAssertion(assertion);
         FAEMessage.setFindAuditEvents(message);
         logMessage.setMessage(FAEMessage);
-        logMessage.setDirection("inbound");
-        logMessage.setInterface("nhin");
+//        logMessage.setDirection("inbound");
+//        logMessage.setInterface("nhin");
 
         AuditMessageType expResult = new AuditMessageType();
         AuditMessageType.ActiveParticipant participant = new AuditMessageType.ActiveParticipant();
@@ -125,6 +124,8 @@ public class FindAuditEventsTransformsTest {
 
         LogEventRequestType result = FindAuditEventsTransforms.transformFindAuditEventsReq2AuditMsg(logMessage);
 
+        assertEquals(expected.getAuditMessage().getActiveParticipant().get(0).getUserName(), result.getAuditMessage()
+                .getActiveParticipant().get(0).getUserName());
         assertEquals(expected.getAuditMessage().getAuditSourceIdentification().get(0).getAuditEnterpriseSiteID(),
                 result.getAuditMessage().getAuditSourceIdentification().get(0).getAuditEnterpriseSiteID());
         assertEquals(expected.getAuditMessage().getEventIdentification().getEventActionCode(), result.getAuditMessage()

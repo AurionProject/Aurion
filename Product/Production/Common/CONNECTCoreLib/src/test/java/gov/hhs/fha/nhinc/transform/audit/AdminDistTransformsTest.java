@@ -112,7 +112,7 @@ public class AdminDistTransformsTest {
         assertEquals(NhincConstants.AUDIT_LOG_ENTITY_INTERFACE, result.getInterface());
 
         assertNotNull(result.getAuditMessage());
-        assertEquals(3, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
 
         assertNotNull(result.getAuditMessage().getEventIdentification());
         assertEquals(AuditDataTransformConstants.EVENT_ID_CODE_SYS_NAME_T63, result.getAuditMessage()
@@ -148,7 +148,7 @@ public class AdminDistTransformsTest {
         assertEquals(NhincConstants.AUDIT_LOG_NHIN_INTERFACE, result.getInterface());
 
         assertNotNull(result.getAuditMessage());
-        assertEquals(3, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
 
         assertNotNull(result.getAuditMessage().getEventIdentification());
         assertEquals(AuditDataTransformConstants.EVENT_ID_CODE_SYS_NAME_T63, result.getAuditMessage()
@@ -186,7 +186,7 @@ public class AdminDistTransformsTest {
         assertEquals(NhincConstants.AUDIT_LOG_NHIN_INTERFACE, result.getInterface());
 
         assertNotNull(result.getAuditMessage());
-        assertEquals(3, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
 
         assertNotNull(result.getAuditMessage().getEventIdentification());
         assertEquals(AuditDataTransformConstants.EVENT_ID_CODE_SYS_NAME_T63, result.getAuditMessage()

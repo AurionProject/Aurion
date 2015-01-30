@@ -32,7 +32,6 @@ import gov.hhs.fha.nhinc.messaging.client.CONNECTTestClient;
 import gov.hhs.fha.nhinc.messaging.service.ServiceEndpoint;
 import gov.hhs.fha.nhinc.messaging.service.port.TestServicePortDescriptor;
 import gov.hhs.fha.nhinc.messaging.service.port.TestServicePortType;
-import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 
@@ -50,23 +49,24 @@ public class TimeoutServiceEndpointDecoratorTest {
     @Test
     public void testTimeoutIsSet() {
         CONNECTClient<TestServicePortType> client = createClient();
+
         verifyTimeoutIsSet(client);
     }
 
     public void verifyTimeoutIsSet(CONNECTClient<?> client) {
-        int connectTimeout = getConnectTimeoutFromConfig();
-        int responseTimeout = getResponseTimeoutFromConfig();
+        int timeout = getTimeoutFromConfig();
+        
         Map<String, Object> requestContext = ((javax.xml.ws.BindingProvider) client.getPort()).getRequestContext();        
         HTTPClientPolicy clientPolicy = (HTTPClientPolicy) requestContext.get(HTTPClientPolicy.class.getName());
         
-        assertEquals(connectTimeout, clientPolicy.getConnectionTimeout());
-        assertEquals(responseTimeout, clientPolicy.getReceiveTimeout());
+        assertEquals(timeout, clientPolicy.getConnectionTimeout());
+        assertEquals(timeout, clientPolicy.getReceiveTimeout());
     }
     
-    private int getConnectTimeoutFromConfig() {
+    private int getTimeoutFromConfig() {
         int timeout = 0;
         try {
-            String sValue = PropertyAccessor.getInstance().getProperty(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.DEFAULT_CONNECT_TIMEOUT);
+            String sValue = PropertyAccessor.getInstance().getProperty(TimeoutServiceEndpointDecorator.CONFIG_KEY_TIMEOUT);
             if (NullChecker.isNotNullish(sValue)) {
                 timeout = Integer.parseInt(sValue);
             }
@@ -76,18 +76,6 @@ public class TimeoutServiceEndpointDecoratorTest {
         return timeout;
     }
 
-    private int getResponseTimeoutFromConfig() {
-        int timeout = 0;
-        try {
-            String sValue = PropertyAccessor.getInstance().getProperty(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.DEFAULT_RESPONSE_TIMEOUT);
-            if (NullChecker.isNotNullish(sValue)) {
-                timeout = Integer.parseInt(sValue);
-            }
-        } catch (Exception ex) {
-            // Do Nothing
-        }
-        return timeout;
-    }
     private CONNECTClient<TestServicePortType> createClient() {
         CONNECTTestClient<TestServicePortType> testClient = new CONNECTTestClient<TestServicePortType>(
                 new TestServicePortDescriptor());

@@ -28,6 +28,12 @@
  */
 package gov.hhs.fha.nhinc.transform.audit;
 
+import com.services.nhinc.schema.auditmessage.AuditMessageType;
+import com.services.nhinc.schema.auditmessage.AuditMessageType.ActiveParticipant;
+import com.services.nhinc.schema.auditmessage.AuditSourceIdentificationType;
+import com.services.nhinc.schema.auditmessage.CodedValueType;
+import com.services.nhinc.schema.auditmessage.EventIdentificationType;
+import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationType;
 import gov.hhs.fha.nhinc.common.auditlog.LogEventRequestType;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
@@ -36,15 +42,12 @@ import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 import gov.hhs.fha.nhinc.transform.marshallers.JAXBContextHandler;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hl7.v3.CommunityPRPAIN201306UV02ResponseType;
@@ -65,17 +68,15 @@ import org.hl7.v3.RespondingGatewayPRPAIN201305UV02RequestType;
 import org.hl7.v3.RespondingGatewayPRPAIN201306UV02RequestType;
 import org.hl7.v3.RespondingGatewayPRPAIN201306UV02ResponseType;
 
-import com.services.nhinc.schema.auditmessage.AuditMessageType;
-import com.services.nhinc.schema.auditmessage.AuditMessageType.ActiveParticipant;
-import com.services.nhinc.schema.auditmessage.CodedValueType;
-import com.services.nhinc.schema.auditmessage.EventIdentificationType;
-import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationType;
-
 /**
  *
  * @author shawc
  *
- * @author rhaslam
+ * Note: requirements for the LogEventRequestType "Direction", required = true "Interface", required = true
+ * "EventIdentification", required = true "ActiveParticipant", required = true "AuditSourceIdentification", required =
+ * true "ParticipantObjectIdentification", required = false
+ *
+ @author rhaslam
  * The specification used here:
  *	IHE IT Infrastructure Technical Framework Supplement Cross-Community Patient Discovery (XCPD) August 31, 2012
  *	Section 3.55.5.1 Security Audit Considerations
@@ -90,62 +91,64 @@ public class PatientDiscoveryTransforms {
      * needed for the audit log up to the caller.
      *
      * @param oPatientDiscoveryRequestMessage
-     * @param assertion
+     * @param oAssertion
      * @param direction
      * @param _interface
+     * @param _type
+     * @param _process
      * @return
      */
     protected LogEventRequestType transformPRPAIN201305RequestToAuditMsg(
-        PRPAIN201305UV02 oPatientDiscoveryRequestMessage, AssertionType assertion, String direction,
-        String _interface) {
+        PRPAIN201305UV02 oPatientDiscoveryRequestMessage, AssertionType oAssertion, String direction,
+        String _interface, String _type, String _process) {
         LogEventRequestType oReturnLogEventRequestType = null;
-        AuditMessageType auditMsg = new AuditMessageType();
-        
+
+        AuditMessageType oAuditMessageType = null;
+
         addLogDebug("*********************************************************");
         addLogDebug("Entering transformPRPAIN201305RequestToAuditMsg() method.");
         addLogDebug("*********************************************************");
 
+        oAuditMessageType = new AuditMessageType();
+
         // check to see that the required fields are not null
-        boolean bRequiredFieldsAreNull = areRequired201305fieldsNull(oPatientDiscoveryRequestMessage, assertion);
+        boolean bRequiredFieldsAreNull = areRequired201305fieldsNull(oPatientDiscoveryRequestMessage, oAssertion);
         if (bRequiredFieldsAreNull) {
             // TODO add a unit test case...
-            addLogError("PatientDiscoveryTransforms.transformPRPAIN201305RequestToAuditMsg(): One or more of the required fields needed to transform to an audit message request were null. No audit message logged.");
+            addLogError("One or more of the required fields needed to transform to an audit message request were null.");
             return null;
-        }
+        } // else continue
 
         // Extract UserInfo from request assertion
-        UserType userInfo = assertion.getUserInfo();// new UserType();
+        UserType oUserInfo = oAssertion.getUserInfo();// new UserType();
 
         oReturnLogEventRequestType = new LogEventRequestType();
 
+        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
+        
         // Create EventIdentification
         CodedValueType eventID = getCodedValueTypeFor201305UV();
         CodedValueType eventType = getCodedValueForEventType();
-        
-        EventIdentificationType oEventIdentificationType = AuditDataTransformHelper.createEventIdentification(
-                AuditDataTransformConstants.PD_REQUEST_EVENT_ACTION_CODE,
-                AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS, 
-                eventID, 
-                eventType);
-        
-        auditMsg.setEventIdentification(oEventIdentificationType);
-        
-        addLogDebug("Audit record EventIdentificationType.getEventActionCode(): " + oEventIdentificationType.getEventActionCode());
 
-        // Create Active Participant Section
-        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
+        EventIdentificationType oEventIdentificationType = getEventIdentificationType(eventID, isSender, eventType);
+        oAuditMessageType.setEventIdentification(oEventIdentificationType);
+        addLogDebug("Audit record EventIdentificationType.getEventActionCode(): "
+            + oEventIdentificationType.getEventActionCode());
+
+        /* Create Active Participant Section */
         boolean isRecipient = isSender ? false : true;
-       
-        if (userInfo != null) {
-            ActiveParticipant participant = AuditDataTransformHelper.createActiveParticipantForHuman(userInfo);
-            auditMsg.getActiveParticipant().add(participant);
+        if (oUserInfo != null) {
+            ActiveParticipant participant = AuditDataTransformHelper.createActiveParticipantForHuman(oUserInfo);
+            oAuditMessageType.getActiveParticipant().add(participant);
+            addLogDebug("Audit record AuditMessageType.getActiveParticipant().get(0).getUserName(): "
+                + oAuditMessageType.getActiveParticipant().get(0).getUserName());
         }
 
         ActiveParticipant source = AuditDataTransformHelper.createActiveParticipantSource(isSender, null);
-        auditMsg.getActiveParticipant().add(source);
+        oAuditMessageType.getActiveParticipant().add(source);
         
-        ActiveParticipant destination = AuditDataTransformHelper.createActiveParticipantDestination(assertion.getSamlAuthnStatement(), isRecipient);
-        auditMsg.getActiveParticipant().add(destination);
+        ActiveParticipant destination = AuditDataTransformHelper.createActiveParticipantDestination(oAssertion.getSamlAuthnStatement(), isRecipient);
+        oAuditMessageType.getActiveParticipant().add(destination);
 
 
 
@@ -175,15 +178,15 @@ public class PatientDiscoveryTransforms {
 	        		sPatientId,
 	        		null);
 	
-	        auditMsg.getParticipantObjectIdentification().add(partObjId);
+	        oAuditMessageType.getParticipantObjectIdentification().add(partObjId);
         }
         */
         /*
          * Create the Community ParticipantObjectIdentification record 
          */
-        if (userInfo != null && userInfo.getOrg()!= null) {
-	        ParticipantObjectIdentificationType communityRecord = AuditDataTransformHelper.createParticipantCommunityRecordFromUser(userInfo);
-	        auditMsg.getParticipantObjectIdentification().add(communityRecord);
+        if (oUserInfo != null && oUserInfo.getOrg()!= null) {
+	        ParticipantObjectIdentificationType communityRecord = AuditDataTransformHelper.createParticipantCommunityRecordFromUser(oUserInfo);
+	        oAuditMessageType.getParticipantObjectIdentification().add(communityRecord);
         }
         
         // Create Query Parameters Entry for ParticipantObjectIdentification
@@ -214,10 +217,10 @@ public class PatientDiscoveryTransforms {
 	        		AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_SYSTEM,
 	        		AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_ROLE_QUERY,
 	        		queryObjectType,
-	        		assertion.getMessageId(),
+	        		oAssertion.getMessageId(),
 	        		queryParams);
 	
-	        auditMsg.getParticipantObjectIdentification().add(participantObject);
+	        oAuditMessageType.getParticipantObjectIdentification().add(participantObject);
         }
         
         /* 
@@ -228,8 +231,9 @@ public class PatientDiscoveryTransforms {
         String messageId = null;
         messageBytes = marshallPatientDiscoveryMessage(oPatientDiscoveryRequestMessage);
 
-        messageId = assertion.getMessageId();
+        messageId = oAssertion.getMessageId();
         
+        // Put the contents of the actual message into the Audit Log Message
         if (messageBytes != null && messageBytes.length > 0){
     		CodedValueType dataTransportType = AuditDataTransformHelper.getDataTransportParticipantRoleIdCodedValue();
 	        ParticipantObjectIdentificationType dataObject = AuditDataTransformHelper.createParticipantObjectIdentification(
@@ -238,11 +242,11 @@ public class PatientDiscoveryTransforms {
 	        		dataTransportType,
 	        		messageId,
 	        		messageBytes);
-	        auditMsg.getParticipantObjectIdentification().add(dataObject);
+	        oAuditMessageType.getParticipantObjectIdentification().add(dataObject);
         }
 
         
-        oReturnLogEventRequestType.setAuditMessage(auditMsg);
+        oReturnLogEventRequestType.setAuditMessage(oAuditMessageType);
         oReturnLogEventRequestType.setDirection(direction);
         oReturnLogEventRequestType.setInterface(_interface);
 
@@ -265,59 +269,55 @@ public class PatientDiscoveryTransforms {
      * needed for the audit log up to the caller.
      *
      * @param oPatientDiscoveryResponseMessage
-     * @param assertion
+     * @param oAssertion
      * @param direction
      * @param _interface
      * @param _type
      * @return
      */
     protected LogEventRequestType transformPRPAIN201306ResponseToAuditMsg(
-        PRPAIN201306UV02 oPatientDiscoveryResponseMessage, AssertionType assertion, String direction,
-        String _interface) {
+        PRPAIN201306UV02 oPatientDiscoveryResponseMessage, AssertionType oAssertion, String direction,
+        String _interface, String _type) {
         LogEventRequestType oReturnLogEventRequestType = null;
-        AuditMessageType auditMsg = new AuditMessageType();;
-//        PRPAIN201306UV oPatientDiscoveryResponseMessage = null;
+        AuditMessageType oAuditMessageType = null;
 
         addLogInfo("******************************************************************");
         addLogInfo("Entering transformPRPAIN201306ResponseToAuditMsg() method.");
         addLogInfo("******************************************************************");
 
         // check to see that the required fields are not null
-        boolean bRequiredFieldsAreNull = areRequired201306fieldsNull(oPatientDiscoveryResponseMessage, assertion);
+        boolean bRequiredFieldsAreNull = areRequired201306fieldsNull(oPatientDiscoveryResponseMessage, oAssertion);
         if (bRequiredFieldsAreNull) {
             addLogError("One or more of the required fields needed to transform to an audit message request were null.");
             return null;
         } // else continue
 
+        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
+        
         // Extract UserInfo from request assertion
-        UserType userInfo = assertion.getUserInfo();
+        UserType oUserInfo = oAssertion.getUserInfo();
 
+        oAuditMessageType = new AuditMessageType();
         oReturnLogEventRequestType = new LogEventRequestType();
 
         CodedValueType eventID = getCodedValueTypeFor201306UV();
         CodedValueType eventType = getCodedValueForEventType();
-        EventIdentificationType oEventIdentificationType = AuditDataTransformHelper.createEventIdentification(
-                AuditDataTransformConstants.PD_RESPONSE_EVENT_ACTION_CODE,
-                AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS, 
-                eventID, 
-                eventType);
-        
-        auditMsg.setEventIdentification(oEventIdentificationType);
+        EventIdentificationType oEventIdentificationType = getEventIdentificationType(eventID, isSender, eventType);
+        oAuditMessageType.setEventIdentification(oEventIdentificationType);
 
         // Create Active Participant Section
-        boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
         boolean isRecipient = isSender ? false : true;
        
-        if (userInfo != null) {
-            ActiveParticipant participant = AuditDataTransformHelper.createActiveParticipantForHuman(userInfo);
-            auditMsg.getActiveParticipant().add(participant);
+        if (oUserInfo != null) {
+            ActiveParticipant participant = AuditDataTransformHelper.createActiveParticipantForHuman(oUserInfo);
+            oAuditMessageType.getActiveParticipant().add(participant);
         }
 
         ActiveParticipant source = AuditDataTransformHelper.createActiveParticipantSource(isSender, null);
-        auditMsg.getActiveParticipant().add(source);
+        oAuditMessageType.getActiveParticipant().add(source);
         
-        ActiveParticipant destination = AuditDataTransformHelper.createActiveParticipantDestination(assertion.getSamlAuthnStatement(), isRecipient);
-        auditMsg.getActiveParticipant().add(destination);
+        ActiveParticipant destination = AuditDataTransformHelper.createActiveParticipantDestination(oAssertion.getSamlAuthnStatement(), isRecipient);
+        oAuditMessageType.getActiveParticipant().add(destination);
         
         /* Get Composite Patient Id */
         String sCommunityId = "";
@@ -335,9 +335,9 @@ public class PatientDiscoveryTransforms {
         /*
          * Create the Community ParticipantObjectIdentification record 
          */
-        if (userInfo != null && userInfo.getOrg()!= null) {
-	        ParticipantObjectIdentificationType communityRecord = AuditDataTransformHelper.createParticipantCommunityRecordFromUser(userInfo);
-	        auditMsg.getParticipantObjectIdentification().add(communityRecord);
+        if (oUserInfo != null && oUserInfo.getOrg()!= null) {
+	        ParticipantObjectIdentificationType communityRecord = AuditDataTransformHelper.createParticipantCommunityRecordFromUser(oUserInfo);
+	        oAuditMessageType.getParticipantObjectIdentification().add(communityRecord);
         }
 
         /* Assign Patient ParticipationObjectIdentification - PATIENT*/
@@ -352,7 +352,7 @@ public class PatientDiscoveryTransforms {
 	        		sPatientId,
 	        		null);
 	
-	        auditMsg.getParticipantObjectIdentification().add(partObjId);
+	        oAuditMessageType.getParticipantObjectIdentification().add(partObjId);
         }
         
         // A successful patient discovery response does echo back the Query Parameters
@@ -383,10 +383,10 @@ public class PatientDiscoveryTransforms {
 	        		AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_SYSTEM,
 	        		AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_ROLE_QUERY,
 	        		queryObjectType,
-	        		assertion.getMessageId(),
+	        		oAssertion.getMessageId(),
 	        		queryParams);
 	
-	        auditMsg.getParticipantObjectIdentification().add(participantObject);
+	        oAuditMessageType.getParticipantObjectIdentification().add(participantObject);
         }
         
         /* 
@@ -398,7 +398,7 @@ public class PatientDiscoveryTransforms {
         ByteArrayOutputStream baOutStrm = new ByteArrayOutputStream();
         messageBytes = marshallPatientDiscoveryMessage(oPatientDiscoveryResponseMessage);
 
-        messageId = assertion.getMessageId();
+        messageId = oAssertion.getMessageId();
         
         if (messageBytes != null && messageBytes.length > 0){
     		CodedValueType dataTransportType = AuditDataTransformHelper.getDataTransportParticipantRoleIdCodedValue();
@@ -408,14 +408,14 @@ public class PatientDiscoveryTransforms {
 	        		dataTransportType,
 	        		messageId,
 	        		messageBytes);
-	        auditMsg.getParticipantObjectIdentification().add(dataObject);
+	        oAuditMessageType.getParticipantObjectIdentification().add(dataObject);
         }
         
         addLogInfo("******************************************************************");
         addLogInfo("Exiting transformPRPAIN201306ResponseToAuditMsg() method.");
         addLogInfo("******************************************************************");
 
-        oReturnLogEventRequestType.setAuditMessage(auditMsg);
+        oReturnLogEventRequestType.setAuditMessage(oAuditMessageType);
         oReturnLogEventRequestType.setDirection(direction);
         oReturnLogEventRequestType.setInterface(_interface);
 
@@ -431,12 +431,16 @@ public class PatientDiscoveryTransforms {
      * this method tranforms a patient discovery request from an inbound entity into an audit log message.
      *
      * @param oRequest
-     * @param assertion
+     * @param oAssertion
      * @param direction
      * @param _interface
+     * @param _type
+     * @param _process
      * @return <code>LogEventRequestType</code>
      */
-    public LogEventRequestType transformEntityPRPAIN201305RequestToAuditMsg(RespondingGatewayPRPAIN201305UV02RequestType oRequest, AssertionType assertion, String direction, String _interface) {
+    public LogEventRequestType transformEntityPRPAIN201305RequestToAuditMsg(
+        RespondingGatewayPRPAIN201305UV02RequestType oRequest, AssertionType oAssertion, String direction,
+        String _interface, String _type, String _process) {
         LogEventRequestType oReturnLogEventRequestType = null;
         PRPAIN201305UV02 oPatientDiscoveryRequestMessage = null;
 
@@ -451,12 +455,12 @@ public class PatientDiscoveryTransforms {
             oPatientDiscoveryRequestMessage = oRequest.getPRPAIN201305UV02();
         }
 
-        if ((oPatientDiscoveryRequestMessage == null) && (assertion == null)) {
+        if ((oPatientDiscoveryRequestMessage == null) && (oAssertion == null)) {
             addLogError("The Patient Discovery request did not have a PRPAIN201305UV object or an AssertionType object.");
             return null;
         } else {
             oReturnLogEventRequestType = transformPRPAIN201305RequestToAuditMsg(oPatientDiscoveryRequestMessage,
-                assertion, direction, _interface);
+                oAssertion, direction, _interface, _type, _process);
         }
 
         if (oReturnLogEventRequestType == null) {
@@ -479,13 +483,15 @@ public class PatientDiscoveryTransforms {
      * this method tranforms a patient discovery request from an inbound NHIN into an audit log message.
      *
      * @param oRequest
-     * @param assertion
+     * @param oAssertion
      * @param direction
      * @param _interface
+     * @param _type
+     * @param _process
      * @return <code>LogEventRequestType</code>
      */
     public LogEventRequestType transformNhinPRPAIN201305RequestToAuditMsg(PRPAIN201305UV02 oRequest,
-        AssertionType assertion, String direction, String _interface) {
+        AssertionType oAssertion, String direction, String _interface, String _type, String _process) {
         LogEventRequestType oReturnLogEventRequestType = null;
 
         addLogInfo("*************************************************************");
@@ -495,14 +501,15 @@ public class PatientDiscoveryTransforms {
         if (oRequest == null) {
             addLogError("The incomming Patient Discovery request message was null.");
             return null;
-        } //else continue
+        } // else continue
 
-        if (assertion == null) {
+        if (oAssertion == null) {
             addLogError("The AssertionType object was null.");
             return null;
-        }
-        oReturnLogEventRequestType = transformPRPAIN201305RequestToAuditMsg(oRequest, assertion, direction, _interface);
+        } // else continue
 
+        oReturnLogEventRequestType = transformPRPAIN201305RequestToAuditMsg(oRequest, oAssertion, direction,
+            _interface, _type, _process);
 
         if (oReturnLogEventRequestType == null) {
             addLogError("There was a problem translating the request into an audit log request object.");
@@ -525,9 +532,12 @@ public class PatientDiscoveryTransforms {
      * @param oAssertion
      * @param direction
      * @param _interface
+     * @param _type
+     * @param _process
      * @return <code>LogEventRequestType</code>
      */
-    public LogEventRequestType transformAdapterPRPAIN201305RequestToAuditMsg(PRPAIN201305UV02 oRequest, AssertionType oAssertion, String direction, String _interface) {
+    public LogEventRequestType transformAdapterPRPAIN201305RequestToAuditMsg(PRPAIN201305UV02 oRequest,
+        AssertionType oAssertion, String direction, String _interface, String _type, String _process) {
         LogEventRequestType oReturnLogEventRequestType = null;
 
         addLogInfo("****************************************************************");
@@ -537,15 +547,15 @@ public class PatientDiscoveryTransforms {
         if (oRequest == null) {
             addLogError("The incomming Patient Discovery request message was null.");
             return null;
-        } //else continue
+        } // else continue
 
         if (oAssertion == null) {
             addLogError("The AssertionType object was null.");
             return null;
-        } //else continue
+        } // else continue
 
-        oReturnLogEventRequestType = transformPRPAIN201305RequestToAuditMsg(oRequest, oAssertion, direction, _interface);
-
+        oReturnLogEventRequestType = transformPRPAIN201305RequestToAuditMsg(oRequest, oAssertion, direction,
+            _interface, _type, _process);
 
         if (oReturnLogEventRequestType == null) {
             addLogError("There was a problem translating the request into an audit log request object.");
@@ -566,10 +576,13 @@ public class PatientDiscoveryTransforms {
      * @param oRequest
      * @param oAssertion
      * @param direction
+     * @param _interface
+     * @param _type
      * @return <code>LogEventRequestType</code>
      */
     public LogEventRequestType transformEntityPRPAIN201306ResponseToAuditMsg(
-        List<CommunityPRPAIN201306UV02ResponseType> oRequest, AssertionType oAssertion, String direction, String _interface) {
+        List<CommunityPRPAIN201306UV02ResponseType> oRequest, AssertionType oAssertion, String direction,
+        String _interface, String _type) {
 
         addLogInfo("****************************************************************");
         addLogInfo("Entering transformEntityPRPAIN201306ResponseToAuditMsg() method.");
@@ -578,7 +591,8 @@ public class PatientDiscoveryTransforms {
         LogEventRequestType oReturnLogEventRequestType = null;
 
         for (CommunityPRPAIN201306UV02ResponseType response : oRequest) {
-            oReturnLogEventRequestType = transformNhinPRPAIN201306ResponseToAuditMsg(response.getPRPAIN201306UV02(), oAssertion, direction, _interface);
+            oReturnLogEventRequestType = transformNhinPRPAIN201306ResponseToAuditMsg(response.getPRPAIN201306UV02(),
+                oAssertion, direction, _interface, _type);
 
         }
 
@@ -610,7 +624,7 @@ public class PatientDiscoveryTransforms {
         LogEventRequestType oReturnLogEventRequestType = null;
 
         oReturnLogEventRequestType = transformNhinPRPAIN201306ResponseToAuditMsg(oRequest.getPRPAIN201306UV02(),
-            oAssertion, direction, _interface);
+            oAssertion, direction, _interface, _type);
 
         addLogInfo("********************************************************************");
         addLogInfo("Exiting transformEntityPRPAIN201306AsyncResponseToAuditMsg() method.");
@@ -626,9 +640,12 @@ public class PatientDiscoveryTransforms {
      * @param oAssertion
      * @param direction
      * @param _interface
+     * @param _type
      * @return <code>LogEventRequestType</code>
      */
-    public LogEventRequestType transformEntityPRPAIN201306ResponseToAuditMsg(RespondingGatewayPRPAIN201306UV02ResponseType oRequest, AssertionType oAssertion, String direction, String _interface) {
+    public LogEventRequestType transformEntityPRPAIN201306ResponseToAuditMsg(
+        RespondingGatewayPRPAIN201306UV02ResponseType oRequest, AssertionType oAssertion, String direction,
+        String _interface, String _type) {
         LogEventRequestType oReturnLogEventRequestType = null;
         List<CommunityPRPAIN201306UV02ResponseType> communityResponses = null;
 
@@ -652,7 +669,8 @@ public class PatientDiscoveryTransforms {
             addLogError("The assertion object parameter was null.");
             return null;
         } else {
-            oReturnLogEventRequestType = transformEntityPRPAIN201306ResponseToAuditMsg(communityResponses, oAssertion, direction, _interface);
+            oReturnLogEventRequestType = transformEntityPRPAIN201306ResponseToAuditMsg(communityResponses, oAssertion,
+                direction, _interface, _type);
         }
 
         if (oReturnLogEventRequestType == null) {
@@ -674,10 +692,11 @@ public class PatientDiscoveryTransforms {
      * @param oAssertion
      * @param direction
      * @param _interface
+     * @param _type
      * @return <code>LogEventRequestType</code>
      */
     public LogEventRequestType transformNhinPRPAIN201306ResponseToAuditMsg(PRPAIN201306UV02 oResponseMessage,
-        AssertionType oAssertion, String direction, String _interface) {
+        AssertionType oAssertion, String direction, String _interface, String _type) {
         LogEventRequestType oReturnLogEventRequestType = null;
 
         addLogInfo("**************************************************************");
@@ -694,7 +713,7 @@ public class PatientDiscoveryTransforms {
             return null;
         } else {
             oReturnLogEventRequestType = transformPRPAIN201306ResponseToAuditMsg(oResponseMessage, oAssertion,
-                direction, _interface);
+                direction, _interface, _type);
         }
 
         if (oReturnLogEventRequestType == null) {
@@ -719,6 +738,7 @@ public class PatientDiscoveryTransforms {
      * @param oAssertion
      * @param direction
      * @param _interface
+     * @param _type
      * @return <code>LogEventRequestType</code>
      */
     public LogEventRequestType transformAdapterPRPAIN201306ResponseToAuditMsg(PRPAIN201306UV02 oResponseMessage,
@@ -739,7 +759,7 @@ public class PatientDiscoveryTransforms {
             return null;
         } else {
             oReturnLogEventRequestType = transformPRPAIN201306ResponseToAuditMsg(oResponseMessage, oAssertion,
-                direction, _interface);
+                direction, _interface, _type);
         }
 
         if (oReturnLogEventRequestType == null) {
@@ -763,6 +783,12 @@ public class PatientDiscoveryTransforms {
         AuditMessageType.ActiveParticipant participant = AuditDataTransformHelper.createActiveParticipantForHuman(oUserInfo);
         return participant;
     }
+
+//    protected AuditSourceIdentificationType getAuditSourceIdentificationType(String sCommunityId, String sCommunityName) {
+//        AuditSourceIdentificationType auditSource = AuditDataTransformHelper.createAuditSourceIdentification(
+//            sCommunityId, sCommunityName);
+//        return auditSource;
+//    }
 
     protected CodedValueType getCodedValueTypeFor201305UV() {
        CodedValueType eventID = AuditDataTransformHelper.createCodedValue(
@@ -802,6 +828,21 @@ public class PatientDiscoveryTransforms {
     protected String getCompositePatientId(String sAssigningAuthId, String sPatientId) {
         sPatientId = AuditDataTransformHelper.createCompositePatientId(sAssigningAuthId, sPatientId);
         return sPatientId;
+    }
+
+    protected EventIdentificationType getEventIdentificationType(CodedValueType eventID, boolean isSender, CodedValueType eventType) {
+        
+    	String actionCode = null;
+    	if (isSender) {
+    		actionCode = AuditDataTransformConstants.PD_EVENT_ACTION_CODE_INITIATOR;
+    	}
+    	else {
+    		actionCode = AuditDataTransformConstants.PD_EVENT_ACTION_CODE_RESPONDER;
+    	}
+    	EventIdentificationType oEventIdentificationType = AuditDataTransformHelper.createEventIdentification(
+    		actionCode,
+            AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS, eventID, eventType);
+        return oEventIdentificationType;
     }
 
     protected byte[] marshallPatientDiscoveryMessage(Object oPatientDiscoveryMessage)
@@ -864,20 +905,17 @@ public class PatientDiscoveryTransforms {
     }
 
     /**
-     * This method checks to see if all of the audit log request values are
-     * in the patient discovery request.
+     * This method checks to see if all of the audit log request values are in the patient discovery request.
      *
-     * Note: requirements for the LogEventRequestType
-     * "Direction", required = true
-     * "Interface", required = true
-     * "EventIdentification", required = true
-     * "ActiveParticipant", required = true
-     * "ParticipantObjectIdentification", required = false
+     * Note: requirements for the LogEventRequestType "Direction", required = true "Interface", required = true
+     * "EventIdentification", required = true "ActiveParticipant", required = true "AuditSourceIdentification", required
+     * = true "ParticipantObjectIdentification", required = false
      *
      * @param oPatientDiscoveryRequestMessage
      * @return
      */
-    protected boolean areRequired201305fieldsNull(PRPAIN201305UV02 oPatientDiscoveryRequestMessage, AssertionType oAssertion) {
+    protected boolean areRequired201305fieldsNull(PRPAIN201305UV02 oPatientDiscoveryRequestMessage,
+        AssertionType oAssertion) {
         boolean bReturnVal = false;
 
         // check the userInfo object from the assertion object
@@ -887,6 +925,20 @@ public class PatientDiscoveryTransforms {
             bReturnVal = true;
             return true;
         }
+
+        // Create EventIdentification - values are not comming from the request, they are internal to this class
+
+        // Create Active Participant Section - comes from the UserType/UserInfo object which is checked earlier
+
+        // Assign AuditSourceIdentification - patient id may be blank
+        // II oII = getHL7IdentifiersFromRequest(oPatientDiscoveryRequestMessage);
+        // if (oII == null)
+        // {
+        // return true; //error log messages are created from the method above so no need to duplicate here
+        // }
+
+        // AuditSourceIdentification - comes from the UserType/UserInfo object which is checked earlier
+
         return bReturnVal;
     }
 
@@ -902,6 +954,11 @@ public class PatientDiscoveryTransforms {
             return true;
         }
 
+        // Create EventIdentification - values are not comming from the request, they are internal to this class
+
+        // Create Active Participant Section - comes from the UserType/UserInfo object which is checked earlier
+
+        /* Assign AuditSourceIdentification */
         /* If at least one patient match, test for complete unique patient id */
         List<II> oIIs = getHL7IdentitiersFromResponse(oPatientDiscoveryResponseMessage);
         if (oIIs != null && oIIs.size() > 0) {
@@ -917,6 +974,9 @@ public class PatientDiscoveryTransforms {
                 return true;
             }
         }
+
+        // AuditSourceIdentification - comes from the UserType/UserInfo object which is checked earlier
+
         return bReturnVal;
     }
 
@@ -1236,7 +1296,7 @@ public class PatientDiscoveryTransforms {
     protected String getLocalHCID() {
         String hcid = StringUtils.EMPTY;
         try {
-            hcid = PropertyAccessor.getInstance().getProperty(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.HOME_COMMUNITY_ID_PROPERTY);
+            hcid = PropertyAccessor.getInstance().getProperty(NhincConstants.HOME_COMMUNITY_ID_PROPERTY);
         } catch (PropertyAccessException e) {
             LOG.error("Could not retrieve local HCID from gateway.properties", e);
         }

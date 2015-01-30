@@ -1,28 +1,28 @@
 /*
- * Copyright (c) 2012, United States Government, as represented by the Secretary of Health and Human Services. 
- * All rights reserved. 
+ * Copyright (c) 2012, United States Government, as represented by the Secretary of Health and Human Services.
+ * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met: 
- *     * Redistributions of source code must retain the above 
- *       copyright notice, this list of conditions and the following disclaimer. 
- *     * Redistributions in binary form must reproduce the above copyright 
- *       notice, this list of conditions and the following disclaimer in the documentation 
- *       and/or other materials provided with the distribution. 
- *     * Neither the name of the United States Government nor the 
- *       names of its contributors may be used to endorse or promote products 
- *       derived from this software without specific prior written permission. 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above
+ *       copyright notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the documentation
+ *       and/or other materials provided with the distribution.
+ *     * Neither the name of the United States Government nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE UNITED STATES GOVERNMENT BE LIABLE FOR ANY 
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE UNITED STATES GOVERNMENT BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package gov.hhs.fha.nhinc.patientcorrelation.nhinc.dao;
 
@@ -33,7 +33,6 @@ import gov.hhs.fha.nhinc.patientcorrelation.nhinc.persistence.HibernateUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -41,7 +40,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 
 /**
- * 
+ *
  * @author rayj
  */
 public class Retriever {
@@ -49,7 +48,7 @@ public class Retriever {
     private static final Logger LOG = Logger.getLogger(Retriever.class);
 
     public static List<QualifiedPatientIdentifier> retrievePatientCorrelation(
-            QualifiedPatientIdentifier qualifiedPatientIdentifier, List<String> includeOnlyAssigningAuthorities) {
+        QualifiedPatientIdentifier qualifiedPatientIdentifier, List<String> includeOnlyAssigningAuthorities) {
         List<QualifiedPatientIdentifier> qualifiedPatientIdentifiers = retrievePatientCorrelation(qualifiedPatientIdentifier);
         LOG.info("unfiltered list = " + qualifiedPatientIdentifiers.size() + " record(s)");
         qualifiedPatientIdentifiers = filterByIncludeList(qualifiedPatientIdentifiers, includeOnlyAssigningAuthorities);
@@ -58,7 +57,7 @@ public class Retriever {
     }
 
     private static List<QualifiedPatientIdentifier> filterByIncludeList(
-            List<QualifiedPatientIdentifier> qualifiedPatientIdentifiers, List<String> includeOnlyAssigningAuthorities) {
+        List<QualifiedPatientIdentifier> qualifiedPatientIdentifiers, List<String> includeOnlyAssigningAuthorities) {
         List<QualifiedPatientIdentifier> filteredQualifiedPatientIdentifiers;
 
         if (NullChecker.isNotNullish(includeOnlyAssigningAuthorities)) {
@@ -75,7 +74,7 @@ public class Retriever {
     }
 
     private static boolean isAssigningAuthorityInList(QualifiedPatientIdentifier qualifiedPatientIdentifier,
-            List<String> assigningAuthorities) {
+        List<String> assigningAuthorities) {
         boolean found = false;
         for (String assigningAuthority : assigningAuthorities) {
             if (qualifiedPatientIdentifier.getAssigningAuthorityId().contentEquals(assigningAuthority)) {
@@ -88,14 +87,14 @@ public class Retriever {
     }
 
     public static List<QualifiedPatientIdentifier> retrievePatientCorrelation(
-            QualifiedPatientIdentifier qualifiedPatientIdentifier) {
+        QualifiedPatientIdentifier qualifiedPatientIdentifier) {
         LOG.debug("-- Begin CorrelatedIdentifiersDao.retrieveAllPatientCorrelation() ---");
 
         if (qualifiedPatientIdentifier == null) {
             throw new IllegalArgumentException("Missing required parameter: qualifiedPatientIdentifier");
         } else if (NullChecker.isNullish(qualifiedPatientIdentifier.getAssigningAuthorityId())) {
             throw new IllegalArgumentException(
-                    "Missing required parameter: qualifiedPatientIdentifier.getAssigningAuthorityId");
+                "Missing required parameter: qualifiedPatientIdentifier.getAssigningAuthorityId");
         } else if (NullChecker.isNullish(qualifiedPatientIdentifier.getPatientId())) {
             throw new IllegalArgumentException("Missing required parameter: qualifiedPatientIdentifier.getPatientId");
         }
@@ -120,7 +119,7 @@ public class Retriever {
 
             resultQualifiedPatientIdentifier = new QualifiedPatientIdentifier();
             resultQualifiedPatientIdentifier.setAssigningAuthority(correlatedIdentifiers
-                    .getPatientAssigningAuthorityId());
+                .getPatientAssigningAuthorityId());
             resultQualifiedPatientIdentifier.setPatientId(correlatedIdentifiers.getPatientId());
             if (!AreSame(qualifiedPatientIdentifier, resultQualifiedPatientIdentifier)) {
                 resultQualifiedPatientIdentifiers.add(resultQualifiedPatientIdentifier);
@@ -128,7 +127,7 @@ public class Retriever {
 
             resultQualifiedPatientIdentifier = new QualifiedPatientIdentifier();
             resultQualifiedPatientIdentifier.setAssigningAuthority(correlatedIdentifiers
-                    .getCorrelatedPatientAssigningAuthorityId());
+                .getCorrelatedPatientAssigningAuthorityId());
             resultQualifiedPatientIdentifier.setPatientId(correlatedIdentifiers.getCorrelatedPatientId());
 
             if (!AreSame(qualifiedPatientIdentifier, resultQualifiedPatientIdentifier)) {
@@ -147,11 +146,11 @@ public class Retriever {
 
     private static boolean AreSame(QualifiedPatientIdentifier a, QualifiedPatientIdentifier b) {
         return ((a.getAssigningAuthorityId().contentEquals(b.getAssigningAuthorityId())) && (a.getPatientId()
-                .contentEquals(b.getPatientId())));
+            .contentEquals(b.getPatientId())));
     }
 
     private static List<CorrelatedIdentifiers> unionList(List<CorrelatedIdentifiers> list1,
-            List<CorrelatedIdentifiers> list2) {
+        List<CorrelatedIdentifiers> list2) {
         if (list1 == null) {
             list1 = new ArrayList<CorrelatedIdentifiers>();
         }
@@ -235,9 +234,9 @@ public class Retriever {
 
             if (NullChecker.isNotNullish(correlatedIdentifers.getPatientAssigningAuthorityId())) {
                 LOG.debug("Retrieving by patientAssigningAuthorityId="
-                        + correlatedIdentifers.getPatientAssigningAuthorityId());
+                    + correlatedIdentifers.getPatientAssigningAuthorityId());
                 criteria.add(Expression.eq("patientAssigningAuthorityId",
-                        correlatedIdentifers.getPatientAssigningAuthorityId()));
+                    correlatedIdentifers.getPatientAssigningAuthorityId()));
             }
             if (NullChecker.isNotNullish(correlatedIdentifers.getPatientId())) {
                 LOG.debug("Retrieving by patientId=" + correlatedIdentifers.getPatientId());
@@ -245,9 +244,9 @@ public class Retriever {
             }
             if (NullChecker.isNotNullish(correlatedIdentifers.getCorrelatedPatientAssigningAuthorityId())) {
                 LOG.debug("Retrieving by correlatedPatientAssigningAuthorityId="
-                        + correlatedIdentifers.getCorrelatedPatientAssigningAuthorityId());
+                    + correlatedIdentifers.getCorrelatedPatientAssigningAuthorityId());
                 criteria.add(Expression.eq("correlatedPatientAssigningAuthorityId",
-                        correlatedIdentifers.getCorrelatedPatientAssigningAuthorityId()));
+                    correlatedIdentifers.getCorrelatedPatientAssigningAuthorityId()));
             }
             if (NullChecker.isNotNullish(correlatedIdentifers.getCorrelatedPatientId())) {
                 LOG.debug("Retrieving by correlatedPatientId=" + correlatedIdentifers.getCorrelatedPatientId());
@@ -278,7 +277,7 @@ public class Retriever {
     /**
      * This method removes expired records from the list of records returned from the database and also removes the
      * expired records from the database.
-     * 
+     *
      * @param result List of correlationIdentifiers objects returned from the database
      * @return Returns a list of correlationIdentifiers that have not expired
      */
@@ -293,7 +292,7 @@ public class Retriever {
                 LOG.debug("~~~ expirationDate: " + correlatedIdentifiers.getCorrelationExpirationDate());
 
                 if ((correlatedIdentifiers.getCorrelationExpirationDate() == null)
-                        || (now.before(correlatedIdentifiers.getCorrelationExpirationDate()))) {
+                    || (now.before(correlatedIdentifiers.getCorrelationExpirationDate()))) {
                     LOG.debug("patient correlation record has not expired");
                     modifiedResult.add(correlatedIdentifiers);
                 } else {

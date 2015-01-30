@@ -27,13 +27,14 @@
 
 package gov.hhs.fha.nhinc.messaging.client;
 
+import org.apache.log4j.Logger;
+
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.messaging.service.decorator.SAMLServiceEndpointDecorator;
 import gov.hhs.fha.nhinc.messaging.service.decorator.cxf.SoapHeaderServiceEndPointDecorator;
 import gov.hhs.fha.nhinc.messaging.service.decorator.cxf.WsAddressingServiceEndpointDecorator;
 import gov.hhs.fha.nhinc.messaging.service.port.CachingCXFSecuredServicePortBuilder;
 import gov.hhs.fha.nhinc.messaging.service.port.ServicePortDescriptor;
-import org.apache.log4j.Logger;
 
 /**
  * @author akong
@@ -45,7 +46,7 @@ public class CONNECTCXFClientSecured<T> extends CONNECTCXFClient<T> {
     
     CONNECTCXFClientSecured(ServicePortDescriptor<T> portDescriptor, String url, AssertionType assertion,
             String wsAddressingTo, String SoapHeader) {
-    	super(portDescriptor, url, assertion, new CachingCXFSecuredServicePortBuilder<T>(portDescriptor));
+        super(portDescriptor, url, assertion, new CachingCXFSecuredServicePortBuilder<T>(portDescriptor));
         decorateEndpoint(assertion, wsAddressingTo, portDescriptor.getWSAddressingAction(), SoapHeader, null, null);
 
         serviceEndpoint.configure();
@@ -63,6 +64,7 @@ public class CONNECTCXFClientSecured<T> extends CONNECTCXFClient<T> {
     public T getPort() {
         return serviceEndpoint.getPort();
     }
+
     private void decorateEndpoint(AssertionType assertion, String wsAddressingTo, String wsAddressingActionId,
             String subscriptionId, String targetHomeCommunityId, String serviceName) {
         serviceEndpoint = new SAMLServiceEndpointDecorator<T>(serviceEndpoint, assertion, targetHomeCommunityId,

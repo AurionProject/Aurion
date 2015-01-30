@@ -33,7 +33,6 @@ import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthnStatementType;
 import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
-import gov.hhs.fha.nhinc.util.Base64Coder;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -64,10 +63,13 @@ import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationTyp
  * 
  * @author MFLYNN02
  * @author rhaslam - Updates for the 2013 Message Audit Specifications
+ * @author richard.ettema
  */
 public class AuditDataTransformHelper {
 
     private static final Logger LOG = Logger.getLogger(AuditDataTransformHelper.class);
+
+    private static String ipAddr = null;
 
     // Properties file keys
     private static final String PROPERTY_FILE_NAME_GATEWAY = "gateway";
@@ -118,7 +120,6 @@ public class AuditDataTransformHelper {
             LOG.error("ArrayIndexOutOfBoundsException when createing XMLGregorian Date");
             LOG.error(" message: " + e.getMessage());
         }
-        
         // Set the Event Outcome Indicator
         BigInteger eventOutcomeBig = BigInteger.ZERO;
         if (eventOutcome != null) {
@@ -167,34 +168,36 @@ public class AuditDataTransformHelper {
 
         return eventId;
     }
+
     /**
-     * Create a coded value <code>CodedValueType</code> for an audit log record.
+     * Create the <code>CodedValueType</code> for an audit log record.
      * 
-     * @param eventCode
-     * @param eventCodeSys
-     * @param eventCodeSysName
+     * @param code
+     * @param codeSys
+     * @param codeSysName
      * @param dispName
+     * @param originalText
      * @return <code>CodedValueType</code>
      */
-    public static CodedValueType createCodedValue(String eventCode, String eventCodeSys, String eventCodeSysName, String dispName, String originalText) {
-        CodedValueType cvt = new CodedValueType();
+    public static CodedValueType createCodedValue(String code, String codeSys, String codeSysName, String dispName, String originalText) {
+        CodedValueType codeValueType = new CodedValueType();
 
-        // Set the Coded Value Code
-        cvt.setCode(eventCode);
+        // Set the Code
+        codeValueType.setCode(code);
 
-        // Set the Coded Value CodeSystem
-        cvt.setCodeSystem(eventCodeSys);
+        // Set the Codesystem
+        codeValueType.setCodeSystem(codeSys);
 
-        // Set the Coded Value CodeSystemName
-        cvt.setCodeSystemName(eventCodeSysName);
+        // Set the Codesystem Name
+        codeValueType.setCodeSystemName(codeSysName);
 
-        // Set the Coded Value CodeSystemDisplayName
-        cvt.setDisplayName(dispName);
+        // Set the Display Name
+        codeValueType.setDisplayName(dispName);
         
         // Set the Coded Value originalText
-        cvt.setOriginalText(originalText);
+        codeValueType.setOriginalText(originalText);
 
-        return cvt;
+        return codeValueType;
     }
     
     public static CodedValueType getPatientParticipantRoleIdCodedValue() {
@@ -416,7 +419,6 @@ public class AuditDataTransformHelper {
             Boolean userIsReq) {
         AuditMessageType.ActiveParticipant participant = new AuditMessageType.ActiveParticipant();
 
-        String ipAddr = null;
         if (ipAddr == null) {
             try {
                 ipAddr = InetAddress.getLocalHost().getHostAddress();
@@ -463,10 +465,11 @@ public class AuditDataTransformHelper {
         participant.setNetworkAccessPointID(ipAddr);
 
         // Set the Network Access Point Typecode
-        participant.setNetworkAccessPointTypeCode(AuditDataTransformConstants.NETWORK_ACCESS_POINT_TYPE_CODE_IP);
+        participant.setNetworkAccessPointTypeCode(AuditDataTransformConstants.NETWORK_ACCESSOR_PT_TYPE_CODE_IP);
 
         return participant;
     }
+
     /**
      * Create the <code>AuditMessageType.ActiveParticipant</code> for an audit log record.
      * 
@@ -622,17 +625,27 @@ public class AuditDataTransformHelper {
     	}
     	return null;
     }
-    /*
-    public static ActiveParticipant createActiveParticipant(String userId, String altUserId, String userName, Boolean userIsReq)
-    {
-        ActiveParticipant participant = new ActiveParticipant();
-        String ipAddr = null;
 
-        try {
-            ipAddr = InetAddress.getLocalHost().getHostAddress();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new RuntimeException();
+    /**
+     * Create the <code>AuditMessageType.ActiveParticipant</code> for an audit log record.
+     * 
+     * @param userId
+     * @param altUserId
+     * @param userName
+     * @param userIsReq
+     * @return <code>AuditMessageType.ActiveParticipant</code>
+     */
+    public static AuditMessageType.ActiveParticipant createActiveParticipant(String userId, String altUserId,
+            String userName, Boolean userIsReq) {
+        AuditMessageType.ActiveParticipant participant = new AuditMessageType.ActiveParticipant();
+
+        if (ipAddr == null) {
+            try {
+                ipAddr = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException ex) {
+                LOG.error("UnknownHostException thrown getting local host address.", ex);
+                throw new RuntimeException();
+            }
         }
 
         // Set the User Id
@@ -657,11 +670,11 @@ public class AuditDataTransformHelper {
         participant.setNetworkAccessPointID(ipAddr);
 
         // Set the Network Access Point Typecode
-        participant.setNetworkAccessPointTypeCode(AuditDataTransformConstants.NETWORK_ACCESS_POINT_TYPE_CODE_IP);
+        participant.setNetworkAccessPointTypeCode(AuditDataTransformConstants.NETWORK_ACCESSOR_PT_TYPE_CODE_IP);
 
         return participant;
     }
-	*/
+
     /**
      * Create an <code>AuditSourceIdentificationType</code> based on the user info for an audit log record.
      * 
@@ -674,28 +687,25 @@ public class AuditDataTransformHelper {
      */
     @Deprecated
     public static AuditSourceIdentificationType createAuditSourceIdentificationFromUser(UserType userInfo, CodedValueType auditSourceType) {
-        AuditSourceIdentificationType auditSrcIdentification = null;
+        AuditSourceIdentificationType auditSrcId = new AuditSourceIdentificationType();
 
-        // Home Community ID and name                   
+        // Home Community ID and name
         String communityId = null;
         String communityName = null;
 
-        if (userInfo != null &&
-                userInfo.getOrg() != null) {
-            if (userInfo.getOrg().getHomeCommunityId() != null &&
-                    userInfo.getOrg().getHomeCommunityId().length() > 0) {
+        if (userInfo != null && userInfo.getOrg() != null) {
+            if (userInfo.getOrg().getHomeCommunityId() != null && userInfo.getOrg().getHomeCommunityId().length() > 0) {
                 communityId = userInfo.getOrg().getHomeCommunityId();
             }
 
-            if (userInfo.getOrg().getName() != null &&
-                    userInfo.getOrg().getName().length() > 0) {
+            if (userInfo.getOrg().getName() != null && userInfo.getOrg().getName().length() > 0) {
                 communityName = userInfo.getOrg().getName();
             }
         }
         
-        auditSrcIdentification = createAuditSourceIdentification(communityId, communityName, auditSourceType);
+        auditSrcId = createAuditSourceIdentification(communityId, communityName, auditSourceType);
 
-        return auditSrcIdentification;
+        return auditSrcId;
     }
 
     public static ParticipantObjectIdentificationType createParticipantCommunityRecordFromUser(UserType userInfo) {
@@ -725,6 +735,7 @@ public class AuditDataTransformHelper {
     	communityRecord.setParticipantObjectName(communityName);
         return communityRecord;
     }
+
     /**
      * Create an <code>AuditSourceIdentificationType</code> based on the the gateway properties file
      * 
@@ -761,62 +772,31 @@ public class AuditDataTransformHelper {
      * 
      * @param communityId
      * @param communityName
+     * @param auditSourceType
      * @return <code>AuditSourceIdentificationType</code>
      */
     public static AuditSourceIdentificationType createAuditSourceIdentification(String communityId, String communityName, CodedValueType auditSourceType) {
-        AuditSourceIdentificationType auditSrcIdentification = new AuditSourceIdentificationType();
+        AuditSourceIdentificationType auditSrcId = new AuditSourceIdentificationType();
 
         // Set the Audit Source Id (community id)
         if (communityId != null) {
             if (communityId.startsWith("urn:oid:")) {
-                auditSrcIdentification.setAuditSourceID(communityId.substring(8));
+                auditSrcId.setAuditSourceID(communityId.substring(8));
             } else {
-                auditSrcIdentification.setAuditSourceID(communityId);
+                auditSrcId.setAuditSourceID(communityId);
             }
         }
 
         // If specified, set the Audit Enterprise Site Id (community name)
         if (communityName != null) {
-            auditSrcIdentification.setAuditEnterpriseSiteID(communityName);
+            auditSrcId.setAuditEnterpriseSiteID(communityName);
         }
         
         if (auditSourceType != null) {
-        	auditSrcIdentification.getAuditSourceTypeCode().add(auditSourceType);
+        	auditSrcId.getAuditSourceTypeCode().add(auditSourceType);
         }
 
-        return auditSrcIdentification;
-    }
-
-    /**
-     * Create the <code>ParticipantObjectIdentificationType</code> based on the patient id for an audit log record.
-     * 
-     * @param patientId
-     * @return <code>ParticipantObjectIdentificationType</code>
-     * 
-     * Replaced by createParticipantObjectIdentification()
-     */
-    @Deprecated
-    public static ParticipantObjectIdentificationType createDocumentParticipantObjectIdentification(String documentId) {
-        ParticipantObjectIdentificationType partObjId = new ParticipantObjectIdentificationType();
-
-        // Set the Partipation Object Id (documentId)
-        if (documentId != null) {
-            partObjId.setParticipantObjectID(documentId);
-        }
-
-        // Set the Participation Object Typecode
-        partObjId.setParticipantObjectTypeCode(AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_SYSTEM);
-
-        // Set the Participation Object Typecode Role
-        partObjId
-                .setParticipantObjectTypeCodeRole(AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_ROLE_REPORT);
-
-        // Set the Participation Object Id Type code
-        CodedValueType partObjIdTypeCode = new CodedValueType();
-        partObjIdTypeCode.setCode(AuditDataTransformConstants.PARTICIPANT_DOCUMENT_ID_CODE);
-        partObjId.setParticipantObjectIDTypeCode(partObjIdTypeCode);
-
-        return partObjId;
+        return auditSrcId;
     }
 
     /**
@@ -850,7 +830,39 @@ public class AuditDataTransformHelper {
 	    return partObjId;
 	}
 
-	/**
+    /**
+     * Create the <code>ParticipantObjectIdentificationType</code> based on the patient id for an audit log record.
+     * 
+     * @param patientId
+     * @return <code>ParticipantObjectIdentificationType</code>
+     * 
+     * Replaced by createParticipantObjectIdentification()
+     */
+    @Deprecated
+    public static ParticipantObjectIdentificationType createDocumentParticipantObjectIdentification(String documentId) {
+        ParticipantObjectIdentificationType partObjId = new ParticipantObjectIdentificationType();
+
+        // Set the Partipation Object Id (documentId)
+        if (documentId != null) {
+            partObjId.setParticipantObjectID(documentId);
+        }
+
+        // Set the Participation Object Typecode
+        partObjId.setParticipantObjectTypeCode(AuditDataTransformConstants.PARTICIPANT_OJB_TYPE_CODE_SYSTEM);
+
+        // Set the Participation Object Typecode Role
+        partObjId
+                .setParticipantObjectTypeCodeRole(AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_ROLE_REPORT);
+
+        // Set the Participation Object Id Type code
+        CodedValueType partObjIdTypeCode = new CodedValueType();
+        partObjIdTypeCode.setCode(AuditDataTransformConstants.PARTICIPANT_OJB_ID_TYPE_CODE_REPORTNUM);
+        partObjId.setParticipantObjectIDTypeCode(partObjIdTypeCode);
+
+        return partObjId;
+    }
+
+    /**
      * Write out debug logging statements based on the given <code>AuditMessageType</code> message.
      * 
      * @param message
@@ -911,8 +923,8 @@ public class AuditDataTransformHelper {
     }
 
     /**
-     * This method locates a single External Identifier by its Identification scheme and then extracts the 
-     * value from it.
+     * This method locates a single External Identifier by its Identification scheme and then extracts the value from
+     * it.
      * 
      * @param olExtId The List of external identifiers to be searched.
      * @param sIdentScheme The identification scheme to look for.
@@ -955,7 +967,6 @@ public class AuditDataTransformHelper {
             communityId = userInfo.getOrg().getHomeCommunityId();
         }
         compPatientId = AuditDataTransformHelper.createCompositePatientId(communityId, patientId);
-
 
         return compPatientId;
     }

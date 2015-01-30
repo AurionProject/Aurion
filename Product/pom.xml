@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.aurionproject</groupId>
@@ -12,6 +13,8 @@
     <properties>
         <checkstyle.skip>false</checkstyle.skip>
         <cxf.version>2.7.3</cxf.version>
+        <connect.webservices.version>5.0</connect.webservices.version>
+        <connect.commontypes.version>5.0</connect.commontypes.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <connect.common.properties>Dev</connect.common.properties>
         <skip.cobertura>false</skip.cobertura>
@@ -32,15 +35,51 @@
     </modules>
     <dependencyManagement>
         <dependencies>
+            <!-- Java EE API -->
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>6.0</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- CXF -->
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-bundle</artifactId>
                 <version>${cxf.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.santuario</groupId>
+                        <artifactId>xmlsec</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-jaxws_2.2_spec</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-javamail_1.4_spec</artifactId>
+
+                    </exclusion>
+
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-servlet_3.0_spec</artifactId>
+
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-jms_1.1_spec</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
+
+            <!-- XML -->
             <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>1.2.17</version>
+                <groupId>org.apache.santuario</groupId>
+                <artifactId>xmlsec</artifactId>
+                <version>1.5.5</version>
             </dependency>
             <dependency>
                 <groupId>xerces</groupId>
@@ -48,10 +87,16 @@
                 <version>2.10.0</version>
             </dependency>
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>3.2.1</version>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>2.2.7-b41</version>
             </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-xjc</artifactId>
+                <version>2.2.7-b41</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
@@ -72,12 +117,8 @@
                 <artifactId>spring-web</artifactId>
                 <version>3.0.7.RELEASE</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>3.0.7.RELEASE</version>
-                <scope>test</scope>
-            </dependency>
+
+            <!-- Persistence -->
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate</artifactId>
@@ -96,8 +137,8 @@
                         <artifactId>asm-attrs</artifactId>
                     </exclusion>
                     <exclusion>
-                        <!-- exclude and use <artifactId>cglib-nodep</artifactId> 
-                            to include the asm it needs in a private package space. -->
+                        <!-- exclude and use <artifactId>cglib-nodep</artifactId> to include the asm it needs in a private
+                        package space. -->
                         <groupId>cglib</groupId>
                         <artifactId>cglib</artifactId>
                     </exclusion>
@@ -107,17 +148,12 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
             <dependency>
-                <!-- Used to include the asm it needs in a private package 
-                    space. -->
+                <!-- Used to include the asm it needs in a private package space. -->
                 <groupId>cglib</groupId>
                 <artifactId>cglib-nodep</artifactId>
-                <version>2.1_3</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>1.1.1</version>
+                <version>2.2</version>
             </dependency>
             <dependency>
                 <groupId>org.forgerock.openam</groupId>
@@ -125,16 +161,12 @@
                 <version>10.0.1</version>
             </dependency>
             <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>6.0</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
                 <version>1.4.3</version>
             </dependency>
+
+            <!-- Testing -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -156,15 +188,44 @@
                 <version>2.5.1</version>
             </dependency>
             <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>3.0.7.RELEASE</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Logging -->
+            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
-                <version>1.6.4</version>
+                <version>1.7.0</version>
             </dependency>
-             <dependency>
+            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.6.4</version>
+                <version>1.7.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>1.7.0</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
@@ -185,26 +246,15 @@
                 <artifactId>velocity</artifactId>
                 <version>1.7</version>
             </dependency>
+
+            <!-- Security -->
             <dependency>
                 <groupId>org.owasp.esapi</groupId>
                 <artifactId>esapi</artifactId>
                 <version>2.0.1</version>
             </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>2.2.7-b41</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-xjc</artifactId>
-                <version>2.2.7-b41</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>1.9.0</version>
-            </dependency>
+
+            <!-- Apache Commons -->
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
@@ -219,153 +269,166 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>1.7</version>
-            </dependency>            
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.1</version>
+            </dependency>
+
+            <!-- Mail -->
             <dependency>
                 <groupId>com.icegreen</groupId>
                 <artifactId>greenmail</artifactId>
                 <version>1.3.1b-mbaechler</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>mail</artifactId>
-                <version>1.4.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15</artifactId>
-                <version>1.45</version>
-            </dependency>
+
             <dependency>
                 <groupId>javax.activation</groupId>
                 <artifactId>activation</artifactId>
                 <version>1.1.1</version>
             </dependency>
-			<dependency>
+
+            <!-- JSF -->
+            <dependency>
                 <groupId>com.sun.faces.extensions</groupId>
                 <artifactId>jsf-extensions-dynamic-faces</artifactId>
                 <version>0.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jvnet.wagon-svn</groupId>
+                        <artifactId>wagon-svn</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
-			<dependency>
+            <dependency>
                 <groupId>com.sun.faces.extensions</groupId>
                 <artifactId>jsf-extensions-common</artifactId>
                 <version>0.1</version>
             </dependency>
-                <dependency>
-            <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
-            <artifactId>jsfcl</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
-            <artifactId>appbase</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
-            <artifactId>dataprovider</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
-            <artifactId>errorhandler</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
-            <artifactId>webui-jsf</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
-            <artifactId>webui-jsf-suntheme</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>AurionCommonTypesLib</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>AdapterAuthenticationWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>AdminDistributionWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>AuditRepositoryWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>ComponentWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>ConnectionManagerWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-         <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>DirectWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-         <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>DocRegistryWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>DocRepositoryWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-          <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>DocumentQueryWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>DocumentRetrieveWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-          <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>DocumentSubmissionWebervices</artifactId>
-            <version>5.0</version>
-        </dependency>
-          <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>HIEMWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-         <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>PatientCorrelationWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>PatientDiscoveryWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>PolicyEngineWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>RedactionEngineWebservices</artifactId>
-            <version>5.0</version>
-        </dependency>
+            <dependency>
+                <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
+                <artifactId>jsfcl</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
+                <artifactId>appbase</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
+                <artifactId>dataprovider</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
+                <artifactId>errorhandler</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
+                <artifactId>webui-jsf</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.connectopensource.thirdparty.com.sun.jsf</groupId>
+                <artifactId>webui-jsf-suntheme</artifactId>
+                <version>1.0</version>
+            </dependency>
+
+            <!-- Aurion Modules / Web Services -->
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>AurionCommonTypesLib</artifactId>
+                <version>${connect.commontypes.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>AdapterAuthenticationWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>AdminDistributionWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>AuditRepositoryWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>ComponentWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>ConnectionManagerWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>CORERule2_2_0Webervices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>DirectWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>DocRegistryWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>DocRepositoryWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>DocumentQueryWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>DocumentRetrieveWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>DocumentSubmissionWebervices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>PatientCorrelationWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>PatientDiscoveryWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>PolicyEngineWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>RedactionEngineWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aurionproject</groupId>
+                <artifactId>HIEMWebservices</artifactId>
+                <version>${connect.webservices.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -393,15 +456,13 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-                
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.13</version>
-                <configuration>
-                    <argLine>-XX:MaxPermSize=1012m</argLine>
-                </configuration>
-                   
+                    <configuration>
+                        <argLine>-XX:MaxPermSize=1012m</argLine>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -413,13 +474,11 @@
                     <artifactId>cargo-maven2-plugin</artifactId>
                     <version>1.3.2</version>
                 </plugin>
-               
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
                     <version>2.7.1</version>
                 </plugin>
-              
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
@@ -429,6 +488,37 @@
                             <groupId>org.aurionproject</groupId>
                             <artifactId>build-tools</artifactId>
                             <version>5.1</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <plugins>
+                            <plugin>
+                                <groupId>com.h3xstream.findsecbugs</groupId>
+                                <artifactId>plugin</artifactId>
+                                <version>1.1.0</version>
+                            </plugin>
+                        </plugins>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.redfish4ktc.soapui</groupId>
+                    <artifactId>maven-soapui-extension-plugin</artifactId>
+                    <version>4.5.1.2</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>5.1.6</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.connectopensource</groupId>
+                            <artifactId>CONNECTCommonTypesLib</artifactId>
+                            <version>${connect.commontypes.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.connectopensource</groupId>
+                            <artifactId>FileUtils</artifactId>
+                            <version>4.4.1-SNAPSHOT</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -453,7 +543,7 @@
                     <downloadJavadocs>true</downloadJavadocs>
                     <useProjectReferences>true</useProjectReferences>
                     <projectNameTemplate>[artifactId]-[version]</projectNameTemplate>
-               </configuration>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -469,6 +559,14 @@
                 <configuration>
                     <skipSource>${skip.source}</skipSource>
                     <attach>true</attach>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <!-- use baseVersion instead of unique timestamp version to support skinny WARS -->
+                    <outputFileNameMapping>@{artifactId}@-@{baseVersion}@.@{extension}@</outputFileNameMapping>
                 </configuration>
             </plugin>
         </plugins>
@@ -501,9 +599,23 @@
         </repository>
         <repository>
             <id>sonatype-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>eviwarePluginRepository</id>
+            <url>http://www.soapui.org/repository/maven2/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
     <profiles>
         <profile>
             <id>quick</id>

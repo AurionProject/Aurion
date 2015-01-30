@@ -92,7 +92,16 @@ public class ConfigurationManager {
 
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            
+            final String FEATURE = "http://xml.org/sax/features/external-general-entities";
+            dbf.setFeature(FEATURE, false);
+            
+            //For Xerces 2
+            final String FEATURE_2 = "http://apache.org/xml/features/disallow-doctype-decl";
+            dbf.setFeature(FEATURE_2, true);
+            
             DocumentBuilder db = dbf.newDocumentBuilder();
+            
             Document doc = db.parse(file);
             doc.getDocumentElement().normalize();
 
