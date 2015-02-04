@@ -32,7 +32,6 @@ import com.services.nhinc.schema.auditmessage.AuditSourceIdentificationType;
 import com.services.nhinc.schema.auditmessage.CodedValueType;
 import com.services.nhinc.schema.auditmessage.EventIdentificationType;
 import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationType;
-
 import gov.hhs.fha.nhinc.common.auditlog.LogAdhocQueryRequestType;
 import gov.hhs.fha.nhinc.common.auditlog.LogAdhocQueryResultRequestType;
 import gov.hhs.fha.nhinc.common.auditlog.LogEventRequestType;
@@ -41,23 +40,19 @@ import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
 import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.transform.marshallers.JAXBContextHandler;
 import gov.hhs.healthit.nhin.DocQueryAcknowledgementType;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-
 import oasis.names.tc.ebxml_regrep.xsd.query._3.AdhocQueryRequest;
 import oasis.names.tc.ebxml_regrep.xsd.query._3.AdhocQueryResponse;
 import oasis.names.tc.ebxml_regrep.xsd.rim._3.ExtrinsicObjectType;
 import oasis.names.tc.ebxml_regrep.xsd.rim._3.IdentifiableType;
 import oasis.names.tc.ebxml_regrep.xsd.rim._3.ObjectRefType;
 import oasis.names.tc.ebxml_regrep.xsd.rim._3.SlotType1;
-
 import org.apache.log4j.Logger;
 
 /**

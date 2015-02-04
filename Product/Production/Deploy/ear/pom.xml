@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.aurionproject</groupId>
@@ -21,18 +21,13 @@
         <gui.excluded>true</gui.excluded>
         <pd.excluded>true</pd.excluded>
         <direct.excluded>true</direct.excluded>
+        <admingui.excluded>true</admingui.excluded>
+        <x12.excluded>true</x12.excluded>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.aurionproject</groupId>
             <artifactId>ear-dependencies</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-        </dependency>
-        <!-- direct -->
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>direct-dependencies</artifactId>
             <version>${project.parent.version}</version>
             <type>pom</type>
         </dependency>
@@ -78,14 +73,19 @@
             <version>${project.parent.version}</version>
             <type>pom</type>
         </dependency>
-         <!-- GUI -->
+        <!-- GUI -->
         <dependency>
             <groupId>org.aurionproject</groupId>
             <artifactId>gui-dependencies</artifactId>
             <version>${project.parent.version}</version>
             <type>pom</type>
         </dependency>
-
+        <dependency>
+            <groupId>org.aurionproject</groupId>
+            <artifactId>admingui-dependencies</artifactId>
+            <version>${project.parent.version}</version>
+            <type>pom</type>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -193,12 +193,6 @@
                             <contextRoot>/Adapter/DocumentSubmission/A_0</contextRoot>
                             <excluded>${ds.excluded}</excluded>
                         </webModule>
-                         <webModule>
-                            <groupId>org.aurionproject</groupId>
-                            <artifactId>Direct</artifactId>
-                            <contextRoot>/Direct</contextRoot>
-                            <excluded>${direct.excluded}</excluded>
-                        </webModule>
                         <webModule>
                             <groupId>org.aurionproject</groupId>
                             <artifactId>HIEM_20</artifactId>
@@ -223,12 +217,21 @@
                             <contextRoot>/CONNECTUniversalClientGUI</contextRoot>
                             <excluded>${gui.excluded}</excluded>
                         </webModule>
+                        <webModule>
+                            <groupId>org.aurionproject</groupId>
+                            <artifactId>CONNECTAdminGUI</artifactId>
+                            <contextRoot>/CONNECTAdminGUI</contextRoot>
+                            <excluded>${admingui.excluded}</excluded>
+                        </webModule>
                     </modules>
                     <version>5</version>
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
                     <skinnyWars>true</skinnyWars>
-                    <!-- this causes all archives to be exploded on server 
-                        SLOW!!! <includeLibInApplicationXml>true</includeLibInApplicationXml> -->
+                    <packagingExcludes>
+                        lib/Properties-*.jar
+                    </packagingExcludes>
+
+                    <!-- this causes all archives to be exploded on server SLOW!!! <includeLibInApplicationXml>true</includeLibInApplicationXml> -->
                 </configuration>
             </plugin>
         </plugins>
@@ -243,7 +246,6 @@
             <properties>
                 <pd.excluded>false</pd.excluded>
             </properties>
-
         </profile>
         <profile>
             <id>AD</id>
@@ -262,7 +264,6 @@
             <properties>
                 <dq.excluded>false</dq.excluded>
             </properties>
-
         </profile>
         <profile>
             <id>DR</id>
@@ -281,7 +282,15 @@
             <properties>
                 <ds.excluded>false</ds.excluded>
             </properties>
-
+        </profile>
+        <profile>
+            <id>Direct</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <direct.excluded>false</direct.excluded>
+            </properties>
         </profile>
         <profile>
             <id>HIEM</id>
@@ -291,7 +300,6 @@
             <properties>
                 <hiem.excluded>false</hiem.excluded>
             </properties>
-
         </profile>
         <profile>
             <id>GUI</id>
@@ -303,14 +311,66 @@
             </properties>
         </profile>
         <profile>
-            <id>Direct</id>
+            <id>AdminGUI</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <direct.excluded>false</direct.excluded>
+                <admingui.excluded>false</admingui.excluded>
+            </properties>
+        </profile>
+        <profile>
+            <id>X12</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <x12.excluded>false</x12.excluded>
             </properties>
 
+            <!-- X12 -->
+            <dependencies>
+                <dependency>
+                    <groupId>org.aurionproject</groupId>
+                    <artifactId>x12-dependencies</artifactId>
+                    <version>${project.parent.version}</version>
+                    <type>pom</type>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-ear-plugin</artifactId>
+                        <configuration>
+                            <modules combine.children="append">
+                                <webModule>
+                                    <groupId>org.aurionproject</groupId>
+                                    <artifactId>CORE_X12DocumentSubmission_10</artifactId>
+                                    <contextRoot>/Gateway/CORE_X12DocumentSubmission/1_0</contextRoot>
+                                    <excluded>${x12.excluded}</excluded>
+                                </webModule>
+                                <webModule>
+                                    <groupId>org.aurionproject</groupId>
+                                    <artifactId>CORE_X12DocumentSubmission_a0</artifactId>
+                                    <contextRoot>/Adapter/CORE_X12DocumentSubmission/A_0</contextRoot>
+                                    <excluded>${x12.excluded}</excluded>
+                                </webModule>
+                            </modules>
+                            <version>5</version>
+                            <defaultLibBundleDir>lib</defaultLibBundleDir>
+                            <skinnyWars>true</skinnyWars>
+                            <packagingExcludes>
+                                lib/Properties-*.jar
+                            </packagingExcludes>
+
+                            <!-- this causes all archives to be exploded on server SLOW!!! <includeLibInApplicationXml>true</includeLibInApplicationXml> -->
+                        </configuration>
+                    </plugin>
+                </plugins>
+                <finalName>${project.artifactId}</finalName>
+            </build>
         </profile>
     </profiles>
 </project>

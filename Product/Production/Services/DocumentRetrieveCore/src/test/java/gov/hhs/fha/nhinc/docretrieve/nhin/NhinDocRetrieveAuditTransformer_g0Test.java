@@ -26,13 +26,16 @@
  */
 package gov.hhs.fha.nhinc.docretrieve.nhin;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import gov.hhs.fha.nhinc.auditrepository.AuditRepositoryDocumentRetrieveLogger;
 import gov.hhs.fha.nhinc.common.auditlog.DocRetrieveMessageType;
 import gov.hhs.fha.nhinc.common.auditlog.DocRetrieveResponseMessageType;
+import gov.hhs.fha.nhinc.common.auditlog.LogEventRequestType;
 import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 
 import org.junit.Test;

@@ -1,28 +1,28 @@
 /*
- * Copyright (c) 2012, United States Government, as represented by the Secretary of Health and Human Services. 
- * All rights reserved. 
+ * Copyright (c) 2012, United States Government, as represented by the Secretary of Health and Human Services.
+ * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met: 
- *     * Redistributions of source code must retain the above 
- *       copyright notice, this list of conditions and the following disclaimer. 
- *     * Redistributions in binary form must reproduce the above copyright 
- *       notice, this list of conditions and the following disclaimer in the documentation 
- *       and/or other materials provided with the distribution. 
- *     * Neither the name of the United States Government nor the 
- *       names of its contributors may be used to endorse or promote products 
- *       derived from this software without specific prior written permission. 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above
+ *       copyright notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the documentation
+ *       and/or other materials provided with the distribution.
+ *     * Neither the name of the United States Government nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
- * DISCLAIMED. IN NO EVENT SHALL THE UNITED STATES GOVERNMENT BE LIABLE FOR ANY 
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE UNITED STATES GOVERNMENT BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package gov.hhs.fha.nhinc.policyengine.adapter.pip;
 
@@ -40,13 +40,8 @@ import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 import gov.hhs.fha.nhinc.util.StringUtil;
 import gov.hhs.fha.nhinc.util.format.PatientIdFormatUtil;
 import gov.hhs.fha.nhinc.util.format.UTCDateUtil;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 import javax.xml.bind.JAXBElement;
 import oasis.names.tc.ebxml_regrep.xsd.lcm._3.SubmitObjectsRequest;
@@ -62,11 +57,10 @@ import oasis.names.tc.ebxml_regrep.xsd.rim._3.RegistryObjectListType;
 import oasis.names.tc.ebxml_regrep.xsd.rim._3.RegistryPackageType;
 import oasis.names.tc.ebxml_regrep.xsd.rim._3.SlotType1;
 import oasis.names.tc.ebxml_regrep.xsd.rim._3.ValueListType;
-
 import org.apache.log4j.Logger;
 
 /**
- * 
+ *
  * @author svalluripalli
  */
 public class PatientConsentDocumentBuilderHelper {
@@ -103,9 +97,6 @@ public class PatientConsentDocumentBuilderHelper {
         } else {
             LOG.error("Path to property files not found");
         }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Properties file path: " + propertiesFilePath);
-        }
         return propertiesFilePath;
     }
 
@@ -116,13 +107,17 @@ public class PatientConsentDocumentBuilderHelper {
         String hl7PatientId = "";
         SubmitObjectsRequest oSubmitObjectRequest = new SubmitObjectsRequest();
         RegistryObjectListType oRegistryObjectList = new RegistryObjectListType();
-        if (oPtPref != null && oPtPref.getPatientId() != null && !oPtPref.getPatientId().contains("&ISO")) {
-            hl7PatientId = PatientIdFormatUtil.hl7EncodePatientId(oPtPref.getPatientId(),
+
+        if (oPtPref != null) {
+            if (oPtPref.getPatientId() != null && !oPtPref.getPatientId().contains("&ISO")) {
+                hl7PatientId = PatientIdFormatUtil.hl7EncodePatientId(oPtPref.getPatientId(),
                     oPtPref.getAssigningAuthority());
-            hl7PatientId = StringUtil.extractStringFromTokens(hl7PatientId, "'");
-        } else {
-            hl7PatientId = oPtPref.getPatientId();
+                hl7PatientId = StringUtil.extractStringFromTokens(hl7PatientId, "'");
+            } else {
+                hl7PatientId = oPtPref.getPatientId();
+            }
         }
+
         List<JAXBElement<? extends IdentifiableType>> oRegistryObjList = oRegistryObjectList.getIdentifiable();
         ExtrinsicObjectType oExtObj = new ExtrinsicObjectType();
         oExtObj.setId(sDocUniqueId);
@@ -182,7 +177,6 @@ public class PatientConsentDocumentBuilderHelper {
         oRegistryPackage.getExternalIdentifier().add(oExtIdTypePatForReg);
 
         String sSubmissionSetUniqueId = PropertyAccessor.getInstance().getProperty(FILE_NAME, "submissionsetuniqueid");
-        LOG.debug("sSubmissionSetUniqueId: " + sSubmissionSetUniqueId);
         // getOidFromProperty("submissionsetuniqueid");
         oExtIdTypePatForReg = createExternalIdentifier(oRimObjectFactory,
                 CDAConstants.EXTERNAL_IDENTIFICATION_SCHEMA_REGISTRYOBJECT,
@@ -246,15 +240,19 @@ public class PatientConsentDocumentBuilderHelper {
 
     private void setMimeTypeAndStatus(ExtrinsicObjectType oExtObj, PatientPreferencesType oPtPref) {
         String mimeType = null;
-        if ((oExtObj != null) && (oPtPref != null) && (oPtPref.getFineGrainedPolicyMetadata() != null)
+        if (oExtObj != null) {
+            if (oPtPref != null && oPtPref.getFineGrainedPolicyMetadata() != null
                 && NullChecker.isNotNullish(oPtPref.getFineGrainedPolicyMetadata().getMimeType())) {
-            mimeType = oPtPref.getFineGrainedPolicyMetadata().getMimeType();
+                mimeType = oPtPref.getFineGrainedPolicyMetadata().getMimeType();
+            }
+
+            if (mimeType == null) {
+                mimeType = CDAConstants.PROVIDE_REGISTER_MIME_TYPE;
+            }
+
+            oExtObj.setMimeType(mimeType);
+            oExtObj.setStatus(CDAConstants.PROVIDE_REGISTER_STATUS_APPROVED);
         }
-        if (mimeType == null) {
-            mimeType = CDAConstants.PROVIDE_REGISTER_MIME_TYPE;
-        }
-        oExtObj.setMimeType(mimeType);
-        oExtObj.setStatus(CDAConstants.PROVIDE_REGISTER_STATUS_APPROVED);
     }
 
     private void setComments(ExtrinsicObjectType oExtObj, PatientPreferencesType oPtPref,
@@ -475,29 +473,33 @@ public class PatientConsentDocumentBuilderHelper {
 
     private void setTitle(ExtrinsicObjectType oExtObj, PatientPreferencesType oPtPref,
             oasis.names.tc.ebxml_regrep.xsd.rim._3.ObjectFactory oRimObjectFactory, String sMimeType,
-            String sDocUniqueId) {
-        String sTitle = null;
-        if (oPtPref != null) {
-            if (PDF_MIME_TYPE.equals(sMimeType) && oPtPref.getBinaryDocumentPolicyCriteria() != null
+        String sDocUniqueId) {
+
+        if (oExtObj != null) {
+            String sTitle = null;
+            if (oPtPref != null) {
+                if (PDF_MIME_TYPE.equals(sMimeType) && oPtPref.getBinaryDocumentPolicyCriteria() != null
                     && oPtPref.getBinaryDocumentPolicyCriteria().getBinaryDocumentPolicyCriterion() != null
                     && !oPtPref.getBinaryDocumentPolicyCriteria().getBinaryDocumentPolicyCriterion().isEmpty()) {
-                for (BinaryDocumentPolicyCriterionType eachBinaryDocumentPolicyCriteria : oPtPref
+                    for (BinaryDocumentPolicyCriterionType eachBinaryDocumentPolicyCriteria : oPtPref
                         .getBinaryDocumentPolicyCriteria().getBinaryDocumentPolicyCriterion()) {
-                    if (sDocUniqueId.equals(eachBinaryDocumentPolicyCriteria.getDocumentUniqueId())) {
-                        sTitle = eachBinaryDocumentPolicyCriteria.getDocumentTitle();
+                        if (sDocUniqueId.equals(eachBinaryDocumentPolicyCriteria.getDocumentUniqueId())) {
+                            sTitle = eachBinaryDocumentPolicyCriteria.getDocumentTitle();
+                        }
                     }
-                }
-            } else if ((oExtObj != null) && (oPtPref.getFineGrainedPolicyMetadata() != null)
+                } else if (oPtPref.getFineGrainedPolicyMetadata() != null
                     && NullChecker.isNotNullish(oPtPref.getFineGrainedPolicyMetadata().getDocumentTitle())) {
-                sTitle = oPtPref.getFineGrainedPolicyMetadata().getDocumentTitle();
+                    sTitle = oPtPref.getFineGrainedPolicyMetadata().getDocumentTitle();
+                }
             }
-        }
-        if (sTitle == null) {
-            sTitle = CDAConstants.TITLE;
-        }
-        oExtObj.setName(createInternationalStringType(oRimObjectFactory, CDAConstants.CHARACTER_SET,
-                CDAConstants.LANGUAGE_CODE_ENGLISH, sTitle));
 
+            if (sTitle == null) {
+                sTitle = CDAConstants.TITLE;
+            }
+
+            oExtObj.setName(createInternationalStringType(oRimObjectFactory, CDAConstants.CHARACTER_SET,
+                CDAConstants.LANGUAGE_CODE_ENGLISH, sTitle));
+        }
     }
 
     private void setPatientInfo(List<oasis.names.tc.ebxml_regrep.xsd.rim._3.SlotType1> oSlots,
@@ -890,7 +892,7 @@ public class PatientConsentDocumentBuilderHelper {
     }
 
     /**
-     * 
+     *
      * @param sDocId
      * @param oFactory
      * @param oPatCD
@@ -914,7 +916,7 @@ public class PatientConsentDocumentBuilderHelper {
     // return cClass;
     // }
     /**
-     * 
+     *
      * @param fact
      * @param name
      * @param value
@@ -932,7 +934,7 @@ public class PatientConsentDocumentBuilderHelper {
     }
 
     /**
-     * 
+     *
      * @param fact
      * @param id
      * @param regObject
@@ -960,7 +962,7 @@ public class PatientConsentDocumentBuilderHelper {
     }
 
     /**
-     * 
+     *
      * @param fact
      * @param scheme
      * @param clObject
@@ -995,7 +997,7 @@ public class PatientConsentDocumentBuilderHelper {
     }
 
     /**
-     * 
+     *
      * @param fact
      * @param charSet
      * @param language
@@ -1013,33 +1015,6 @@ public class PatientConsentDocumentBuilderHelper {
         intStr.getLocalizedString().add(locStr);
         LOG.info("------- End PatientConsentDocumentBuilderHelper.createInternationalStringType -------");
         return intStr;
-    }
-
-    protected synchronized String getOidFromProperty(String sPropertyName) {
-        String sUniqueId = "";
-        try {
-            Properties tempProp = new Properties();
-            InputStream propsInFile = new FileInputStream(sPropertyFile);
-            tempProp.load(propsInFile);
-            propsInFile.close();
-            sUniqueId = tempProp.getProperty(sPropertyName);
-            String sFirstPart = sUniqueId.substring(0, sUniqueId.lastIndexOf("."));
-            String sDotString = sUniqueId.substring(sUniqueId.lastIndexOf("."));
-            sDotString = sDotString.substring(1);
-            int iSUniqueId = Integer.parseInt(sDotString);
-            iSUniqueId = iSUniqueId + 1;
-            String sNewId = sFirstPart + "." + iSUniqueId;
-            tempProp.setProperty(sPropertyName, sNewId);
-            OutputStream propsOutFile = new FileOutputStream(sPropertyFile);
-            tempProp.store(propsOutFile, "Update property file with new sequence");
-            propsOutFile.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Generated unique id: " + sUniqueId);
-        }
-        return sUniqueId;
     }
 
     private String extractAddressFromPatInfo(PolicyPatientInfoType patInfo) {

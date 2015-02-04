@@ -26,6 +26,15 @@
  */
 package gov.hhs.fha.nhinc.transform.audit;
 
+import org.apache.log4j.Logger;
+
+import com.services.nhinc.schema.auditmessage.AuditMessageType;
+import com.services.nhinc.schema.auditmessage.AuditMessageType.ActiveParticipant;
+import com.services.nhinc.schema.auditmessage.AuditSourceIdentificationType;
+import com.services.nhinc.schema.auditmessage.CodedValueType;
+import com.services.nhinc.schema.auditmessage.EventIdentificationType;
+import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationType;
+
 import gov.hhs.fha.nhinc.common.auditlog.LogEventSecureRequestType;
 import gov.hhs.fha.nhinc.common.nhinccommon.CeType;
 import gov.hhs.fha.nhinc.common.nhinccommon.HomeCommunityType;
@@ -33,6 +42,8 @@ import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthnStatementType;
 import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
+
+import oasis.names.tc.ebxml_regrep.xsd.rim._3.ExternalIdentifierType;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -45,19 +56,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.TimeZone;
-
 import javax.xml.datatype.DatatypeConfigurationException;
-
-import oasis.names.tc.ebxml_regrep.xsd.rim._3.ExternalIdentifierType;
-
-import org.apache.log4j.Logger;
-
-import com.services.nhinc.schema.auditmessage.AuditMessageType;
-import com.services.nhinc.schema.auditmessage.AuditMessageType.ActiveParticipant;
-import com.services.nhinc.schema.auditmessage.AuditSourceIdentificationType;
-import com.services.nhinc.schema.auditmessage.CodedValueType;
-import com.services.nhinc.schema.auditmessage.EventIdentificationType;
-import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationType;
 
 /**
  * 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.aurionproject</groupId>
@@ -20,6 +20,10 @@
         <db.password>nhincpass</db.password>
         <db.port>3306</db.port>
         <db.user>nhincuser</db.user>
+        <as.username>admin</as.username>
+        <as.password>adminadmin</as.password>
+        <jmx.host>localhost</jmx.host>
+        <jmx.port>8686</jmx.port>
         <mysql.root.password>NHIE-Gateway</mysql.root.password>
     </properties>
     <modules>
@@ -44,7 +48,7 @@
                     <version>3.1.2.2</version>
                     <configuration>
                         <goalPrefix>embedded-glassfish</goalPrefix>
-                        <name>CONNECT</name>
+                        <name>CONNECT-GF</name>
                         <app>${ear.path}</app>
                         <autoDelete>true</autoDelete>
                         <port>${port}</port>
@@ -72,7 +76,7 @@
                     <execution>
                         <id>unpack-soapui-test-resources</id>
                         <!-- Using the initialize phase because it is before 
-                            the generate sources phase -->
+                        the generate sources phase -->
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>unpack</goal>
@@ -102,7 +106,6 @@
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>AurionCommonTypesLib</artifactId>
-                                    <version>5.0</version>
                                     <type>jar</type>
                                 </artifactItem>
                             </artifactItems>
@@ -122,83 +125,71 @@
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>AdapterAuthenticationWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>AdminDistributionWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>AuditRepositoryWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>ComponentWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>ConnectionManagerWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>DirectWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>DocRegistryWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>DocRepositoryWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>DocumentQueryWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>DocumentRetrieveWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>DocumentSubmissionWebervices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>HIEMWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>PatientCorrelationWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>PatientDiscoveryWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>PolicyEngineWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.aurionproject</groupId>
                                     <artifactId>RedactionEngineWebservices</artifactId>
-                                    <version>5.0</version>
                                 </artifactItem>
+                                <dependency>
+                                    <groupId>org.aurionproject</groupId>
+                                    <artifactId>CORERule2_2_0Webervices</artifactId>
+                                </dependency>
                             </artifactItems>
                             <includes>**/*.wsdl</includes>
                             <outputDirectory>${project.build.directory}/wsdl-extracted/</outputDirectory>
@@ -219,7 +210,7 @@
                         <configuration>
                             <target>
                                 <copy todir="${project.build.directory}/wsdl"
-                                    flatten="true">
+                                      flatten="true">
                                     <fileset
                                         dir="${project.build.directory}/wsdl-extracted">
                                         <include name="**/*.wsdl" />

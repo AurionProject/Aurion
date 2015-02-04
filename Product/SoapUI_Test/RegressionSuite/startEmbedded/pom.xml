@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.aurionproject</groupId>
-		<artifactId>RegressionSuite</artifactId>
-		<version>5.1</version>
-	</parent>
-	<artifactId>startEmbedded</artifactId>
-	<packaging>jar</packaging>
-	<name>Start Embedded Glassfish</name>
-	<properties>
-		<soapui.testFailIgnore>true</soapui.testFailIgnore>
-	</properties>
-	<profiles>
-	<profile>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.aurionproject</groupId>
+        <artifactId>RegressionSuite</artifactId>
+        <version>5.1</version>
+    </parent>
+    <artifactId>startEmbedded</artifactId>
+    <packaging>jar</packaging>
+    <name>Start Embedded Glassfish</name>
+    <properties>
+        <soapui.testFailIgnore>true</soapui.testFailIgnore>
+    </properties>
+    <profiles>
+        <profile>
             <id>embedded-testing</id>
             <activation>
                 <property>
@@ -170,63 +170,6 @@
                                         <copy file="${project.build.directory}/test-classes/chaincerts/cacerts.jks" todir="${project.build.directory}/domain1/config/" />
                                         <copy file="${project.build.directory}/test-classes/chaincerts/gateway.jks" todir="${project.build.directory}/domain1/lib/classes/" />
                                         <copy file="${project.build.directory}/test-classes/chaincerts/cacerts.jks" todir="${project.build.directory}/domain1/lib/classes/" />
-                                    </target>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>setup-direct-smtp-agent-config</id>
-                                <!-- using "compile" because it must come after process-resources (where the properties files are expanded) -->
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <property name="temp.dir" value="${basedir}/.validationsuite.temp" />
-                                        <property name="cert.key.algorithm" value="RSA" />
-                                        <property name="cert.key.size" value="1024" />
-                                        <property name="cert.keypass" value="changeit" />
-                                        <property name="cert.validity.length" value="365" />
-                                        <property name="cert.storepass" value="changeit" />
-                                        <property name="direct.anchor.store" value="anchors" />
-                                        <property name="direct.trust.store" value="example-store" />
-                                        <property name="direct.key.store" value="example-key" />
-
-                                        <!-- Direct stores -->
-                                        <mkdir dir="${temp.dir}" />
-                                        <delete>
-                                            <fileset dir="${temp.dir}">
-                                                <include name="**/*" />
-                                            </fileset>
-                                        </delete>
-                                        <exec failonerror="true" executable="keytool" dir="${temp.dir}">
-                                            <arg line="-v -genkey -keyalg ${cert.key.algorithm} -keysize ${cert.key.size} -keystore ${direct.key.store}.jks -keypass ${cert.keypass} -storepass ${cert.storepass} -validity ${cert.validity.length} -alias direct.example.com -dname &quot;cn=direct.example.com&quot;" />
-                                        </exec>
-                                        <exec failonerror="true" executable="keytool" dir="${temp.dir}">
-                                            <arg line="-v -export -rfc -alias direct.example.com -file example.cer -keystore ${direct.key.store}.jks -keypass ${cert.keypass} -storepass ${cert.storepass}" />
-                                        </exec>
-                                        <exec failonerror="true" executable="keytool" dir="${temp.dir}">
-                                            <arg line="-v -import -keypass ${cert.keypass} -noprompt -trustcacerts -alias direct.example.com -file example.cer -keystore ${direct.trust.store}.jks -storepass ${cert.storepass}" />
-                                        </exec>
-                                        <!-- Use the same trust store for the anchor store -->
-                                        <exec failonerror="true" executable="keytool" dir="${temp.dir}">
-                                            <arg line="-v -import -keypass ${cert.keypass} -noprompt -trustcacerts -alias direct.example.com -file example.cer -keystore ${direct.anchor.store}.jks -storepass ${cert.storepass}" />
-                                        </exec>
-                                        <copy todir="${project.build.directory}/domain1/config" overwrite="true">
-                                            <fileset dir="${temp.dir}">
-                                                <include name="${direct.key.store}.jks" />
-                                                <include name="${direct.trust.store}.jks" />
-                                                <include name="${direct.anchor.store}.jks" />
-                                            </fileset>
-                                        </copy>
-
-                                        <copy file="${project.build.directory}/nhinc-properites-dir/smtp.agent.config.template.xml" tofile="${project.build.directory}/nhinc-properites-dir/smtp.agent.config.xml" filtering="yes" overwrite="yes">
-                                            <filterset>
-                                                <filter token="ANCHOR_STORE_JKS" value="${project.build.directory}/domain1/config/${direct.anchor.store}.jks" />
-                                                <filter token="PUBLIC_STORE_JKS" value="${project.build.directory}/domain1/config/${direct.trust.store}.jks" />
-                                                <filter token="PRIVATE_STORE_JKS" value="${project.build.directory}/domain1/config/${direct.key.store}.jks" />
-                                            </filterset>
-                                        </copy>
                                     </target>
                                 </configuration>
                             </execution>

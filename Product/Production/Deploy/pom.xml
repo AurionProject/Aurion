@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.aurionproject</groupId>
@@ -13,17 +13,18 @@
     <modules>
         <module>ear-dependencies</module>
         <module>ad-dependencies</module>
-        <module>direct-dependencies</module>
         <module>dq-dependencies</module>
         <module>dr-dependencies</module>
         <module>ds-dependencies</module>
         <module>gui-dependencies</module>
         <module>hiem-dependencies</module>
         <module>pd-dependencies</module>
+        <module>admingui-dependencies</module>
+        <module>x12-dependencies</module>
         <module>ear</module>
-
         <module>ear/glassfish</module>
     </modules>
+    <!--properties> <findbugs.skip>true</findbugs.skip> </properties -->
     <build>
         <pluginManagement>
             <plugins>
@@ -35,8 +36,18 @@
             </plugins>
         </pluginManagement>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
     <profiles>
-
         <profile>
             <id>wasce</id>
             <modules>
@@ -62,5 +73,14 @@
             </modules>
         </profile>
 
+        <profile>
+            <id>Direct</id>
+            <modules>
+                <module>direct-dependencies</module>
+            </modules>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
     </profiles>
 </project>

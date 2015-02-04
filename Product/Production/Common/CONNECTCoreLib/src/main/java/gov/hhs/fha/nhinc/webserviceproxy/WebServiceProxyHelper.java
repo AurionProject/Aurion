@@ -39,7 +39,6 @@ import gov.hhs.fha.nhinc.properties.IPropertyAcessor;
 import gov.hhs.fha.nhinc.util.HomeCommunityMap;
 import javax.xml.ws.WebServiceException;
 
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;

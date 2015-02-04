@@ -36,9 +36,9 @@ import gov.hhs.fha.nhinc.common.nhinccommonentity.RespondingGatewayProvideAndReg
 import gov.hhs.fha.nhinc.docsubmission.MessageGeneratorUtils;
 import gov.hhs.fha.nhinc.docsubmission.XDRAuditLogger;
 import gov.hhs.fha.nhinc.docsubmission.XDRPolicyChecker;
-import gov.hhs.fha.nhinc.docsubmission.aspect.DocSubmissionBaseEventDescriptionBuilder;
 import gov.hhs.fha.nhinc.docsubmission.entity.OutboundDocSubmissionDelegate;
 import gov.hhs.fha.nhinc.docsubmission.entity.OutboundDocSubmissionOrchestratable;
+import gov.hhs.fha.nhinc.docsubmission.aspect.DocSubmissionBaseEventDescriptionBuilder;
 import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
@@ -140,7 +140,7 @@ public class StandardOutboundDocSubmission implements OutboundDocSubmission {
             String senderHCID = getSubjectHelper().determineSendingHomeCommunityId(assertion.getHomeCommunity(),
                     assertion);
             String receiverHCID = getNhinTargetHomeCommunityId(request);
-            LOG.debug("Receiving home community id: " + receiverHCID);
+
             isValid = getXDRPolicyChecker().checkXDRRequestPolicy(request.getProvideAndRegisterDocumentSetRequest(),
                     assertion, senderHCID, receiverHCID, NhincConstants.POLICYENGINE_OUTBOUND_DIRECTION);
         } else {

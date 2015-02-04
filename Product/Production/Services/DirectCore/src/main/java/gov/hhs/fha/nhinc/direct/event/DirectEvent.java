@@ -26,47 +26,51 @@
  */
 package gov.hhs.fha.nhinc.direct.event;
 
+import com.google.common.collect.ImmutableList;
+import gov.hhs.fha.nhinc.direct.messagemonitoring.util.MessageMonitoringUtil;
 import gov.hhs.fha.nhinc.event.BaseEvent;
-
+import gov.hhs.fha.nhinc.event.Event;
+import gov.hhs.fha.nhinc.nhinclib.NullChecker;
+import gov.hhs.fha.nhinc.properties.PropertyAccessException;
+import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * {@link Event} Implementation for Direct.
  */
 public class DirectEvent extends BaseEvent {
-    
+
     private static final Logger LOG = Logger.getLogger(DirectEvent.class);
 
     private static final String XML_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    
+
     /*
      * JSON fields and values. (should use a standard enum here? )
      */
     private static final String ACTION = "action";
     private static final String MESSAGE_ID = "message_id";
+    private static final String PARENT_MESSAGE_ID = "parent_message_id";
     private static final String TIMESTAMP = "timestamp";
     private static final String STATUSES = "statuses";
     private static final String ERROR_MSG = "error_msg";
     private static final String SENDER = "sender";
     private static final String RECIPIENT = "recipient";
+    private static final String SERVICE_TYPE = "Direct";
+    private static final String PROPERTY_FILE_NAME = "gateway";
+    private static final String PROPERTY_NAME = "localHomeCommunityId";
     private static final List<String> STATUS_SUCCESS = ImmutableList.of("success");
     private static final List<String> STATUS_ERROR = ImmutableList.of("error");
 
     private final String name;
 
-    
     /**
      * @param name of the triggered event.
      */
@@ -81,7 +85,7 @@ public class DirectEvent extends BaseEvent {
     public String getEventName() {
         return name;
     }
-    
+
     /**
      * Builder for the Direct Event.
      */
@@ -89,7 +93,7 @@ public class DirectEvent extends BaseEvent {
 
         private MimeMessage message;
         private String errorMsg;
-        
+
         /**
          * @param mimeMessage source for messageid, sender, recips, etc
          * @return this builder.
@@ -98,9 +102,10 @@ public class DirectEvent extends BaseEvent {
             this.message = mimeMessage;
             return this;
         }
-        
+
         /**
          * Create an event with an error status.
+         *
          * @param str error message encountered.
          * @return this builder.
          */
@@ -111,6 +116,7 @@ public class DirectEvent extends BaseEvent {
 
         /**
          * Build a direct event.
+         *
          * @param type - {@link DirectEventType} to build.
          * @return the created event.
          */
@@ -118,8 +124,14 @@ public class DirectEvent extends BaseEvent {
 
             String eventName = type.toString();
             final DirectEvent event = new DirectEvent(eventName);
-            event.setTransactionID("");            
-            
+            event.setTransactionID("");
+            event.setServiceType(SERVICE_TYPE);
+            try {
+                event.setInitiatorHcid(PropertyAccessor.getInstance().getProperty(PROPERTY_FILE_NAME, PROPERTY_NAME));
+                event.setRespondingHcid(PropertyAccessor.getInstance().getProperty(PROPERTY_FILE_NAME, PROPERTY_NAME));
+            } catch (PropertyAccessException e) {
+                LOG.error("Error reading local home community from gateway properties file.", e);
+            }
             JSONObject jsonDescription = new JSONObject();
             addToJSON(jsonDescription, TIMESTAMP, formatDateForXml(new Date()));
             addToJSON(jsonDescription, ACTION, eventName);
@@ -128,6 +140,15 @@ public class DirectEvent extends BaseEvent {
                 try {
                     addToJSON(jsonDescription, SENDER, message.getSender());
                     addToJSON(jsonDescription, RECIPIENT, message.getAllRecipients());
+                    String parentMessageID = getParentMessageId(message);
+                    //set the parent message ID in the JSON string if its 
+                    //also set it in the transaction id
+                    if (NullChecker.isNotNullish(parentMessageID)) {
+                        addToJSON(jsonDescription, PARENT_MESSAGE_ID, parentMessageID);
+                        event.setTransactionID(parentMessageID);
+                    } else {
+                        event.setTransactionID(message.getMessageID());
+                    }
 
                     String messageId = message.getMessageID();
                     event.setMessageID(messageId);
@@ -137,27 +158,36 @@ public class DirectEvent extends BaseEvent {
                     LOG.error("Error building JSON (Messaging Exception)", e);
                 }
             }
-            
+
             if (errorMsg == null) {
                 addToJSON(jsonDescription, STATUSES, STATUS_SUCCESS);
             } else {
-                addToJSON(jsonDescription, STATUSES, STATUS_ERROR);                
+                addToJSON(jsonDescription, STATUSES, STATUS_ERROR);
             }
 
             event.setDescription(jsonDescription.toString());
             return event;
         }
-        
-        private void addToJSON(JSONObject jsonObject, String key, Object value)  {
+
+        private void addToJSON(JSONObject jsonObject, String key, Object value) {
             try {
                 jsonObject.put(key, value);
             } catch (JSONException e) {
                 LOG.error("Exception while building JSON description for direct event.", e);
             }
         }
-    }   
-    
-    private static String formatDateForXml(Date date) {        
+    }
+
+    private static String formatDateForXml(Date date) {
         return new SimpleDateFormat(XML_DATE_FORMAT, Locale.getDefault()).format(date);
+    }
+
+    private static String getParentMessageId(MimeMessage msg) {
+        try {
+            return MessageMonitoringUtil.getParentMessageId(msg);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 }

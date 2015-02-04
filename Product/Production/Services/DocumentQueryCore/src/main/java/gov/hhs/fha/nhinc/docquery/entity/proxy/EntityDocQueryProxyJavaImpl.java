@@ -30,7 +30,6 @@ import org.apache.log4j.Logger;
 
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.common.nhinccommon.NhinTargetCommunitiesType;
-import gov.hhs.fha.nhinc.docquery.adapter.proxy.AdapterDocQueryProxyJavaImpl;
 import oasis.names.tc.ebxml_regrep.xsd.query._3.AdhocQueryRequest;
 import oasis.names.tc.ebxml_regrep.xsd.query._3.AdhocQueryResponse;
 
@@ -39,7 +38,7 @@ import oasis.names.tc.ebxml_regrep.xsd.query._3.AdhocQueryResponse;
  *
  */
 public class EntityDocQueryProxyJavaImpl implements EntityDocQueryProxy {
-    private static final Logger LOG = Logger.getLogger(AdapterDocQueryProxyJavaImpl.class);
+    private static final Logger LOG = Logger.getLogger(EntityDocQueryProxyJavaImpl.class);
 
     /** This method does not have any implementation. Hence it returns null AdhocQueryResponse.
      * @param msg AdhocQUery Request received.

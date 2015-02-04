@@ -49,6 +49,7 @@ import gov.hhs.fha.nhinc.xdcommon.XDCommonResponseHelper.ErrorCodes;
 import ihe.iti.xds_b._2007.RespondingGatewayRetrievePortType;
 import ihe.iti.xds_b._2007.RetrieveDocumentSetRequestType;
 import ihe.iti.xds_b._2007.RetrieveDocumentSetResponseType;
+
 import oasis.names.tc.ebxml_regrep.xsd.rs._3.RegistryResponseType;
 
 import org.apache.commons.lang.StringUtils;
@@ -91,6 +92,7 @@ public class NhinDocRetrieveProxyWebServiceSecuredImpl implements NhinDocRetriev
                     CONNECTClient<RespondingGatewayRetrievePortType> client = getCONNECTClientSecured(portDescriptor,
                             assertion, url, targetSystem);
                     client.enableMtom();
+
                 	if (client != null) {
                 		boolean overrideSuccessful = client.overrideDefaultTimeouts(
                 				NhincConstants.DOC_RETRIEVE_CONNECT_TIMEOUT,

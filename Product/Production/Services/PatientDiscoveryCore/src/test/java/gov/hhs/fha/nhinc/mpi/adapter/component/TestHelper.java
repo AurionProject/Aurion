@@ -153,7 +153,7 @@ public class TestHelper {
 
             if (contentItem instanceof JAXBElement) {
                 @SuppressWarnings("rawtypes")
-				JAXBElement oJAXBElement = (JAXBElement) contentItem;
+                JAXBElement oJAXBElement = (JAXBElement) contentItem;
                 if (oJAXBElement.getValue() instanceof EnExplicitFamily) {
                     familyName = (EnExplicitFamily) oJAXBElement.getValue();
                     hasName = true;
@@ -355,7 +355,7 @@ public class TestHelper {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	private static PRPAMT201306UV02LivingSubjectName createName(String firstName, String lastName) {
+    private static PRPAMT201306UV02LivingSubjectName createName(String firstName, String lastName) {
         PRPAMT201306UV02LivingSubjectName subjectName = new PRPAMT201306UV02LivingSubjectName();
         org.hl7.v3.ObjectFactory factory = new org.hl7.v3.ObjectFactory();
         ENExplicit name = (factory.createENExplicit());
@@ -468,7 +468,7 @@ public class TestHelper {
 
         return result;
     }
-    
+
     public static Patient createMpiPatient(String firstName, String lastName, String middleName, String gender,
             String birthTime, Identifier subjectId) {
 

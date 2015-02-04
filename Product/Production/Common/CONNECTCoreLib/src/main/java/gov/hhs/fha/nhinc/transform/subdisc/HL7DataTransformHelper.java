@@ -28,16 +28,13 @@ package gov.hhs.fha.nhinc.transform.subdisc;
 
 import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.util.HomeCommunityMap;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
-
 import javax.xml.bind.JAXBElement;
-
 import org.apache.log4j.Logger;
 import org.hl7.v3.*;
 

@@ -69,6 +69,7 @@ public class AdapterDocRetrieveStrategyImpl_a0Test {
                 any(String.class));
         
         verify(adapterProxy).retrieveDocumentSet(any(RetrieveDocumentSetRequestType.class), any(AssertionType.class));
+
         
         verify(logger).logDocRetrieve(any(DocRetrieveMessageType.class),
                 eq(NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION), eq(NhincConstants.AUDIT_LOG_ADAPTER_INTERFACE),

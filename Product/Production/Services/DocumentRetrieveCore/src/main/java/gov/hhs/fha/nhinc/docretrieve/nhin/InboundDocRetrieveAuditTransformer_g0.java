@@ -4,6 +4,8 @@
  */
 package gov.hhs.fha.nhinc.docretrieve.nhin;
 
+import ihe.iti.xds_b._2007.RetrieveDocumentSetRequestType;
+import ihe.iti.xds_b._2007.RetrieveDocumentSetResponseType;
 import gov.hhs.fha.nhinc.auditrepository.AuditRepositoryDocumentRetrieveLogger;
 import gov.hhs.fha.nhinc.auditrepository.AuditRepositoryLogger;
 import gov.hhs.fha.nhinc.common.auditlog.DocRetrieveMessageType;
@@ -30,6 +32,7 @@ public class InboundDocRetrieveAuditTransformer_g0 implements AuditTransformer {
 	private static final Logger LOG = Logger.getLogger(InboundDocRetrieveAuditTransformer_g0.class);
     
     AuditRepositoryDocumentRetrieveLogger auditLogger;
+    
     
     /**
      * default constructor.

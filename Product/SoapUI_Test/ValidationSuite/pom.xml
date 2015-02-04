@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.aurionproject</groupId>
@@ -12,12 +13,6 @@
         <skip.unpack>false</skip.unpack>
         <soapui.testFailIgnore>true</soapui.testFailIgnore>
     </properties>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>eviwarePluginRepository</id>
-            <url>http://www.soapui.org/repository/maven2/</url>
-        </pluginRepository>
-    </pluginRepositories>
     <profiles>
         <profile>
             <id>validation-testing</id>
@@ -29,61 +24,43 @@
             <build>
                 <plugins>
                     <plugin>
-                    <groupId>com.github.redfish4ktc.soapui</groupId>
-                    <artifactId>maven-soapui-extension-plugin</artifactId>
-                    <version>4.5.1.2</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>mysql</groupId>
-                            <artifactId>mysql-connector-java</artifactId>
-                            <version>5.1.6</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.aurionproject</groupId>
-                            <artifactId>AurionCommonTypesLib</artifactId>
-                            <version>5.0</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.aurionproject</groupId>
-                            <artifactId>FileUtils</artifactId>
-                            <version>5.1</version>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                        <settingsFile>${basedir}/src/main/resources/soapui-settings.xml</settingsFile>
-                        <outputFolder>${basedir}/target/soapui/output/</outputFolder>
-                        <soapuiProperties>
-                            <property>
-                                <name>soapui.logroot</name>
-                                <value>${project.build.directory}/soapui/my_custom_logs/</value>
-                            </property>
-                            <property>
-                                <name>soapui.scripting.library</name>
-                                <value>${basedir}/src/main/resources/groovy_scripts</value>
-                            </property>
-                            <property>
-                                <name>soapui.ext.libraries</name>
-                                <value>${basedir}/src/main/resources/ext</value>
-                            </property>
-                        </soapuiProperties>
-                        <exportAll>true</exportAll>
-                        <printReport>true</printReport>
-                        <junitReport>true</junitReport>
-                        <coverage>false</coverage>
-                        <testFailIgnore>${soapui.testFailIgnore}</testFailIgnore>
-                        <saveAfterRun>false</saveAfterRun>
-                        <host>${host}:${port}</host>
-                        <testSuite>${test.suite}</testSuite>
-                        <testCase>${test.case}</testCase>
-                        <projectProperties>
-                            <value>GatewayPropDir=${properties.dir}</value>
-                            <value>DBHost=${db.host}</value>
-                            <value>DBPass=${db.password}</value>
-                            <value>DBPort=${db.port}</value>
-                            <value>DBUser=${db.user}</value>
-                        </projectProperties>
-                    </configuration>
-                    <executions>
+                        <groupId>com.github.redfish4ktc.soapui</groupId>
+                        <artifactId>maven-soapui-extension-plugin</artifactId>
+                        <configuration>
+                            <settingsFile>${basedir}/src/main/resources/soapui-settings.xml</settingsFile>
+                            <outputFolder>${basedir}/target/soapui/output/</outputFolder>
+                            <soapuiProperties>
+                                <property>
+                                    <name>soapui.logroot</name>
+                                    <value>${project.build.directory}/soapui/my_custom_logs/</value>
+                                </property>
+                                <property>
+                                    <name>soapui.scripting.library</name>
+                                    <value>${basedir}/src/main/resources/groovy_scripts</value>
+                                </property>
+                                <property>
+                                    <name>soapui.ext.libraries</name>
+                                    <value>${basedir}/src/main/resources/ext</value>
+                                </property>
+                            </soapuiProperties>
+                            <exportAll>true</exportAll>
+                            <printReport>true</printReport>
+                            <junitReport>true</junitReport>
+                            <coverage>false</coverage>
+                            <testFailIgnore>${soapui.testFailIgnore}</testFailIgnore>
+                            <saveAfterRun>false</saveAfterRun>
+                            <host>${host}:${port}</host>
+                            <testSuite>${test.suite}</testSuite>
+                            <testCase>${test.case}</testCase>
+                            <projectProperties>
+                                <value>GatewayPropDir=${properties.dir}</value>
+                                <value>DBHost=${db.host}</value>
+                                <value>DBPass=${db.password}</value>
+                                <value>DBPort=${db.port}</value>
+                                <value>DBUser=${db.user}</value>
+                            </projectProperties>
+                        </configuration>
+                        <executions>
                             <execution>
                                 <id>ConnectValidation-soapui-project.xml</id>
                                 <phase>integration-test</phase>
@@ -103,7 +80,7 @@
                                 </goals>
                             </execution>
                         </executions>
-                </plugin>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -153,8 +130,7 @@
                             </execution>
                             <execution>
                                 <id>unpack-nhin-properties</id>
-                                <!-- Using the initialize phase because it
-                                    is before the generate sources phase -->
+                                <!-- Using the initialize phase because it is before the generate sources phase -->
                                 <phase>process-resources</phase>
                                 <goals>
                                     <goal>unpack</goal>
@@ -163,8 +139,7 @@
                                     <skip>${skip.unpack}</skip>
                                     <artifactItems>
                                         <artifactItem>
-                                            <!-- Artifact that Holds our
-                                                custom templates -->
+                                            <!-- Artifact that Holds our custom templates -->
                                             <groupId>org.aurionproject</groupId>
                                             <artifactId>Properties</artifactId>
                                             <version>${project.parent.version}</version>
@@ -236,6 +211,53 @@
                             </execution>
                         </executions>
                     </plugin>
+
+                    <!--- create the Properties jar from the nhinc Properties Dir for Build. Refer CONN-1212 for more info. -->
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.3.1</version>
+                        <executions>
+                            <execution>
+                                <id>generate-jar</id>
+                                <phase>process-test-resources</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <!-- The configuration of the plugin -->
+                                <configuration>
+                                    <finalName>Properties</finalName>
+                                    <classesDirectory>${project.build.directory}/nhinc-properites-dir/</classesDirectory>
+                                    <outputDirectory>${project.build.directory}/domain1/lib/</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- copy configdb.hibernate.build.cfg.xml to nhinc-properties-dir to configdb.hibernate.cfg.xml. The 
+                        embedded GF has a classloader issue with antlr jar loaded by CONNECTDirectConfig. A work around solution that can proceed 
+                        build avoiding classloader issues.Please Refer CONN-1212 for furthur details. -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-configdb.hibernate.build.cfg.xml</id>
+                                <phase>process-test-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <copy
+                                            file="${project.build.directory}/nhinc-properites-dir/hibernate/configdb.hibernate.build.cfg.xml"
+                                            tofile="${project.build.directory}/nhinc-properites-dir/hibernate/configdb.hibernate.cfg.xml"
+                                            overwrite="true" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
@@ -261,68 +283,16 @@
                                 <configuration>
                                     <target>
                                         <mkdir dir="${project.build.directory}/domain1/config" />
-                                        <copy file="${project.build.directory}/test-classes/chaincerts/gateway.jks" todir="${project.build.directory}/domain1/config/" />
-                                        <copy file="${project.build.directory}/test-classes/chaincerts/cacerts.jks" todir="${project.build.directory}/domain1/config/" />
-                                        <copy file="${project.build.directory}/test-classes/chaincerts/gateway.jks" todir="${project.build.directory}/domain1/lib/classes/" />
-                                        <copy file="${project.build.directory}/test-classes/chaincerts/cacerts.jks" todir="${project.build.directory}/domain1/lib/classes/" />
+                                        <copy file="${project.build.directory}/test-classes/chaincerts/gateway.jks"
+                                            todir="${project.build.directory}/domain1/config/" />
+                                        <copy file="${project.build.directory}/test-classes/chaincerts/cacerts.jks"
+                                            todir="${project.build.directory}/domain1/config/" />
+                                        <copy file="${project.build.directory}/test-classes/chaincerts/gateway.jks"
+                                            todir="${project.build.directory}/domain1/lib/classes/" />
+                                        <copy file="${project.build.directory}/test-classes/chaincerts/cacerts.jks"
+                                            todir="${project.build.directory}/domain1/lib/classes/" />
                                     </target>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>setup-direct-smtp-agent-config</id>
-                                <!-- using "compile" because it must come after process-resources (where the properties files are expanded) -->
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <property name="temp.dir" value="${basedir}/.validationsuite.temp" />
-                                        <property name="cert.key.algorithm" value="RSA" />
-                                        <property name="cert.key.size" value="1024" />
-                                        <property name="cert.keypass" value="changeit" />
-                                        <property name="cert.validity.length" value="365" />
-                                        <property name="cert.storepass" value="changeit" />
-                                        <property name="direct.anchor.store" value="anchors" />
-                                        <property name="direct.trust.store" value="example-store" />
-                                        <property name="direct.key.store" value="example-key" />
 
-                                        <!-- Direct stores -->
-                                        <mkdir dir="${temp.dir}" />
-                                        <delete>
-                                            <fileset dir="${temp.dir}">
-                                                <include name="**/*" />
-                                            </fileset>
-                                        </delete>
-                                        <exec failonerror="true" executable="keytool" dir="${temp.dir}">
-                                            <arg line="-v -genkey -keyalg ${cert.key.algorithm} -keysize ${cert.key.size} -keystore ${direct.key.store}.jks -keypass ${cert.keypass} -storepass ${cert.storepass} -validity ${cert.validity.length} -alias direct.example.com -dname &quot;cn=direct.example.com&quot;" />
-                                        </exec>
-                                        <exec failonerror="true" executable="keytool" dir="${temp.dir}">
-                                            <arg line="-v -export -rfc -alias direct.example.com -file example.cer -keystore ${direct.key.store}.jks -keypass ${cert.keypass} -storepass ${cert.storepass}" />
-                                        </exec>
-                                        <exec failonerror="true" executable="keytool" dir="${temp.dir}">
-                                            <arg line="-v -import -keypass ${cert.keypass} -noprompt -trustcacerts -alias direct.example.com -file example.cer -keystore ${direct.trust.store}.jks -storepass ${cert.storepass}" />
-                                        </exec>
-                                        <!-- Use the same trust store for the anchor store -->
-                                        <exec failonerror="true" executable="keytool" dir="${temp.dir}">
-                                            <arg line="-v -import -keypass ${cert.keypass} -noprompt -trustcacerts -alias direct.example.com -file example.cer -keystore ${direct.anchor.store}.jks -storepass ${cert.storepass}" />
-                                        </exec>
-                                        <copy todir="${project.build.directory}/domain1/config" overwrite="true">
-                                            <fileset dir="${temp.dir}">
-                                                <include name="${direct.key.store}.jks" />
-                                                <include name="${direct.trust.store}.jks" />
-                                                <include name="${direct.anchor.store}.jks" />
-                                            </fileset>
-                                        </copy>
-
-                                        <copy file="${project.build.directory}/nhinc-properites-dir/smtp.agent.config.template.xml" tofile="${project.build.directory}/nhinc-properites-dir/smtp.agent.config.xml" filtering="yes" overwrite="yes">
-                                            <filterset>
-                                                <filter token="ANCHOR_STORE_JKS" value="${project.build.directory}/domain1/config/${direct.anchor.store}.jks" />
-                                                <filter token="PUBLIC_STORE_JKS" value="${project.build.directory}/domain1/config/${direct.trust.store}.jks" />
-                                                <filter token="PRIVATE_STORE_JKS" value="${project.build.directory}/domain1/config/${direct.key.store}.jks" />
-                                            </filterset>
-                                        </copy>
-                                    </target>
                                 </configuration>
                             </execution>
                         </executions>
@@ -341,8 +311,7 @@
                                     <skip>${skip.unpack}</skip>
                                     <artifactItems>
                                         <artifactItem>
-                                            <!-- Artifact that Holds our
-                                                SQL scripts -->
+                                            <!-- Artifact that Holds our SQL scripts -->
                                             <groupId>org.aurionproject</groupId>
                                             <artifactId>DBScripts</artifactId>
                                             <version>${project.parent.version}</version>

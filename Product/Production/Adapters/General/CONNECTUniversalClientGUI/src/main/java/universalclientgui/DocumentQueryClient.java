@@ -363,7 +363,7 @@ public class DocumentQueryClient {
     }
 
     @SuppressWarnings("unused")
-	private String formatDate(Date date, String format) {
+    private String formatDate(Date date, String format) {
         SimpleDateFormat formatter = new SimpleDateFormat(format);
         return formatter.format(date);
     }

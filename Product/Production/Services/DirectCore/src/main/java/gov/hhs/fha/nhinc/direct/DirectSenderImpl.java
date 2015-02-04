@@ -32,6 +32,7 @@ import java.util.Enumeration;
 
 import gov.hhs.fha.nhinc.direct.event.DirectEventLogger;
 import gov.hhs.fha.nhinc.direct.event.DirectEventType;
+import gov.hhs.fha.nhinc.direct.messagemonitoring.impl.MessageMonitoringAPI;
 import gov.hhs.fha.nhinc.mail.MailSender;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
@@ -40,9 +41,8 @@ import javax.mail.Address;
 import javax.mail.Header;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
 import org.apache.log4j.Logger;
-import org.nhindirect.gateway.smtp.SmtpAgent;
+
 import org.nhindirect.xd.common.DirectDocuments;
 
 /**
@@ -55,17 +55,15 @@ public class DirectSenderImpl extends DirectAdapter implements DirectSender {
 	private static final String DATE_HEADER_FIELD = "Date";
 
     private static final Logger LOG = Logger.getLogger(DirectSenderImpl.class);
-
     private static final String MSG_SUBJECT = "DIRECT Message";
     private static final String MSG_TEXT = "DIRECT Message body text";
-    
+
     /**
      * @param externalMailSender used to send messages.
-     * @param smtpAgent used to process direct messages.
      * @param directEventLogger used to log direct events.
      */
-    public DirectSenderImpl(MailSender externalMailSender, SmtpAgent smtpAgent, DirectEventLogger directEventLogger) {
-        super(externalMailSender, smtpAgent, directEventLogger);
+    public DirectSenderImpl(MailSender externalMailSender, DirectEventLogger directEventLogger) {
+        super(externalMailSender, directEventLogger);
     }
 
     /**
@@ -73,17 +71,28 @@ public class DirectSenderImpl extends DirectAdapter implements DirectSender {
      */
     @Override
     public void sendOutboundDirect(MimeMessage message) {
+        boolean failed = false;
+        String errorMessage = null;
         getDirectEventLogger().log(DirectEventType.BEGIN_OUTBOUND_DIRECT, message);
         try {        	
         	ensureOrigDateHeaderExistsInMimeMessage(message);
             MimeMessage processedMessage = process(message).getProcessedMessage().getMessage();
             getExternalMailSender().send(message.getAllRecipients(), processedMessage);
         } catch (Exception e) {
-            throw new DirectException("Exception sending outbound direct.", e, message);
+            //if its security error then return send a message back to sender
+            failed = true;
+            errorMessage = e.getMessage();
+            //TODO: drop the message to a delete bin directory for future ref
+            return;
+        } finally {
+            LOG.debug("Before inserting Outgoing Message");
+            //if failed then insert a row with the status failed, which will be
+            //used by the Notification piece to send a message to the edge
+            addOutgoingMessage(message, failed, errorMessage);
         }
         getDirectEventLogger().log(DirectEventType.END_OUTBOUND_DIRECT, message);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -106,11 +115,15 @@ public class DirectSenderImpl extends DirectAdapter implements DirectSender {
 			}
             
             sendOutboundDirect(message);
-         } catch (Exception e) {
-            throw new DirectException("Error building and sending mime message.", e, message);
+        } catch (Exception e) {
+            getDirectEventLogger().log(DirectEventType.DIRECT_ERROR, message, e.getMessage());
+            throw new DirectException("Error building and sending mime message.sendOutboundDirect", e, message);
         }
     }   
     
+    protected void addOutgoingMessage(MimeMessage message, boolean failed, String errorMessage) {
+        MessageMonitoringAPI.getInstance().addOutgoingMessage(message, failed, errorMessage);
+    }
     
 	/**
 	 * Gets the override mime message id option from a properties file.

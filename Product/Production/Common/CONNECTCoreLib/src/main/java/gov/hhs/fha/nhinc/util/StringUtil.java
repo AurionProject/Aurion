@@ -26,6 +26,7 @@
  */
 package gov.hhs.fha.nhinc.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;

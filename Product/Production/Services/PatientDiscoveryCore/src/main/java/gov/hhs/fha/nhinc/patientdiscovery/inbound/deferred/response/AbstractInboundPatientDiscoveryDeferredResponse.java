@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, United States Government, as represented by the Secretary of Health and Human Services.
+ * Copyright (c) 2009-2014, United States Government, as represented by the Secretary of Health and Human Services.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,15 +26,12 @@
  */
 package gov.hhs.fha.nhinc.patientdiscovery.inbound.deferred.response;
 
-import gov.hhs.fha.nhinc.aspect.InboundProcessingEvent;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.generic.GenericFactory;
 import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditor;
 import gov.hhs.fha.nhinc.patientdiscovery.adapter.deferred.response.proxy.AdapterPatientDiscoveryDeferredRespProxy;
 import gov.hhs.fha.nhinc.patientdiscovery.adapter.deferred.response.proxy.AdapterPatientDiscoveryDeferredRespProxyObjectFactory;
-import gov.hhs.fha.nhinc.patientdiscovery.aspect.MCCIIN000002UV01EventDescriptionBuilder;
-import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 
@@ -61,13 +58,13 @@ public abstract class AbstractInboundPatientDiscoveryDeferredResponse implements
     public AbstractInboundPatientDiscoveryDeferredResponse() {
         proxyFactory = new AdapterPatientDiscoveryDeferredRespProxyObjectFactory();
     }
-    
-    public AbstractInboundPatientDiscoveryDeferredResponse(GenericFactory<AdapterPatientDiscoveryDeferredRespProxy> factory) {
+
+    public AbstractInboundPatientDiscoveryDeferredResponse(
+            GenericFactory<AdapterPatientDiscoveryDeferredRespProxy> factory) {
         proxyFactory = factory;
     }
 
     @Override
-    @InboundProcessingEvent(beforeBuilder = PRPAIN201306UV02EventDescriptionBuilder.class, afterReturningBuilder = MCCIIN000002UV01EventDescriptionBuilder.class, serviceType = "Patient Discovery Deferred Response", version = "1.0")
     public MCCIIN000002UV01 respondingGatewayDeferredPRPAIN201306UV02(PRPAIN201306UV02 request, AssertionType assertion) {
         
     	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, 

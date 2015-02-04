@@ -38,15 +38,12 @@ import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 import gov.hhs.fha.nhinc.transform.subdisc.HL7Constants;
 import gov.hhs.fha.nhinc.transform.subdisc.HL7DataTransformHelper;
 import gov.hhs.fha.nhinc.util.HomeCommunityMap;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
-
 import javax.xml.bind.JAXBElement;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hl7.v3.ADExplicit;
@@ -105,8 +102,7 @@ public class HL7Parser201306 {
     private static final Logger LOG = Logger.getLogger(HL7Parser201306.class);
     private static final String PROPERTY_FILE = "adapter";
     private static final String PROPERTY_NAME = "assigningAuthorityId";
-    private static final String DEFAULT_AA_OID = "1.1";
-    
+
     /**
      * Method to build a PRPAIN201306UV02 froma given list of Patients and a PRPAIN201305UV02 object.
      *
@@ -148,7 +144,6 @@ public class HL7Parser201306 {
             LOG.error(
                 "PropertyAccessException - Default Assigning Authority property not defined in adapter.properties",
                 e);
-            id.setRoot(DEFAULT_AA_OID);
             // CONNECT environment corrupt; return error response
             // return BuildMessageForError(<ERROR_CODE>, query);
         }
@@ -213,7 +208,7 @@ public class HL7Parser201306 {
         controlActProcess.setMoodCode(XActMoodIntentEvent.EVN);
         controlActProcess.setClassCode(ActClassControlAct.CACT);
         CD code = new CD();
-        code.setCode("PRPA_TE201306UV");
+        code.setCode("PRPA_TE201306UV02");
         code.setCodeSystem("2.16.840.1.113883.1.6");
         controlActProcess.setCode(code);
 
@@ -262,7 +257,7 @@ public class HL7Parser201306 {
         authorOrPerformer.setAssignedDevice(assignedDeviceJAXBElement);
         controlActProcess.getAuthorOrPerformer().add(authorOrPerformer);        
 
-		return controlActProcess;
+        return controlActProcess;
     }
 
     private static MFMIMT700711UV01QueryAck createQueryAck(PRPAIN201305UV02 query) {
@@ -292,7 +287,7 @@ public class HL7Parser201306 {
     }
 
     private static PRPAIN201306UV02MFMIMT700711UV01RegistrationEvent createRegEvent(Patient patient,
-            PRPAIN201305UV02 query, String sOrgOid) {
+        PRPAIN201305UV02 query, String sOrgOid) {
         PRPAIN201306UV02MFMIMT700711UV01RegistrationEvent regEvent =
             new PRPAIN201306UV02MFMIMT700711UV01RegistrationEvent();
         regEvent.getMoodCode().add("EVN");

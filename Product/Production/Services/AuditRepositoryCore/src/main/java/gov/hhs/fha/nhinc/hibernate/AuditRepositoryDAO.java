@@ -47,21 +47,26 @@ import org.hibernate.criterion.Expression;
 public class AuditRepositoryDAO {
     // Log4j logging initiated
     private static final Logger LOG = Logger.getLogger(AuditRepositoryDAO.class);
+    private static AuditRepositoryDAO auditDAO = new AuditRepositoryDAO();
     public static String JAVA_IO_TMPDIR = "java.io.tmpdir";
 
     /**
      * Constructor
      */
-    public AuditRepositoryDAO() {
+    private AuditRepositoryDAO() {
         LOG.info("AuditRepositoryDAO - Initialized");
     }
 
     /**
+     * Singleton instance returned...
      * 
-     * @param query
-     * @param whereClause
-     * @return List<AuditRepositoryRecord>
+     * @return AuditRepositoryDAO
      */
+    public static AuditRepositoryDAO getAuditRepositoryDAOInstance() {
+        LOG.debug("getAuditRepositoryDAOInstance()..");
+        return auditDAO;
+    }
+
     public List<AuditRepositoryRecord> queryAuditRepository(String query) {
         LOG.debug("Entering..." + this.getClass().getName() + ".queryAuditRepository()");
 
@@ -159,11 +164,10 @@ public class AuditRepositoryDAO {
      * @return boolean
      */
     public boolean insertAuditRepository(List<AuditRepositoryRecord> auditList) {
+        LOG.debug("AuditRepositoryDAO.createAuditRepository() - Begin");
         Session session = null;
-        Transaction  tx = null;
+        Transaction tx = null;
         boolean result = true;
-
-        LOG.debug("Entering..." + this.getClass().getName() + ".insertAuditRepository()");
         if (auditList != null && auditList.size() > 0) {
             int size = auditList.size();
             AuditRepositoryRecord auditRecord = null;
@@ -204,7 +208,7 @@ public class AuditRepositoryDAO {
                 }
             }
         }
-        LOG.debug("Exiting..." + this.getClass().getName() + ".insertAuditRepository()");
+        LOG.debug("AuditRepositoryDAO.createAuditRepository() - End");
         return result;
     }
 
@@ -299,6 +303,7 @@ public class AuditRepositoryDAO {
         		LOG.error(e.getMessage());
         }
         finally {
+            // Actual contact insertion will happen at this step
             if (session != null) {
                 try {
                 	session.close();

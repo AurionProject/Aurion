@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.aurionproject</groupId>
@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
     <name>CONNECT EAR - Dependencies</name>
     <description>CONNECT EAR - Dependencies</description>
-   
+
     <dependencies>
         <dependency>
             <groupId>org.aurionproject</groupId>
@@ -199,22 +199,19 @@
             <type>war</type>
             <optional>true</optional>
         </dependency>
+
+        <!-- Shared JARs - In order for the SKINNY WARs to work you must
+        include each dependency in the EAR manually and the JARS will be magically
+        removed from the WAR's WEB-INF/lib -->
         <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>DirectCore</artifactId>
-            <version>${project.parent.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.aurionproject</groupId>
-            <artifactId>Direct</artifactId>
+            <groupId>org.connectopensource</groupId>
+            <artifactId>CONNECTAdminGUI</artifactId>
             <version>${project.parent.version}</version>
             <type>war</type>
             <optional>true</optional>
         </dependency>
-        <!-- Shared JARs - In order for the SKINNY WARs to work you must 
-            include each dependency in the EAR manually and the JARS will be magically 
-            removed from the WAR's WEB-INF/lib -->
+        <!-- Shared JARs - In order for the SKINNY WARs to work you must include each dependency in the EAR manually and 
+        the JARS will be magically removed from the WAR's WEB-INF/lib -->
         <dependency>
             <groupId>org.aurionproject</groupId>
             <artifactId>AurionCommonTypesLib</artifactId>
@@ -291,12 +288,22 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>3.0.7.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>3.0.7.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
+            <version>3.0.7.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
             <version>3.0.7.RELEASE</version>
         </dependency>
         <dependency>
@@ -333,7 +340,7 @@
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-xjc</artifactId>
-            </dependency>
+        </dependency>
         <!-- Persistence (HBM, MySQL, Connnection Pooling -->
         <!-- Hibernate & cglib-nodep -->
         <dependency>
@@ -351,9 +358,34 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.3.1.GA</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>ejb3-persistence</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>1.0.1.Final</version>
+        </dependency>
+        <dependency>
             <!-- Used to include the asm it needs in a private package space. -->
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>antlr</artifactId>
+            <version>2.7.7</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -447,11 +479,22 @@
             <groupId>org.opensaml</groupId>
             <artifactId>xmltooling</artifactId>
             <version>1.3.2-1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
             <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
@@ -466,8 +509,8 @@
             <artifactId>commons-collections</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
         </dependency>
         <dependency>
             <groupId>xalan</groupId>
@@ -481,11 +524,33 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            </dependency>
+        </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
         </dependency>
     </dependencies>
-    
+    <profiles>
+        <profile>
+            <id>Direct</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.aurionproject</groupId>
+                    <artifactId>DirectCore</artifactId>
+                    <version>${project.parent.version}</version>
+                    <optional>true</optional>
+                </dependency>
+                <dependency>
+                    <groupId>org.aurionproject</groupId>
+                    <artifactId>Direct</artifactId>
+                    <version>${project.parent.version}</version>
+                    <type>war</type>
+                    <optional>true</optional>
+                </dependency>
+            </dependencies>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 </project>

@@ -31,20 +31,16 @@ import com.services.nhinc.schema.auditmessage.AuditSourceIdentificationType;
 import com.services.nhinc.schema.auditmessage.CodedValueType;
 import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationType;
 import com.services.nhinc.schema.auditmessage.AuditMessageType.ActiveParticipant;
-
 import gov.hhs.fha.nhinc.common.auditlog.LogEventRequestType;
 import gov.hhs.fha.nhinc.common.hiemauditlog.LogNhinUnsubscribeRequestType;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
 import gov.hhs.fha.nhinc.transform.marshallers.JAXBContextHandler;
-
 import java.io.ByteArrayOutputStream;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
-
 import org.apache.log4j.Logger;
 import org.oasis_open.docs.wsn.b_2.Unsubscribe;
 

@@ -146,16 +146,4 @@ public class PassthroughInboundDocSubmissionDeferredResponseTest {
                 eq(NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION), eq(NhincConstants.XDR_RESPONSE_ACTION));
     }
 
-    @Test
-    public void hasInboundProcessingEvent() throws Exception {
-        Class<PassthroughInboundDocSubmissionDeferredResponse> clazz = PassthroughInboundDocSubmissionDeferredResponse.class;
-        Method method = clazz.getMethod("provideAndRegisterDocumentSetBResponse", RegistryResponseType.class,
-                AssertionType.class);
-        InboundProcessingEvent annotation = method.getAnnotation(InboundProcessingEvent.class);
-        assertNotNull(annotation);
-        assertEquals(DeferredResponseDescriptionBuilder.class, annotation.beforeBuilder());
-        assertEquals(DocSubmissionArgTransformerBuilder.class, annotation.afterReturningBuilder());
-        assertEquals("Document Submission Deferred Response", annotation.serviceType());
-        assertEquals("", annotation.version());
-    }
 }

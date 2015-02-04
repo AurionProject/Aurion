@@ -31,13 +31,13 @@ import gov.hhs.fha.nhinc.common.auditlog.LogEventRequestType;
 import gov.hhs.fha.nhinc.common.auditlog.LogEventSecureRequestType;
 import gov.hhs.fha.nhinc.common.nhinccommon.AcknowledgementType;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
-import gov.hhs.fha.nhinc.messaging.client.CONNECTCXFClientFactory;
 import gov.hhs.fha.nhinc.messaging.client.CONNECTClient;
+import gov.hhs.fha.nhinc.messaging.client.CONNECTCXFClientFactory;
 import gov.hhs.fha.nhinc.messaging.service.port.ServicePortDescriptor;
 import gov.hhs.fha.nhinc.nhinccomponentauditrepository.AuditRepositoryManagerSecuredPortType;
 import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 import gov.hhs.fha.nhinc.nhinclib.NullChecker;
-import gov.hhs.fha.nhinc.transform.audit.AuditDataTransformHelper;
+//import gov.hhs.fha.nhinc.transform.audit.AuditDataTransformHelper;
 import gov.hhs.fha.nhinc.webserviceproxy.WebServiceProxyHelper;
 
 import org.apache.log4j.Logger;
@@ -64,7 +64,9 @@ public class AuditRepositoryProxyWebServiceSecuredImpl implements AuditRepositor
         }
         
         LogEventSecureRequestType secureRequest = new LogEventSecureRequestType();
-        
+        if (request.getAuditMessage() == null) {
+            LOG.error("Audit Request is null");
+        }
         secureRequest.setAuditMessage(request.getAuditMessage());
         secureRequest.setDirection(request.getDirection());
         secureRequest.setInterface(request.getInterface());

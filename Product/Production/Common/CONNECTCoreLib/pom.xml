@@ -19,11 +19,11 @@
             <groupId>org.aurionproject</groupId>
             <artifactId>Properties</artifactId>
             <version>${project.parent.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.aurionproject</groupId>
             <artifactId>AurionCommonTypesLib</artifactId>
-            <version>5.0</version>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>

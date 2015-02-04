@@ -20,8 +20,8 @@ By advancing the adoption of interoperable health IT systems and health informat
         <connection>scm:git:git@github.com:${git.username}/CONNECT.git</connection>
         <developerConnection>scm:git:git@github.com:${git.username}/CONNECT.git</developerConnection>
         <url>https://github.com/${git.username}/CONNECT</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 -->
     <modules>
         <module>ThirdParty</module>

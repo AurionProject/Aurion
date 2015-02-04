@@ -26,16 +26,26 @@
  */
 package gov.hhs.fha.nhinc.transform.audit;
 
-import gov.hhs.fha.nhinc.common.auditlog.DocRetrieveMessageType;
-import gov.hhs.fha.nhinc.common.auditlog.LogDocRetrieveRequestType;
-import gov.hhs.fha.nhinc.common.auditlog.LogDocRetrieveResultRequestType;
-import gov.hhs.fha.nhinc.common.auditlog.LogEventRequestType;
+import org.apache.log4j.Logger;
+
+import com.services.nhinc.schema.auditmessage.AuditMessageType;
+import com.services.nhinc.schema.auditmessage.AuditSourceIdentificationType;
+import com.services.nhinc.schema.auditmessage.AuditMessageType.ActiveParticipant;
+import com.services.nhinc.schema.auditmessage.CodedValueType;
+import com.services.nhinc.schema.auditmessage.EventIdentificationType;
+import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationType;
+
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 import gov.hhs.fha.nhinc.transform.marshallers.JAXBContextHandler;
 import ihe.iti.xds_b._2007.RetrieveDocumentSetRequestType;
+import gov.hhs.fha.nhinc.common.auditlog.DocRetrieveMessageType;
+import gov.hhs.fha.nhinc.common.auditlog.LogDocRetrieveRequestType;
+import gov.hhs.fha.nhinc.common.auditlog.LogDocRetrieveResultRequestType;
+import gov.hhs.fha.nhinc.common.auditlog.LogEventRequestType;
+
 import ihe.iti.xds_b._2007.RetrieveDocumentSetRequestType.DocumentRequest;
 import ihe.iti.xds_b._2007.RetrieveDocumentSetResponseType;
 import ihe.iti.xds_b._2007.RetrieveDocumentSetResponseType.DocumentResponse;
@@ -55,13 +65,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.apache.log4j.Logger;
-
-import com.services.nhinc.schema.auditmessage.AuditMessageType;
-import com.services.nhinc.schema.auditmessage.AuditMessageType.ActiveParticipant;
-import com.services.nhinc.schema.auditmessage.CodedValueType;
-import com.services.nhinc.schema.auditmessage.EventIdentificationType;
-import com.services.nhinc.schema.auditmessage.ParticipantObjectIdentificationType;
 
 /**
  * 
@@ -100,7 +103,8 @@ public class DocumentRetrieveTransforms {
      * @param responseCommunityID
      * @return <code>LogEventRequestType</code>
      */
-    public static LogEventRequestType transformDocRetrieveReq2AuditMsg(LogDocRetrieveRequestType message, String responseCommunityID) {
+    public static LogEventRequestType transformDocRetrieveReq2AuditMsg(LogDocRetrieveRequestType message,
+            String responseCommunityID) {
         AuditMessageType auditMsg = new AuditMessageType();
         LogEventRequestType response = new LogEventRequestType();
 

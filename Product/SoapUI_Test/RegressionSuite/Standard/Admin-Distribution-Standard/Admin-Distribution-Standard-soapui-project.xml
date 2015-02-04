@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project abortOnError="false" name="Admin-Distribution-Standard" resourceRoot="${projectDir}" runType="SEQUENTIAL" soapui-version="4.5.1" activeEnvironment="Default" xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-project abortOnError="false" name="Admin-Distribution-Standard" resourceRoot="${projectDir}" runType="SEQUENTIAL" soapui-version="4.6.0" activeEnvironment="Default" xmlns:con="http://eviware.com/soapui/config">
   <con:settings/>
   <con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entityadmindistribution}AdministrativeDistribution_Binding_Soap12" definition="../../../target/wsdl/EntityAdminDist.wsdl" name="AdministrativeDistribution_Binding_Soap12" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings/>
@@ -407,7 +407,7 @@ context.testCase.setPropertyValue('UserId',"${ADUserID}${nowDate}1");</script>
             <con:wsrmConfig version="1.2"/>
           </con:request>
         </con:config>
-      </con:testStep><con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>5000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
+      </con:testStep><con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>60000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
 	sql.firstRow('select count(*) from ' + context.findProperty('AuditTable')).'count(*)'
 }
 //log.info "Count: " + count;
@@ -415,23 +415,23 @@ assert (count == 4);</script></con:config></con:testStep>
       <con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty("GatewayPropDir"), log);</con:setupScript><con:properties>
         <con:property>
           <con:name>startDate</con:name>
-          <con:value>2013-01-23T18:30:12Z</con:value>
+          <con:value>2013-09-25T13:29:59Z</con:value>
         </con:property>
         <con:property>
           <con:name>endDate</con:name>
-          <con:value>2013-01-23T18:40:12Z</con:value>
+          <con:value>2013-09-25T13:39:59Z</con:value>
         </con:property>
         <con:property>
           <con:name>sigDate</con:name>
-          <con:value>01/23/2013 18:30:12</con:value>
+          <con:value>09/25/2013 13:29:59</con:value>
         </con:property>
         <con:property>
           <con:name>expireDate</con:name>
-          <con:value>2013-02-22T00:00:00Z</con:value>
+          <con:value>2013-10-25T00:00:00Z</con:value>
         </con:property>
         <con:property>
           <con:name>UserId</con:name>
-          <con:value>admindistWed Jan 23 18:35:12 UTC 20131</con:value>
+          <con:value>admindistWed Sep 25 13:34:59 UTC 20131</con:value>
         </con:property>
       </con:properties>
       <con:reportParameters/>
@@ -805,30 +805,30 @@ context.testCase.setPropertyValue('UserId',"${ADUserID}${nowDate}1");</script>
           </con:request>
         </con:config>
       </con:testStep>
-      <con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>5000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
+      <con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>60000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
 	sql.firstRow('select count(*) from ' + context.findProperty('AuditTable')).'count(*)'
 }
 //log.info "Count: " + count;
 assert (count == 4);</script></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty("GatewayPropDir"), log);</con:setupScript><con:properties>
         <con:property>
           <con:name>startDate</con:name>
-          <con:value>2013-01-23T18:30:40Z</con:value>
+          <con:value>2013-09-25T13:30:29Z</con:value>
         </con:property>
         <con:property>
           <con:name>endDate</con:name>
-          <con:value>2013-01-23T18:40:40Z</con:value>
+          <con:value>2013-09-25T13:40:29Z</con:value>
         </con:property>
         <con:property>
           <con:name>sigDate</con:name>
-          <con:value>01/23/2013 18:30:40</con:value>
+          <con:value>09/25/2013 13:30:29</con:value>
         </con:property>
         <con:property>
           <con:name>expireDate</con:name>
-          <con:value>2013-02-22T00:00:00Z</con:value>
+          <con:value>2013-10-25T00:00:00Z</con:value>
         </con:property>
         <con:property>
           <con:name>UserId</con:name>
-          <con:value>admindistWed Jan 23 18:35:40 UTC 20131</con:value>
+          <con:value>admindistWed Sep 25 13:35:29 UTC 20131</con:value>
         </con:property>
       </con:properties>
       <con:reportParameters/>
@@ -1213,30 +1213,30 @@ context.testCase.setPropertyValue('UserId',"${ADUserID}${nowDate}1");</script>
           </con:request>
         </con:config>
       </con:testStep>
-      <con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>5000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
+      <con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>60000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
 	sql.firstRow('select count(*) from ' + context.findProperty('AuditTable')).'count(*)'
 }
 //log.info "Count: " + count;
 assert (count == 4);</script></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty("GatewayPropDir"), log);</con:setupScript><con:properties>
         <con:property>
           <con:name>startDate</con:name>
-          <con:value>2013-01-23T18:31:08Z</con:value>
+          <con:value>2013-09-25T13:30:34Z</con:value>
         </con:property>
         <con:property>
           <con:name>endDate</con:name>
-          <con:value>2013-01-23T18:41:08Z</con:value>
+          <con:value>2013-09-25T13:40:34Z</con:value>
         </con:property>
         <con:property>
           <con:name>sigDate</con:name>
-          <con:value>01/23/2013 18:31:08</con:value>
+          <con:value>09/25/2013 13:30:34</con:value>
         </con:property>
         <con:property>
           <con:name>expireDate</con:name>
-          <con:value>2013-02-22T00:00:00Z</con:value>
+          <con:value>2013-10-25T00:00:00Z</con:value>
         </con:property>
         <con:property>
           <con:name>UserId</con:name>
-          <con:value>admindistWed Jan 23 18:36:08 UTC 20131</con:value>
+          <con:value>admindistWed Sep 25 13:35:34 UTC 20131</con:value>
         </con:property>
       </con:properties>
       <con:reportParameters/>
@@ -1650,30 +1650,30 @@ context.testCase.setPropertyValue('UserId',"${ADUserID}${nowDate}1");</script>
           </con:request>
         </con:config>
       </con:testStep>
-      <con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>5000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
+      <con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>60000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
 	sql.firstRow('select count(*) from ' + context.findProperty('AuditTable')).'count(*)'
 }
 //log.info "Count: " + count;
 assert (count == 4);</script></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty("GatewayPropDir"), log);</con:setupScript><con:properties>
         <con:property>
           <con:name>startDate</con:name>
-          <con:value>2013-01-23T18:31:42Z</con:value>
+          <con:value>2013-09-25T13:30:39Z</con:value>
         </con:property>
         <con:property>
           <con:name>endDate</con:name>
-          <con:value>2013-01-23T18:41:42Z</con:value>
+          <con:value>2013-09-25T13:40:39Z</con:value>
         </con:property>
         <con:property>
           <con:name>sigDate</con:name>
-          <con:value>01/23/2013 18:31:42</con:value>
+          <con:value>09/25/2013 13:30:39</con:value>
         </con:property>
         <con:property>
           <con:name>expireDate</con:name>
-          <con:value>2013-02-22T00:00:00Z</con:value>
+          <con:value>2013-10-25T00:00:00Z</con:value>
         </con:property>
         <con:property>
           <con:name>UserId</con:name>
-          <con:value>admindistWed Jan 23 18:36:42 UTC 20131</con:value>
+          <con:value>admindistWed Sep 25 13:35:39 UTC 20131</con:value>
         </con:property>
       </con:properties>
       <con:reportParameters/>
@@ -2007,30 +2007,30 @@ context.testCase.setPropertyValue('UserId',"${ADUserID}${nowDate}1");</script>
             <con:wsrmConfig version="1.2"/>
           </con:request>
         </con:config>
-      </con:testStep><con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>5000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
+      </con:testStep><con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>60000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
 	sql.firstRow('select count(*) from ' + context.findProperty('AuditTable')).'count(*)'
 }
 //log.info "Count: " + count;
 assert (count == 4);</script></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty("GatewayPropDir"), log);</con:setupScript><con:properties>
         <con:property>
           <con:name>startDate</con:name>
-          <con:value>2013-01-23T18:35:09Z</con:value>
+          <con:value>2013-09-25T13:30:45Z</con:value>
         </con:property>
         <con:property>
           <con:name>endDate</con:name>
-          <con:value>2013-01-23T18:45:09Z</con:value>
+          <con:value>2013-09-25T13:40:45Z</con:value>
         </con:property>
         <con:property>
           <con:name>sigDate</con:name>
-          <con:value>01/23/2013 18:35:09</con:value>
+          <con:value>09/25/2013 13:30:45</con:value>
         </con:property>
         <con:property>
           <con:name>expireDate</con:name>
-          <con:value>2013-02-22T00:00:00Z</con:value>
+          <con:value>2013-10-25T00:00:00Z</con:value>
         </con:property>
         <con:property>
           <con:name>UserId</con:name>
-          <con:value>admindistWed Jan 23 18:40:09 UTC 20131</con:value>
+          <con:value>admindistWed Sep 25 13:35:45 UTC 20131</con:value>
         </con:property>
       </con:properties>
       <con:reportParameters/>
@@ -2368,30 +2368,30 @@ context.testCase.setPropertyValue('UserId',"${ADUserID}${nowDate}1");</script>
             <con:wsrmConfig version="1.2"/>
           </con:request>
         </con:config>
-      </con:testStep><con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>5000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
+      </con:testStep><con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>60000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
 	sql.firstRow('select count(*) from ' + context.findProperty('AuditTable')).'count(*)'
 }
 //log.info "Count: " + count;
 assert (count == 4);</script></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty("GatewayPropDir"), log);</con:setupScript><con:properties>
         <con:property>
           <con:name>startDate</con:name>
-          <con:value>2013-01-23T18:35:45Z</con:value>
+          <con:value>2013-09-25T13:30:50Z</con:value>
         </con:property>
         <con:property>
           <con:name>endDate</con:name>
-          <con:value>2013-01-23T18:45:45Z</con:value>
+          <con:value>2013-09-25T13:40:50Z</con:value>
         </con:property>
         <con:property>
           <con:name>sigDate</con:name>
-          <con:value>01/23/2013 18:35:45</con:value>
+          <con:value>09/25/2013 13:30:50</con:value>
         </con:property>
         <con:property>
           <con:name>expireDate</con:name>
-          <con:value>2013-02-22T00:00:00Z</con:value>
+          <con:value>2013-10-25T00:00:00Z</con:value>
         </con:property>
         <con:property>
           <con:name>UserId</con:name>
-          <con:value>admindistWed Jan 23 18:40:45 UTC 20131</con:value>
+          <con:value>admindistWed Sep 25 13:35:50 UTC 20131</con:value>
         </con:property>
       </con:properties>
       <con:reportParameters/>
@@ -2400,7 +2400,7 @@ assert (count == 4);</script></con:config></con:testStep><con:setupScript>nhinc.
       <con:settings/>
       <con:testStep name="Copy uddiConnectionInfo" type="groovy">
         <con:settings/>
-        <con:config><script>def sourceDir = (new com.eviware.soapui.support.GroovyUtils(context)).projectPath;
+        <con:config><script>def sourceDir = context.expand('${projectDir}');
 
 nhinc.FileUtils.copyFile(sourceDir, "uddiConnectionInfo_AD_multitarget.xml", context.findProperty("GatewayPropDir"), "uddiConnectionInfo.xml", log);</script></con:config>
       </con:testStep>
@@ -2780,30 +2780,30 @@ context.testCase.setPropertyValue('UserId',"${ADUserID}${nowDate}1");</script>
             <con:wsrmConfig version="1.2"/>
           </con:request>
         </con:config>
-      </con:testStep><con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>10000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
+      </con:testStep><con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>80000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
 	sql.firstRow('select count(*) from ' + context.findProperty('AuditTable')).'count(*)'
 }
 //log.info "Count: " + count;
 assert (count == 7);</script></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty("GatewayPropDir"), log);</con:setupScript><con:properties>
         <con:property>
           <con:name>startDate</con:name>
-          <con:value>2013-01-23T19:01:04Z</con:value>
+          <con:value>2013-09-25T13:30:55Z</con:value>
         </con:property>
         <con:property>
           <con:name>endDate</con:name>
-          <con:value>2013-01-23T19:11:04Z</con:value>
+          <con:value>2013-09-25T13:40:55Z</con:value>
         </con:property>
         <con:property>
           <con:name>sigDate</con:name>
-          <con:value>01/23/2013 19:01:04</con:value>
+          <con:value>09/25/2013 13:30:55</con:value>
         </con:property>
         <con:property>
           <con:name>expireDate</con:name>
-          <con:value>2013-02-22T00:00:00Z</con:value>
+          <con:value>2013-10-25T00:00:00Z</con:value>
         </con:property>
         <con:property>
           <con:name>UserId</con:name>
-          <con:value>admindistWed Jan 23 19:06:04 UTC 20131</con:value>
+          <con:value>admindistWed Sep 25 13:35:55 UTC 20131</con:value>
         </con:property>
       </con:properties>
       <con:reportParameters/>
@@ -4676,19 +4676,19 @@ declare namespace ns17='urn:gov:hhs:fha:nhinc:common:nhinccommonadapter';
 assert (count == 1);</script></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty("GatewayPropDir"), log);</con:setupScript><con:properties>
         <con:property>
           <con:name>startDate</con:name>
-          <con:value>2013-01-23T18:36:58Z</con:value>
+          <con:value>2013-09-25T13:32:16Z</con:value>
         </con:property>
         <con:property>
           <con:name>endDate</con:name>
-          <con:value>2013-01-23T18:46:58Z</con:value>
+          <con:value>2013-09-25T13:42:16Z</con:value>
         </con:property>
         <con:property>
           <con:name>sigDate</con:name>
-          <con:value>01/23/2013 18:36:58</con:value>
+          <con:value>09/25/2013 13:32:16</con:value>
         </con:property>
         <con:property>
           <con:name>expireDate</con:name>
-          <con:value>2013-02-22T00:00:00Z</con:value>
+          <con:value>2013-10-25T00:00:00Z</con:value>
         </con:property>
       </con:properties>
       <con:reportParameters/>
@@ -5061,26 +5061,26 @@ FileUtils.createOrUpdateConnection("uddiConnectionInfo.xml", context.findPropert
             <con:wsrmConfig version="1.2"/>
           </con:request>
         </con:config>
-      </con:testStep><con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>5000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
+      </con:testStep><con:testStep name="Delay" type="delay"><con:settings/><con:config><delay>60000</delay></con:config></con:testStep><con:testStep name="verify audit events" type="groovy"><con:settings/><con:config><script>def count = context.withSql('AuditDB') { sql -> 
 	sql.firstRow('select count(*) from ' + context.findProperty('AuditTable')).'count(*)'
 }
 //log.info "Count: " + count;
 assert (count == 2);</script></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty("GatewayPropDir"), log);</con:setupScript><con:properties>
         <con:property>
           <con:name>startDate</con:name>
-          <con:value>2013-01-23T18:48:21Z</con:value>
+          <con:value>2013-09-25T13:32:19Z</con:value>
         </con:property>
         <con:property>
           <con:name>endDate</con:name>
-          <con:value>2013-01-23T18:58:21Z</con:value>
+          <con:value>2013-09-25T13:42:19Z</con:value>
         </con:property>
         <con:property>
           <con:name>sigDate</con:name>
-          <con:value>01/23/2013 18:48:21</con:value>
+          <con:value>09/25/2013 13:32:19</con:value>
         </con:property>
         <con:property>
           <con:name>expireDate</con:name>
-          <con:value>2013-02-22T00:00:00Z</con:value>
+          <con:value>2013-10-25T00:00:00Z</con:value>
         </con:property>
       </con:properties>
       <con:reportParameters/>

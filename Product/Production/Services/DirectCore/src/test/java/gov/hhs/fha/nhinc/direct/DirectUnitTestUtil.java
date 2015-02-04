@@ -73,10 +73,6 @@ import org.nhindirect.xd.common.type.PracticeSettingCodeEnum;
 import org.nhindirect.xd.transform.pojo.SimplePerson;
 import org.nhindirect.xd.transform.util.type.MimeType;
 
-import com.icegreen.greenmail.store.MailFolder;
-import com.icegreen.greenmail.store.SimpleStoredMessage;
-import com.icegreen.greenmail.user.GreenMailUser;
-import com.icegreen.greenmail.util.GreenMail;
 
 /**
  * Utilities for running Direct Core Unit Tests.
@@ -205,36 +201,6 @@ public class DirectUnitTestUtil {
         when(mockFile.getName()).thenReturn("fileName");
         
         return mockDirectDocuments;
-    }
-    
-    /**
-     * Workaround for defect in greenmail expunging messages: 
-     * http://sourceforge.net/tracker/?func=detail&aid=2688036&group_id=159695&atid=812857
-     * 
-     * We have to delete these ourselves...
-     * @param greenMail mock mail server
-     * @param user used to access folder to be expunged
-     */
-    public static void expungeMissedMessages(GreenMail greenMail, GreenMailUser user) {
-        try {
-            MailFolder folder = greenMail.getManagers().getImapHostManager()
-                    .getFolder(user, MailUtils.FOLDER_NAME_INBOX);
-            while (folderHasDeletedMsgs(folder)) {
-                folder.expunge();
-            }
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }    
-    
-    private static  boolean folderHasDeletedMsgs(MailFolder folder) throws MessagingException {
-        for (Object object : folder.getMessages()) {
-            SimpleStoredMessage message = (SimpleStoredMessage) object;
-            if (message.getFlags().contains(Flags.Flag.DELETED)) {
-                return true;
-            }
-        }
-        return false;
     }
     
     /**

@@ -43,12 +43,6 @@
             <version>${openam.version}</version>
             <scope>provided</scope>
         </dependency>
-<!--         <dependency>
-            <groupId>com.forgerock.openam</groupId>
-            <artifactId>sharedlib</artifactId>
-            <version>${openam.version}</version>
-            <scope>provided</scope>
-        </dependency> -->
         <dependency>
             <groupId>org.forgerock.openam</groupId>
             <artifactId>fedlib</artifactId>

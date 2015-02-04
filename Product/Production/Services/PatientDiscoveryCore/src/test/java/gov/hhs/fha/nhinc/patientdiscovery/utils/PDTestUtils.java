@@ -41,9 +41,7 @@ import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthzDecisionStatementEvidenceTy
 import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthzDecisionStatementType;
 import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
 import gov.hhs.fha.nhinc.transform.subdisc.HL7Constants;
-
 import javax.xml.bind.JAXBElement;
-
 import org.hl7.v3.ActClassControlAct;
 import org.hl7.v3.BinaryDataEncoding;
 import org.hl7.v3.CE;

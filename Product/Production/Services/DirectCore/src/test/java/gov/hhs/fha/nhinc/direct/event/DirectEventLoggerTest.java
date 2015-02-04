@@ -28,9 +28,10 @@ package gov.hhs.fha.nhinc.direct.event;
 
 import gov.hhs.fha.nhinc.direct.DirectException;
 
-import javax.mail.MessagingException;
-
-import org.junit.Before;
+// This does not exist in CONNECT    
+//import javax.mail.MessagingException;
+//
+//import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -41,19 +42,20 @@ public class DirectEventLoggerTest extends DirectEventTest {
     private static final String ERROR_MESSAGE = "I've got blisters on me fingers...";
     
     private final DirectEventLogger testLogger = DirectEventLogger.getInstance();
-    
-    @Before
-    public void setUp() throws MessagingException {
-        DirectException.setDirectEventLogger(DirectEventLogger.getInstance());         
-    	super.setUp();
-    } 
+
+// This does not exist in CONNECT    
+//    @Before
+//    public void setUp() throws MessagingException {
+//        DirectException.setDirectEventLogger(DirectEventLogger.getInstance());         
+//    	super.setUp();
+//    } 
     
     
     /**
      * {@link DirectEventLogger#log(DirectEventType, javax.mail.internet.MimeMessage)}.
      */
     @Test
-    public void canLogSuccess() {  
+    public void canLogSuccess() {
         testLogger.log(DirectEventType.BEGIN_OUTBOUND_DIRECT, mockMimeMessage);
     }
 

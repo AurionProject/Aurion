@@ -60,10 +60,13 @@ public class UDDIFindBusinessProxyHPImpl extends UDDIFindBusinessProxyBase {
             loadProperties();
 
             FindBusiness oSearchParams = new FindBusiness();
+            
             int maxRows = getMaxResults();
-            if (maxRows > 0) {
-            	oSearchParams.setMaxRows(getMaxResults());
+            
+            if(maxRows > 0){
+                 oSearchParams.setMaxRows(getMaxResults());
             }
+            
             ServicePortDescriptor<UDDIInquiryPortType> portDescriptor = new UDDIFindBusinessProxyServicePortDescriptor();
             CONNECTClient<UDDIInquiryPortType> client = getCONNECTClientUnsecured(portDescriptor, uddiInquiryUrl, null);
             oBusinessList = (BusinessList) client.invokePort(UDDIInquiryPortType.class, "findBusiness", oSearchParams);
@@ -79,7 +82,8 @@ public class UDDIFindBusinessProxyHPImpl extends UDDIFindBusinessProxyBase {
 
     @Override
     public BusinessDetail getBusinessDetail(GetBusinessDetail searchParams) throws UDDIFindBusinessException {
-
-    	return super.getBusinessDetail(searchParams);
+        return super.getBusinessDetail(searchParams);
     }
+    
+    
 }

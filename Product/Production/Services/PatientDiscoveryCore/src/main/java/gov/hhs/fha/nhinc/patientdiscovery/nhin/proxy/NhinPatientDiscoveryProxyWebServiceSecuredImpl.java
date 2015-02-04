@@ -81,8 +81,8 @@ public class NhinPatientDiscoveryProxyWebServiceSecuredImpl implements NhinPatie
                 }
 
                 if (NullChecker.isNotNullish(url)) {
-                	
-                	ServicePortDescriptor<RespondingGatewayPortType> portDescriptor = new RespondingGatewayServicePortDescriptor();
+                    ServicePortDescriptor<RespondingGatewayPortType> portDescriptor = new RespondingGatewayServicePortDescriptor();
+
                     CONNECTClient<RespondingGatewayPortType> client = getCONNECTSecuredClient(target, portDescriptor,
                             url, assertion);
                 	if (client != null) {

@@ -29,6 +29,7 @@ package gov.hhs.fha.nhinc.patientdiscovery.adapter.deferred.request.queue;
 import gov.hhs.fha.nhinc.async.AddressingHeaderCreator;
 import gov.hhs.fha.nhinc.async.AsyncMessageProcessHelper;
 import gov.hhs.fha.nhinc.asyncmsgs.dao.AsyncMsgRecordDao;
+import gov.hhs.fha.nhinc.common.nhinccommon.AcknowledgementType;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.common.nhinccommon.HomeCommunityType;
 import gov.hhs.fha.nhinc.common.nhinccommon.NhinTargetCommunitiesType;
@@ -154,19 +155,19 @@ public class AdapterPatientDiscoveryDeferredReqQueueOrchImpl {
 
         if (targets != null) {
             urlInfoList = getTargetEndpoints(targets);
+
+            if (NullChecker.isNotNullish(urlInfoList) && urlInfoList.get(0) != null
+                    && NullChecker.isNotNullish(urlInfoList.get(0).getUrl())) {
+
+                EntityPatientDiscoveryDeferredResponseProxyObjectFactory patientDiscoveryFactory = new EntityPatientDiscoveryDeferredResponseProxyObjectFactory();
+                EntityPatientDiscoveryDeferredResponseProxy proxy = patientDiscoveryFactory.getNhincPatientDiscoveryProxy();
+
+                resp = proxy.processPatientDiscoveryAsyncResp(respMsg, assertion, targets);
+            } else {
+                LOG.error("Failed to send response to the Nhin as no target endpoints can be found.");
+            }
         }
-
-        if (NullChecker.isNotNullish(urlInfoList) && urlInfoList.get(0) != null
-                && NullChecker.isNotNullish(urlInfoList.get(0).getUrl())) {
-
-            EntityPatientDiscoveryDeferredResponseProxyObjectFactory patientDiscoveryFactory = new EntityPatientDiscoveryDeferredResponseProxyObjectFactory();
-            EntityPatientDiscoveryDeferredResponseProxy proxy = patientDiscoveryFactory.getNhincPatientDiscoveryProxy();
-
-            resp = proxy.processPatientDiscoveryAsyncResp(respMsg, assertion, targets);
-        } else {
-            LOG.error("Failed to send response to the Nhin as no target endpoints can be found.");
-        }
-
+        
         return resp;
     }
 

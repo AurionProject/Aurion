@@ -74,7 +74,6 @@ import org.hl7.v3.RespondingGatewayPRPAIN201305UV02RequestType;
 import org.hl7.v3.RespondingGatewayPRPAIN201306UV02ResponseType;
 
 import com.google.common.base.Optional;
-
 import gov.hhs.fha.nhinc.util.HomeCommunityMap;
 
 public class StandardOutboundPatientDiscovery implements OutboundPatientDiscovery {

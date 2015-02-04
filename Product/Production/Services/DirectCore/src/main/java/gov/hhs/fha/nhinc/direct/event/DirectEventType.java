@@ -30,39 +30,95 @@ package gov.hhs.fha.nhinc.direct.event;
  * Enumeration of event types for direct event logging.
  */
 public enum DirectEventType {
-    
+
     /**
      * Begin sending outbound direct message.
      */
-    BEGIN_OUTBOUND_DIRECT, 
+    BEGIN_OUTBOUND_DIRECT,
     /**
      * End sending outbound direct message.
      */
-    END_OUTBOUND_DIRECT, 
+    END_OUTBOUND_DIRECT,
     /**
      * Begin handling an inbound direct (non-MDN) message.
      */
-    BEGIN_INBOUND_DIRECT, 
+    BEGIN_INBOUND_DIRECT,
     /**
      * End handling an inbound direct (non-MDN) message.
      */
-    END_INBOUND_DIRECT, 
+    END_INBOUND_DIRECT,
     /**
      * Begin sending an outbound MDN message.
      */
-    BEGIN_OUTBOUND_MDN, 
+    BEGIN_OUTBOUND_MDN,
     /**
      * End sending an outbound MDN message.
      */
-    END_OUTBOUND_MDN, 
+    END_OUTBOUND_MDN,
     /**
      * Begin handling an inbound MDN message.
      */
-    BEGIN_INBOUND_MDN, 
+    BEGIN_INBOUND_MDN,
     /**
      * End handling an inbound MDN message.
      */
-    END_INBOUND_MDN, 
+    END_INBOUND_MDN,
+    /**
+     * Begin handling an inbound Processed MDN message.
+     */
+    BEGIN_INBOUND_MDN_PROCESSED,
+    /**
+     * End handling an inbound processed MDN message.
+     */
+    END_INBOUND_MDN_PROCESSED,
+    /**
+     * Begin handling an inbound dispatched MDN message.
+     */
+    BEGIN_INBOUND_MDN_DISPATCHED,
+    /**
+     * End handling an inbound dispatched MDN message.
+     */
+    END_INBOUND_MDN_DISPATCHED,
+    /**
+     * Begin handling an inbound Failed MDN message.
+     */
+    BEGIN_INBOUND_MDN_FAILED,
+    /**
+     * End handling an inbound Failed MDN message.
+     */
+    END_INBOUND_MDN_FAILED,
+    /**
+     * Begin handling an Outbound Processed MDN message.
+     */
+    BEGIN_OUTBOUND_MDN_PROCESSED,
+    /**
+     * End handling an Outbound Processed MDN message.
+     */
+    END_OUTBOUND_MDN_PROCESSED,
+    /**
+     * Begin handling an Outbound Dispatched MDN message.
+     */
+    BEGIN_OUTBOUND_MDN_DISPATCHED,
+    /**
+     * Begin handling an Outbound Dispatched MDN message.
+     */
+    END_OUTBOUND_MDN_DISPATCHED,
+    /**
+     * Begin handling an Outbound Failed MDN message.
+     */
+    BEGIN_OUTBOUND_MDN_FAILED,
+    /**
+     * End handling an Outbound Failed MDN message.
+     */
+    END_OUTBOUND_MDN_FAILED,
+    /**
+     * Once an Successful Edge notification is sent.
+     */
+    DIRECT_EDGE_NOTIFICATION_SUCCESSFUL,
+    /**
+     * Once an Failed Edge notification is sent.
+     */
+    DIRECT_EDGE_NOTIFICATION_FAILED,
     /**
      * An error or exception condition was generated in the Direct Module.
      */

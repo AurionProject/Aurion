@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, United States Government, as represented by the Secretary of Health and Human Services.
+ * Copyright (c) 2009-2014, United States Government, as represented by the Secretary of Health and Human Services.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,7 @@
  */
 package gov.hhs.fha.nhinc.patientdiscovery.inbound.deferred.request;
 
+import gov.hhs.fha.nhinc.aspect.InboundProcessingEvent;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditLogger;
@@ -33,6 +34,8 @@ import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditor;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryPolicyChecker;
 import gov.hhs.fha.nhinc.patientdiscovery.adapter.deferred.request.error.proxy.AdapterPatientDiscoveryDeferredReqErrorProxyObjectFactory;
 import gov.hhs.fha.nhinc.patientdiscovery.adapter.deferred.request.proxy.AdapterPatientDiscoveryDeferredReqProxyObjectFactory;
+import gov.hhs.fha.nhinc.patientdiscovery.aspect.MCCIIN000002UV01EventDescriptionBuilder;
+import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.transform.subdisc.HL7PRPA201306Transforms;
 
 import org.apache.log4j.Logger;
@@ -78,7 +81,20 @@ public class StandardInboundPatientDiscoveryDeferredRequest extends AbstractInbo
         this.proxyErrorFactory = proxyErrorFactory;
         this.auditLogger = auditLogger;
     }
+    
+    @Override
+    @InboundProcessingEvent(beforeBuilder = PRPAIN201305UV02EventDescriptionBuilder.class, afterReturningBuilder = MCCIIN000002UV01EventDescriptionBuilder.class, serviceType = "Patient Discovery Deferred Request", version = "1.0")
+    public MCCIIN000002UV01 respondingGatewayPRPAIN201305UV02(PRPAIN201305UV02 request, AssertionType assertion) {
+        auditRequestFromNhin(request, assertion);
 
+        MCCIIN000002UV01 response = process(request, assertion);
+
+        auditResponseToNhin(response, assertion);
+
+        return response;
+    }
+
+    @Override
     MCCIIN000002UV01 process(PRPAIN201305UV02 request, AssertionType assertion) {
         MCCIIN000002UV01 response = null;
         boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, 
