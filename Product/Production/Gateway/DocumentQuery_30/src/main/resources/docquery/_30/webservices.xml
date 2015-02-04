@@ -8,12 +8,20 @@
     the License. -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:soap="http://cxf.apache.org/bindings/soap" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xmlns:cxf="http://cxf.apache.org/core" xmlns:p="http://cxf.apache.org/policy"
     xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 http://cxf.apache.org/bindings/soap http://cxf.apache.org/schemas/configuration/soap.xsd
-http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+http://cxf.apache.org/policy http://cxf.apache.org/schemas/policy.xsd
+http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd ">
 
     <!-- Document Query -->
+    <cxf:bus>
+        <cxf:features>
+            <p:policies />
+        </cxf:features>
+    </cxf:bus>
 
     <!-- Nhin services -->
 
@@ -27,13 +35,15 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.s
             <entry key="ws-security.saml2.validator">
                 <bean class="gov.hhs.fha.nhinc.callback.cxf.CONNECTSamlAssertionValidator" />
             </entry>
+            <entry key="ws-security.enable.timestamp.cache" value="false" />
         </jaxws:properties>
+
+
         <jaxws:inInterceptors>
             <ref bean="securityConfigInInterceptor" />
         </jaxws:inInterceptors>
         <jaxws:handlers>
             <ref bean="SOAPHeaderHandler" />
-            <ref bean="MustUnderstandSOAPHeaderHandler" />
             <ref bean="TransactionHandler" />
         </jaxws:handlers>
     </jaxws:endpoint>
@@ -58,11 +68,22 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd http://www.s
             <entry key="ws-security.encryption.properties" value="file:///${nhinc.properties.dir}/truststore.properties" />
             <entry key="ws-security.saml2.validator">
                 <bean class="gov.hhs.fha.nhinc.callback.cxf.CONNECTSamlAssertionValidator" />
-            </entry>            
+            </entry>
+            <entry key="ws-security.enable.timestamp.cache" value="false" />
         </jaxws:properties>
+
         <jaxws:inInterceptors>
             <ref bean="securityConfigInInterceptor" />
         </jaxws:inInterceptors>
+        <jaxws:handlers>
+            <ref bean="TransactionHandler" />
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <jaxws:endpoint xmlns:edq="urn:gov:hhs:fha:nhinc:entitydocquery" id="EntityDocQueryUnsecuredProxy"
+        address="/EntityServiceProxy/EntityDocQueryUnsecured" serviceName="edq:EntityDocQuery" endpointName="edq:EntityDocQueryPortSoap"
+        implementorClass="gov.hhs.fha.nhinc.docquery._30.entity.EntityDocQueryUnsecuredProxy" implementor="gov.hhs.fha.nhinc.docquery._30.entity.EntityDocQueryUnsecuredProxy"
+        wsdlLocation="classpath:wsdl/EntityDocQuery.wsdl">
         <jaxws:handlers>
             <ref bean="TransactionHandler" />
         </jaxws:handlers>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jboss-web>
     
-    <resource-ref>
+       <resource-ref>
         <res-ref-name>jdbc/auditrepo_datasource</res-ref-name>
         <jndi-name>java:/jdbc/auditrepo_datasource</jndi-name>
         <res-type>javax.sql.DataSource</res-type>

@@ -31,7 +31,12 @@ import gov.hhs.fha.nhinc.common.nhinccommonentity.RespondingGatewayCrossGatewayR
 import gov.hhs.fha.nhinc.docretrieve._20.entity.EntityDocRetrieve;
 import gov.hhs.fha.nhinc.docretrieve._20.entity.EntityDocRetrieveSecured;
 import gov.hhs.fha.nhinc.docretrieve._20.inbound.DocRetrieve;
+import gov.hhs.fha.nhinc.docretrieve.inbound.PassthroughInboundDocRetrieve;
+import gov.hhs.fha.nhinc.docretrieve.inbound.StandardInboundDocRetrieve;
+import gov.hhs.fha.nhinc.docretrieve.outbound.PassthroughOutboundDocRetrieve;
+import gov.hhs.fha.nhinc.docretrieve.outbound.StandardOutboundDocRetrieve;
 import ihe.iti.xds_b._2007.RetrieveDocumentSetRequestType;
+import ihe.iti.xds_b._2007.RetrieveDocumentSetRequestType.DocumentRequest;
 import ihe.iti.xds_b._2007.RetrieveDocumentSetResponseType;
 
 import org.junit.Test;
@@ -48,6 +53,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = { "/docretrieve/_20/applicationContext.xml" })
 public class DocRetrieveSpringContextTest {
     
+	@Autowired
+    StandardOutboundDocRetrieve standardOutboundOrchImpl;
+    
+    @Autowired
+    StandardInboundDocRetrieve standardInboundOrchImpl;
+    
+    @Autowired
+    PassthroughInboundDocRetrieve passthroughInboundOrchImpl;
+    
+    @Autowired
+    PassthroughOutboundDocRetrieve passthroughOutboundOrchImpl;
+
     @Autowired
     DocRetrieve inboundDocRetrieve;
     
@@ -82,8 +99,13 @@ public class DocRetrieveSpringContextTest {
         assertNotNull(outboundDocRetrieveSecured);
         
         RetrieveDocumentSetRequestType request = new RetrieveDocumentSetRequestType();
+        DocumentRequest document = new DocumentRequest();
+        document.setHomeCommunityId("2.2");
+        document.setRepositoryUniqueId("1");
+        request.getDocumentRequest().add(document);
         RetrieveDocumentSetResponseType response = outboundDocRetrieveSecured.respondingGatewayCrossGatewayRetrieve(request);
         
         assertNotNull(response);
     }
+    
 }

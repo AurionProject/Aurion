@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-    <display-name>Sample web service provider</display-name>
 
     <context-param>
         <param-name>configService</param-name>
         <param-value>http://localhost:8081/config-service/ConfigurationService</param-value>
     </context-param>
 
+	<listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+	
+	<context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:CONNECT-interceptor-beans.xml 
+            classpath:CONNECT-context.xml
+            classpath:eventlogging.xml
+            classpath:/direct/_10/applicationContext.xml
+            classpath:/direct/_10/webservices.xml
+        </param-value>
+    </context-param>
     <!-- Uncomment if using 'syslog' audit method -->
     <!--     
     <context-param>
@@ -47,5 +60,11 @@
         <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
 
+    <resource-ref>
+        <res-ref-name>jdbc/messagemonitoringdb_datasource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+    </resource-ref>
 </web-app>
 

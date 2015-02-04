@@ -26,6 +26,7 @@
  */
 package gov.hhs.fha.nhinc.docsubmission.configuration.jmx;
 
+import gov.hhs.fha.nhinc.configuration.IConfiguration.serviceEnum;
 import gov.hhs.fha.nhinc.docsubmission._11.entity.EntityDocSubmissionSecured;
 import gov.hhs.fha.nhinc.docsubmission._11.entity.EntityDocSubmissionUnsecured;
 import gov.hhs.fha.nhinc.docsubmission._11.nhin.NhinXDR;
@@ -50,6 +51,7 @@ public class DocumentSubmission11WebServices extends AbstractDSWebServicesMXBean
     /** The Constant ENTITY_SECURED_DS_BEAN_NAME. */
     private static final String ENTITY_SECURED_DS_BEAN_NAME = "entityXDRSecured";
     
+    private final serviceEnum serviceName = serviceEnum.DocumentSubmission;
     /**
      * Instantiates a new document submission20 web services.
      * 
@@ -99,7 +101,7 @@ public class DocumentSubmission11WebServices extends AbstractDSWebServicesMXBean
         boolean isPassthru = false;
         NhinXDR nhinDS = retrieveBean(NhinXDR.class, getNhinBeanName());
         InboundDocSubmission inboundDS = nhinDS.getInboundDocSubmission();
-        if (DEFAULT_INBOUND_PASSTHRU_IMPL_CLASS_NAME.equals(inboundDS.getClass().getName())) {
+        if (compareClassName(inboundDS, DEFAULT_INBOUND_PASSTHRU_IMPL_CLASS_NAME)) {
             isPassthru = true;
         }
         return isPassthru;
@@ -115,7 +117,7 @@ public class DocumentSubmission11WebServices extends AbstractDSWebServicesMXBean
         boolean isPassthru = false;
         EntityDocSubmissionUnsecured entityDS = retrieveBean(EntityDocSubmissionUnsecured.class, getEntityUnsecuredBeanName());
         OutboundDocSubmission outboundDS = entityDS.getOutboundDocSubmission();
-        if (DEFAULT_OUTBOUND_PASSTHRU_IMPL_CLASS_NAME.equals(outboundDS.getClass().getName())) {
+        if (compareClassName(outboundDS, DEFAULT_OUTBOUND_PASSTHRU_IMPL_CLASS_NAME)) {
             isPassthru = true;
         }
         return isPassthru;
@@ -127,10 +129,24 @@ public class DocumentSubmission11WebServices extends AbstractDSWebServicesMXBean
      * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureInboundImpl(java.lang.String)
      */
     @Override
-    public void configureInboundImpl(String className) throws InstantiationException, IllegalAccessException,
+    public void configureInboundStdImpl() throws InstantiationException, IllegalAccessException,
             ClassNotFoundException {
         NhinXDR nhinDS = retrieveBean(NhinXDR.class, getNhinBeanName());
-        InboundDocSubmission inboundDS = retrieveDependency(InboundDocSubmission.class, className);
+        InboundDocSubmission inboundDS = retrieveBean(InboundDocSubmission.class, getStandardInboundBeanName());
+
+        nhinDS.setInboundDocSubmission(inboundDS);
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureInboundImpl(java.lang.String)
+     */
+    @Override
+    public void configureInboundPtImpl() throws InstantiationException, IllegalAccessException,
+            ClassNotFoundException {
+        NhinXDR nhinDS = retrieveBean(NhinXDR.class, getNhinBeanName());
+        InboundDocSubmission inboundDS = retrieveBean(InboundDocSubmission.class, getPassthroughInboundBeanName());
 
         nhinDS.setInboundDocSubmission(inboundDS);
     }
@@ -141,9 +157,9 @@ public class DocumentSubmission11WebServices extends AbstractDSWebServicesMXBean
      * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureOutboundImpl(java.lang.String)
      */
     @Override
-    public void configureOutboundImpl(String className) throws InstantiationException, IllegalAccessException,
+    public void configureOutboundStdImpl() throws InstantiationException, IllegalAccessException,
             ClassNotFoundException {
-        OutboundDocSubmission outboundDS = retrieveDependency(OutboundDocSubmission.class, className);
+        OutboundDocSubmission outboundDS = retrieveBean(OutboundDocSubmission.class, getStandardOutboundBeanName());
         EntityDocSubmissionUnsecured entityDSUnsecured = retrieveBean(EntityDocSubmissionUnsecured.class,
                 getEntityUnsecuredBeanName());
         EntityDocSubmissionSecured entityDSSecured = retrieveBean(EntityDocSubmissionSecured.class,
@@ -151,5 +167,60 @@ public class DocumentSubmission11WebServices extends AbstractDSWebServicesMXBean
 
         entityDSSecured.setOutboundDocSubmission(outboundDS);
         entityDSUnsecured.setOutboundDocSubmission(outboundDS);
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureOutboundImpl(java.lang.String)
+     */
+    @Override
+    public void configureOutboundPtImpl() throws InstantiationException, IllegalAccessException,
+            ClassNotFoundException {
+        OutboundDocSubmission outboundDS = retrieveBean(OutboundDocSubmission.class, getPassthroughOutboundBeanName());
+        EntityDocSubmissionUnsecured entityDSUnsecured = retrieveBean(EntityDocSubmissionUnsecured.class,
+                getEntityUnsecuredBeanName());
+        EntityDocSubmissionSecured entityDSSecured = retrieveBean(EntityDocSubmissionSecured.class,
+                getEntitySecuredBeanName());
+
+        entityDSSecured.setOutboundDocSubmission(outboundDS);
+        entityDSUnsecured.setOutboundDocSubmission(outboundDS);
+    }
+    
+    @Override
+    public serviceEnum getServiceName() {
+        return this.serviceName;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gov.hhs.fha.nhinc.configuration.jmx.WebServicesMXBean#isInboundStandard()
+     */
+    @Override
+    public boolean isInboundStandard() {
+        boolean isStandard = false;
+        NhinXDR nhinDS = retrieveBean(NhinXDR.class, getNhinBeanName());
+        InboundDocSubmission inboundDS = nhinDS.getInboundDocSubmission();
+        if (compareClassName(inboundDS, DEFAULT_INBOUND_STANDARD_IMPL_CLASS_NAME)) {
+            isStandard = true;
+        }
+        return isStandard;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see gov.hhs.fha.nhinc.configuration.jmx.WebServicesMXBean#isOutboundStandard()
+     */
+    @Override
+    public boolean isOutboundStandard() {
+        boolean isStandard = false;
+        EntityDocSubmissionUnsecured entityDS = retrieveBean(EntityDocSubmissionUnsecured.class, getEntityUnsecuredBeanName());
+        OutboundDocSubmission outboundDS = entityDS.getOutboundDocSubmission();
+        if (compareClassName(outboundDS, DEFAULT_OUTBOUND_STANDARD_IMPL_CLASS_NAME)) {
+            isStandard = true;
+        }
+        return isStandard;
     }
 }

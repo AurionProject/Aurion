@@ -26,11 +26,13 @@
  */
 package gov.hhs.fha.nhinc.admindistribution.configuration.jmx;
 
+
 import gov.hhs.fha.nhinc.admindistribution._20.entity.EntityAdministrativeDistributionSecured_g1;
 import gov.hhs.fha.nhinc.admindistribution._20.entity.EntityAdministrativeDistribution_g1;
 import gov.hhs.fha.nhinc.admindistribution._20.nhin.NhinAdministrativeDistribution_g1;
 import gov.hhs.fha.nhinc.admindistribution.inbound.InboundAdminDistribution;
 import gov.hhs.fha.nhinc.admindistribution.outbound.OutboundAdminDistribution;
+import gov.hhs.fha.nhinc.configuration.IConfiguration.serviceEnum;
 
 import javax.servlet.ServletContext;
 
@@ -50,6 +52,7 @@ public class AdminDistribution20WebServices extends AbstractAdminDistributionWeb
     /** The Constant ENTITY_SECURED_AD_BEAN_NAME. */
     private static final String ENTITY_SECURED_AD_BEAN_NAME = "EntityAdministrativeDistributionSecuredBean_g1";
     
+    private final serviceEnum serviceName = serviceEnum.AdminDistribution; 
     /**
      * Instantiates a new admin distribution20 web services.
      *
@@ -67,7 +70,7 @@ public class AdminDistribution20WebServices extends AbstractAdminDistributionWeb
         boolean isPassthru = false;
         NhinAdministrativeDistribution_g1 nhinAD = retrieveBean(NhinAdministrativeDistribution_g1.class, getNhinBeanName());
         InboundAdminDistribution inboundAD = nhinAD.getInboundAdminDistribution();
-        if (DEFAULT_INBOUND_PASSTHRU_IMPL_CLASS_NAME.equals(inboundAD.getClass().getName())) {
+        if (compareClassName(inboundAD, DEFAULT_INBOUND_PASSTHRU_IMPL_CLASS_NAME)) {
             isPassthru = true;
         }
         return isPassthru;
@@ -81,7 +84,7 @@ public class AdminDistribution20WebServices extends AbstractAdminDistributionWeb
         boolean isPassthru = false;
         EntityAdministrativeDistribution_g1 entityAD = retrieveBean(EntityAdministrativeDistribution_g1.class, getEntityUnsecuredBeanName());
         OutboundAdminDistribution outboundAD = entityAD.getOutboundAdminDistribution();
-        if (DEFAULT_OUTBOUND_PASSTHRU_IMPL_CLASS_NAME.equals(outboundAD.getClass().getName())) {
+        if (compareClassName(outboundAD, DEFAULT_OUTBOUND_PASSTHRU_IMPL_CLASS_NAME)) {
             isPassthru = true;
         }
         return isPassthru;
@@ -115,10 +118,10 @@ public class AdminDistribution20WebServices extends AbstractAdminDistributionWeb
      * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureInboundImpl(java.lang.String)
      */
     @Override
-    public void configureInboundImpl(String className) throws InstantiationException, IllegalAccessException,
+    public void configureInboundStdImpl() throws InstantiationException, IllegalAccessException,
             ClassNotFoundException {
         NhinAdministrativeDistribution_g1 nhinAD = retrieveBean(NhinAdministrativeDistribution_g1.class, getNhinBeanName());
-        InboundAdminDistribution inboundAdminDistribution = retrieveDependency(InboundAdminDistribution.class, className);
+        InboundAdminDistribution inboundAdminDistribution = retrieveBean(InboundAdminDistribution.class, getStandardInboundBeanName());
         
         nhinAD.setInboundAdminDistribution(inboundAdminDistribution);
     }
@@ -127,15 +130,71 @@ public class AdminDistribution20WebServices extends AbstractAdminDistributionWeb
      * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureOutboundImpl(java.lang.String)
      */
     @Override
-    public void configureOutboundImpl(String className) throws InstantiationException, IllegalAccessException,
+    public void configureOutboundStdImpl() throws InstantiationException, IllegalAccessException,
             ClassNotFoundException {
         EntityAdministrativeDistribution_g1 entityADUnsecured = retrieveBean(EntityAdministrativeDistribution_g1.class, getEntityUnsecuredBeanName());
         EntityAdministrativeDistributionSecured_g1 entityADSecured = retrieveBean(EntityAdministrativeDistributionSecured_g1.class, getEntitySecuredBeanName());
         
-        OutboundAdminDistribution outboundAdminDistribution = retrieveDependency(OutboundAdminDistribution.class, className);
+        OutboundAdminDistribution outboundAdminDistribution = retrieveBean(OutboundAdminDistribution.class, getStandardOutboundBeanName());
         
         entityADSecured.setOutboundAdminDistribution(outboundAdminDistribution);
         entityADUnsecured.setOutboundAdminDistribution(outboundAdminDistribution);
     }
+    @Override
+    public void configureInboundPtImpl() throws InstantiationException, IllegalAccessException,
+            ClassNotFoundException {
+        NhinAdministrativeDistribution_g1 nhinAD = retrieveBean(NhinAdministrativeDistribution_g1.class, getNhinBeanName());
+        InboundAdminDistribution inboundAdminDistribution = retrieveBean(InboundAdminDistribution.class, getPassthroughInboundBeanName());
+        
+        nhinAD.setInboundAdminDistribution(inboundAdminDistribution);
+    }
+
+    /* (non-Javadoc)
+     * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureOutboundImpl(java.lang.String)
+     */
+    @Override
+    public void configureOutboundPtImpl() throws InstantiationException, IllegalAccessException,
+            ClassNotFoundException {
+        EntityAdministrativeDistribution_g1 entityADUnsecured = retrieveBean(EntityAdministrativeDistribution_g1.class, getEntityUnsecuredBeanName());
+        EntityAdministrativeDistributionSecured_g1 entityADSecured = retrieveBean(EntityAdministrativeDistributionSecured_g1.class, getEntitySecuredBeanName());
+        
+        OutboundAdminDistribution outboundAdminDistribution = retrieveBean(OutboundAdminDistribution.class, getPassthroughOutboundBeanName());
+        
+        entityADSecured.setOutboundAdminDistribution(outboundAdminDistribution);
+        entityADUnsecured.setOutboundAdminDistribution(outboundAdminDistribution);
+    }
+    @Override
+    public serviceEnum getServiceName() {
+        return this.serviceName;
+    }
+    
+    /* (non-Javadoc)
+     * @see gov.hhs.fha.nhinc.configuration.jmx.WebServicesMXBean#isOutboundStandard()
+     */
+    @Override
+    public boolean isOutboundStandard() {
+        boolean isPassthru = false;
+        EntityAdministrativeDistribution_g1 entityAD = retrieveBean(EntityAdministrativeDistribution_g1.class, getEntityUnsecuredBeanName());
+        OutboundAdminDistribution outboundAD = entityAD.getOutboundAdminDistribution();
+        if (compareClassName(outboundAD, DEFAULT_OUTBOUND_STANDARD_IMPL_CLASS_NAME)) {
+            isPassthru = true;
+        }
+        return isPassthru;
+    }
+    
+    /* (non-Javadoc)
+     * @see gov.hhs.fha.nhinc.configuration.jmx.WebServicesMXBean#isInboundStandard()
+     */
+    @Override
+    public boolean isInboundStandard() {
+        boolean isStandard = false;
+        NhinAdministrativeDistribution_g1 nhinAD = retrieveBean(NhinAdministrativeDistribution_g1.class, getNhinBeanName());
+        InboundAdminDistribution inboundAD = nhinAD.getInboundAdminDistribution();
+        if (compareClassName(inboundAD, DEFAULT_INBOUND_STANDARD_IMPL_CLASS_NAME)) {
+            isStandard = true;
+        }
+        return isStandard;
+    }
+
 
 }

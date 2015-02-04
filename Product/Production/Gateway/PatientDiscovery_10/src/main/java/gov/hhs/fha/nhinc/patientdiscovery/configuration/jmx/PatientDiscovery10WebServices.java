@@ -26,6 +26,7 @@
  */
 package gov.hhs.fha.nhinc.patientdiscovery.configuration.jmx;
 
+import gov.hhs.fha.nhinc.configuration.IConfiguration.serviceEnum;
 import gov.hhs.fha.nhinc.patientdiscovery._10.gateway.ws.EntityPatientDiscoveryUnsecured;
 import gov.hhs.fha.nhinc.patientdiscovery._10.gateway.ws.NhinPatientDiscovery;
 import gov.hhs.fha.nhinc.patientdiscovery.inbound.InboundPatientDiscovery;
@@ -40,6 +41,7 @@ import javax.servlet.ServletContext;
  */
 public class PatientDiscovery10WebServices extends AbstractPDWebServicesMXBean {
 
+    private final serviceEnum serviceName = serviceEnum.PatientDiscovery;
     /**
      * Instantiates a new patient discovery10 web services.
      * 
@@ -59,7 +61,7 @@ public class PatientDiscovery10WebServices extends AbstractPDWebServicesMXBean {
         boolean isPassthru = false;
         NhinPatientDiscovery nhinPD = retrieveBean(NhinPatientDiscovery.class, getNhinBeanName());
         InboundPatientDiscovery inboundPatientDiscovery = nhinPD.getInboundPatientDiscovery();
-        if (DEFAULT_INBOUND_PASSTHRU_IMPL_CLASS_NAME.equals(inboundPatientDiscovery.getClass().getName())) {
+        if (compareClassName(inboundPatientDiscovery, DEFAULT_INBOUND_PASSTHRU_IMPL_CLASS_NAME)) {
             isPassthru = true;
         }
         return isPassthru;
@@ -76,7 +78,7 @@ public class PatientDiscovery10WebServices extends AbstractPDWebServicesMXBean {
         EntityPatientDiscoveryUnsecured entityPD = retrieveBean(EntityPatientDiscoveryUnsecured.class,
                 getEntityUnsecuredBeanName());
         OutboundPatientDiscovery outboundPatientDiscovery = entityPD.getOutboundPatientDiscovery();
-        if (DEFAULT_INBOUND_PASSTHRU_IMPL_CLASS_NAME.equals(outboundPatientDiscovery.getClass().getName())) {
+        if (compareClassName(outboundPatientDiscovery, DEFAULT_OUTBOUND_PASSTHRU_IMPL_CLASS_NAME)) {
             isPassthru = true;
         }
         return isPassthru;
@@ -95,13 +97,26 @@ public class PatientDiscovery10WebServices extends AbstractPDWebServicesMXBean {
      * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureInboundImplementation(java.lang.String)
      */
     @Override
-    public void configureInboundImpl(String className) throws InstantiationException,
+    public void configureInboundStdImpl() throws InstantiationException,
             IllegalAccessException, ClassNotFoundException {
         NhinPatientDiscovery nhinPD = null;
         InboundPatientDiscovery inboundPD = null;
 
         nhinPD = retrieveBean(NhinPatientDiscovery.class, getNhinBeanName());
-        inboundPD = retrieveDependency(InboundPatientDiscovery.class, className);
+        inboundPD = retrieveBean(InboundPatientDiscovery.class, getStandardInboundBeanName());
+
+        nhinPD.setInboundPatientDiscovery(inboundPD);
+    }
+    
+    
+    @Override
+    public void configureInboundPtImpl() throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
+        NhinPatientDiscovery nhinPD = null;
+        InboundPatientDiscovery inboundPD = null;
+
+        nhinPD = retrieveBean(NhinPatientDiscovery.class, getNhinBeanName());
+        inboundPD = retrieveBean(InboundPatientDiscovery.class, getPassthroughInboundBeanName());
 
         nhinPD.setInboundPatientDiscovery(inboundPD);
     }
@@ -119,15 +134,56 @@ public class PatientDiscovery10WebServices extends AbstractPDWebServicesMXBean {
      * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureOutboundImplementation(java.lang.String)
      */
     @Override
-    public void configureOutboundImpl(String className) throws InstantiationException,
+    public void configureOutboundStdImpl() throws InstantiationException,
             IllegalAccessException, ClassNotFoundException {
         EntityPatientDiscoveryUnsecured entityPD = null;
         OutboundPatientDiscovery outboundPD = null;
 
         entityPD = retrieveBean(EntityPatientDiscoveryUnsecured.class, getEntityUnsecuredBeanName());
-        outboundPD = retrieveDependency(OutboundPatientDiscovery.class, className);
+        outboundPD = retrieveBean(OutboundPatientDiscovery.class, getStandardOutboundBeanName());
 
         entityPD.setOutboundPatientDiscovery(outboundPD);
+    }
+    
+    @Override
+    public void configureOutboundPtImpl() throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
+        EntityPatientDiscoveryUnsecured entityPD = null;
+        OutboundPatientDiscovery outboundPD = null;
+
+        entityPD = retrieveBean(EntityPatientDiscoveryUnsecured.class, getEntityUnsecuredBeanName());
+        outboundPD = retrieveBean(OutboundPatientDiscovery.class, getPassthroughOutboundBeanName());
+
+        entityPD.setOutboundPatientDiscovery(outboundPD);
+    }
+    
+    @Override
+    public serviceEnum getServiceName() {
+        return this.serviceName;
+    }
+    
+    @Override
+    public boolean isOutboundStandard() {
+        boolean isStandard = false;
+        EntityPatientDiscoveryUnsecured entityPD = retrieveBean(EntityPatientDiscoveryUnsecured.class,
+                getEntityUnsecuredBeanName());
+        OutboundPatientDiscovery outboundPatientDiscovery = entityPD.getOutboundPatientDiscovery();
+        if (compareClassName(outboundPatientDiscovery, DEFAULT_OUTBOUND_STANDARD_IMPL_CLASS_NAME)) {
+            isStandard = true;
+        }
+        return isStandard;
+    }
+    
+    @Override
+    public boolean isInboundStandard() {
+        boolean isStandard = false;
+        NhinPatientDiscovery nhinPD = retrieveBean(NhinPatientDiscovery.class,
+                getNhinBeanName());
+        InboundPatientDiscovery inboundPatientDiscovery = nhinPD.getInboundPatientDiscovery();
+        if (compareClassName(inboundPatientDiscovery, DEFAULT_INBOUND_STANDARD_IMPL_CLASS_NAME)) {
+            isStandard = true;
+        }
+        return isStandard;
     }
 
 }

@@ -26,10 +26,9 @@
  */
 package gov.hhs.fha.nhinc.docretrieve.configuration.jmx;
 
+import gov.hhs.fha.nhinc.configuration.IConfiguration.serviceEnum;
 import gov.hhs.fha.nhinc.docretrieve._20.entity.EntityDocRetrieve;
-import gov.hhs.fha.nhinc.docretrieve._20.entity.EntityDocRetrieveSecured;
 import gov.hhs.fha.nhinc.docretrieve._20.inbound.DocRetrieve;
-import gov.hhs.fha.nhinc.docretrieve.configuration.jmx.AbstractDRWebServicesMXBean;
 import gov.hhs.fha.nhinc.docretrieve.inbound.InboundDocRetrieve;
 import gov.hhs.fha.nhinc.docretrieve.outbound.OutboundDocRetrieve;
 
@@ -44,6 +43,8 @@ public class DocumentRetrieve20WebServices extends AbstractDRWebServicesMXBean {
 
     /** The Constant DEFAULT_OUTBOUND_STANDARD_IMPL_CLASS_NAME. */
     public static final String DEFAULT_OUTBOUND_PASSTHRU_IMPL_CLASS_NAME = "gov.hhs.fha.nhinc.docretrieve._20.outbound.PassthroughOutboundDocRetrieve";
+  
+    private final serviceEnum serviceName = serviceEnum.RetrieveDocuments;
 
     /**
      * Instantiates a new document retrieve30 web services.
@@ -53,7 +54,8 @@ public class DocumentRetrieve20WebServices extends AbstractDRWebServicesMXBean {
     public DocumentRetrieve20WebServices(ServletContext sc) {
         super(sc);
     }
-
+    
+    
     /*
      * (non-Javadoc)
      * 
@@ -64,67 +66,135 @@ public class DocumentRetrieve20WebServices extends AbstractDRWebServicesMXBean {
         boolean isPassthru = false;
         DocRetrieve docRetrieve = retrieveBean(DocRetrieve.class, getNhinBeanName());
         InboundDocRetrieve inboundDocRetrieve = docRetrieve.getInboundDocRetrieve();
-        if (DEFAULT_INBOUND_PASSTHRU_IMPL_CLASS_NAME.equals(inboundDocRetrieve.getClass().getName())) {
+        if (compareClassName(inboundDocRetrieve, DEFAULT_INBOUND_PASSTHRU_IMPL_CLASS_NAME)) {
             isPassthru = true;
         }
         return isPassthru;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see gov.hhs.fha.nhinc.configuration.jmx.WebServicesMXBean#isOutboundPassthru()
-     */
     @Override
     public boolean isOutboundPassthru() {
         boolean isPassthru = false;
-        EntityDocRetrieve entityDocRetrieve = retrieveBean(EntityDocRetrieve.class, getEntityUnsecuredBeanName());
-        OutboundDocRetrieve outboundDocRetrieve = entityDocRetrieve.getOutboundDocRetrieve();
-        if (DEFAULT_OUTBOUND_PASSTHRU_IMPL_CLASS_NAME.equals(outboundDocRetrieve.getClass().getName())) {
+        EntityDocRetrieve docRetrieve = retrieveBean(EntityDocRetrieve.class, getEntityUnsecuredBeanName());
+        OutboundDocRetrieve outboundDocRetrieve = docRetrieve.getOutboundDocRetrieve();
+        if (compareClassName(outboundDocRetrieve, DEFAULT_OUTBOUND_PASSTHRU_IMPL_CLASS_NAME)) {
             isPassthru = true;
         }
         return isPassthru;
     }
+    
+   
 
-    /*
-     * (non-Javadoc)
+   
+
+
+    /**
+     * Configure inbound implementation. The inbound orchestration implementation provided via the className param is
+     * set on the Nhin interface bean. This method uses specific types and passes them to the generic
+     * {@link gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#retrieveBean(Class, String)} and
+     * {@link gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#retrieveDependency(Class, String)} methods.
      * 
-     * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#getOutboundPassthruClassName()
+     * @param className the class name
+     * @throws InstantiationException the instantiation exception
+     * @throws IllegalAccessException the illegal access exception
+     * @throws ClassNotFoundException the class not found exception
+     * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureInboundImplementation(java.lang.String)
      */
     @Override
-    protected String getOutboundPassthruClassName() {
-        return DEFAULT_OUTBOUND_PASSTHRU_IMPL_CLASS_NAME;
+    public void configureInboundStdImpl() throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
+        DocRetrieve nhinDR = null;
+        InboundDocRetrieve inboundDR = null;
+
+        nhinDR = retrieveBean(DocRetrieve.class, getNhinBeanName());
+        inboundDR = retrieveBean(InboundDocRetrieve.class, getStandardInboundBeanName());
+
+        nhinDR.setInboundDocRetrieve(inboundDR);
+    }
+    
+    
+    @Override
+    public void configureInboundPtImpl() throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
+        DocRetrieve nhinDR = null;
+        InboundDocRetrieve inboundDR = null;
+
+        nhinDR = retrieveBean(DocRetrieve.class, getNhinBeanName());
+        inboundDR = retrieveBean(InboundDocRetrieve.class, getPassthroughInboundBeanName());
+
+        nhinDR.setInboundDocRetrieve(inboundDR);
     }
 
+    /**
+     * Configure outbound implementation. The outbound orchestration implementation provided via the className param is
+     * set on the Nhin interface bean. This method uses specific types and passes them to the generic
+     * {@link gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#retrieveBean(Class, String)} and
+     * {@link gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#retrieveDependency(Class, String)} methods.
+     * 
+     * @param className the class name
+     * @throws InstantiationException the instantiation exception
+     * @throws IllegalAccessException the illegal access exception
+     * @throws ClassNotFoundException the class not found exception
+     * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureOutboundImplementation(java.lang.String)
+     */
+    @Override
+    public void configureOutboundStdImpl() throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
+        EntityDocRetrieve entityDR = null;
+        OutboundDocRetrieve outboundDR = null;
+
+        entityDR = retrieveBean(EntityDocRetrieve.class, getEntityUnsecuredBeanName());
+        outboundDR = retrieveBean(OutboundDocRetrieve.class, getStandardOutboundBeanName());
+
+        entityDR.setOutboundDocRetrieve(outboundDR);
+    }
+    
+    @Override
+    public void configureOutboundPtImpl() throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
+        EntityDocRetrieve entityDR = null;
+        OutboundDocRetrieve outboundDR = null;
+
+        entityDR = retrieveBean(EntityDocRetrieve.class, getEntityUnsecuredBeanName());
+        outboundDR = retrieveBean(OutboundDocRetrieve.class, getPassthroughOutboundBeanName());
+
+        entityDR.setOutboundDocRetrieve(outboundDR);
+    }
+
+
+    @Override
+    public serviceEnum getServiceName() {
+        return this.serviceName;
+    }
+    
     /*
      * (non-Javadoc)
      * 
-     * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureInboundImpl(java.lang.String)
+     * @see gov.hhs.fha.nhinc.configuration.jmx.WebServicesMXBean#isInboundStandard()
      */
     @Override
-    public void configureInboundImpl(String className) throws InstantiationException, IllegalAccessException,
-            ClassNotFoundException {
+    public boolean isInboundStandard() {
+        boolean isStandard = false;
         DocRetrieve docRetrieve = retrieveBean(DocRetrieve.class, getNhinBeanName());
-        InboundDocRetrieve inboundDocRetrieve = retrieveDependency(InboundDocRetrieve.class, className);
-
-        docRetrieve.setInboundDocRetrieve(inboundDocRetrieve);
+        InboundDocRetrieve inboundDocRetrieve = docRetrieve.getInboundDocRetrieve();
+        if (compareClassName(inboundDocRetrieve, DEFAULT_INBOUND_STANDARD_IMPL_CLASS_NAME)) {
+            isStandard = true;
+        }
+        return isStandard;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see gov.hhs.fha.nhinc.configuration.jmx.AbstractWebServicesMXBean#configureOutboundImpl(java.lang.String)
+     * @see gov.hhs.fha.nhinc.configuration.jmx.WebServicesMXBean#isOutboundStandard()
      */
     @Override
-    public void configureOutboundImpl(String className) throws InstantiationException, IllegalAccessException,
-            ClassNotFoundException {
-        OutboundDocRetrieve outboundDocRetrieve = retrieveDependency(OutboundDocRetrieve.class, className);
+    public boolean isOutboundStandard() {
+        boolean isStandard = false;
         EntityDocRetrieve entityDocRetrieve = retrieveBean(EntityDocRetrieve.class, getEntityUnsecuredBeanName());
-        EntityDocRetrieveSecured entityDocRetrieveSecured = retrieveBean(EntityDocRetrieveSecured.class,
-                getEntitySecuredBeanName());
-
-        entityDocRetrieve.setOutboundDocRetrieve(outboundDocRetrieve);
-        entityDocRetrieveSecured.setOutboundDocRetrieve(outboundDocRetrieve);
+        OutboundDocRetrieve outboundDocRetrieve = entityDocRetrieve.getOutboundDocRetrieve();
+        if (compareClassName(outboundDocRetrieve, DEFAULT_OUTBOUND_STANDARD_IMPL_CLASS_NAME)) {
+            isStandard = true;
+        }
+        return isStandard;
     }
-
 }

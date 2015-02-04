@@ -15,7 +15,9 @@
         <res-auth>Container</res-auth>
     </resource-ref>
     
-    <resource-ref>
+ 
+    
+       <resource-ref>
         <res-ref-name>jdbc/transrepo_datasource</res-ref-name>
         <jndi-name>java:/jdbc/transrepo_datasource</jndi-name>
         <res-type>javax.sql.DataSource</res-type>
