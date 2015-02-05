@@ -94,12 +94,12 @@ public class NhinDocRetrieveProxyWebServiceSecuredImpl implements NhinDocRetriev
                     client.enableMtom();
 
                 	if (client != null) {
-                		boolean overrideSuccessful = client.overrideDefaultTimeouts(
-                				NhincConstants.DOC_RETRIEVE_CONNECT_TIMEOUT,
-                				NhincConstants.DOC_RETIREVE_RESPONSE_TIMEOUT);
-                		if (! overrideSuccessful){
-                			LOG.warn(this.getClass().getName() + ": Unable to set customized timeouts for DocQuery. Defaults used.");;
-                		}
+//                		boolean overrideSuccessful = client.overrideDefaultTimeouts(
+//                				NhincConstants.DOC_RETRIEVE_CONNECT_TIMEOUT,
+//                				NhincConstants.DOC_RETIREVE_RESPONSE_TIMEOUT);
+//                		if (! overrideSuccessful){
+//                			LOG.warn(this.getClass().getName() + ": Unable to set customized timeouts for DocQuery. Defaults used.");;
+//                		}
                 		response = (RetrieveDocumentSetResponseType) client.invokePort(
                             RespondingGatewayRetrievePortType.class, "respondingGatewayCrossGatewayRetrieve", request);
                 	}

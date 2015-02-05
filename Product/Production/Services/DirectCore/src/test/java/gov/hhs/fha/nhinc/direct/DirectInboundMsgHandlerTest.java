@@ -36,9 +36,9 @@ import gov.hhs.fha.nhinc.direct.edge.proxy.DirectEdgeProxy;
 import gov.hhs.fha.nhinc.direct.edge.proxy.DirectEdgeProxySmtpImpl;
 import gov.hhs.fha.nhinc.direct.edge.proxy.DirectEdgeProxySoapImpl;
 import gov.hhs.fha.nhinc.direct.event.DirectEventLogger;
-import gov.hhs.fha.nhinc.direct.messagevalidation.proxy.DirectMessageValidationProxy;
-import gov.hhs.fha.nhinc.direct.messagevalidation.proxy.DirectMessageValidationResult;
-import gov.hhs.fha.nhinc.direct.messagevalidation.proxy.DirectMessageValidationStatus;
+//import gov.hhs.fha.nhinc.direct.messagevalidation.proxy.DirectMessageValidationProxy;
+//import gov.hhs.fha.nhinc.direct.messagevalidation.proxy.DirectMessageValidationResult;
+//import gov.hhs.fha.nhinc.direct.messagevalidation.proxy.DirectMessageValidationStatus;
 import gov.hhs.fha.nhinc.mail.MailClientException;
 import gov.hhs.fha.nhinc.mail.MailSender;
 import gov.hhs.fha.nhinc.mail.MessageHandler;
@@ -50,11 +50,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import org.nhindirect.gateway.smtp.MessageProcessResult;
 import org.nhindirect.gateway.smtp.SmtpAgent;
 import org.nhindirect.stagent.NHINDAddress;
@@ -71,7 +66,7 @@ public class DirectInboundMsgHandlerTest extends DirectBaseTest {
     private MessageProcessResult mockResult;
     private DirectReceiver directReceiver;
     private MessageHandler testInboundMsgHandler;
-    private DirectMessageValidationProxy mockDirectMessageValidationProxy;
+//    private DirectMessageValidationProxy mockDirectMessageValidationProxy;
 
     /**
      * Set up before each test.
@@ -84,15 +79,15 @@ public class DirectInboundMsgHandlerTest extends DirectBaseTest {
         mockExtMailSender = mock(MailSender.class);
         mockIntMailSender = mock(MailSender.class);
         mockResult = DirectUnitTestUtil.getMockMessageProcessResult(1);
-        mockDirectMessageValidationProxy = mock(DirectMessageValidationProxy.class);
+//        mockDirectMessageValidationProxy = mock(DirectMessageValidationProxy.class);
         
         when(mockSmtpAgent.processMessage(any(MimeMessage.class), any(NHINDAddressCollection.class), any(NHINDAddress.class))).thenReturn(mockResult);
         
-        DirectMessageValidationResult result = new DirectMessageValidationResult();
-        result.setStatus(DirectMessageValidationStatus.SUCCESS);
-        
-        mockDirectMessageValidationProxy = mock(DirectMessageValidationProxy.class);
-        when(mockDirectMessageValidationProxy.validateDirectMessage(any(MessageProcessResult.class))).thenReturn(result);
+//        DirectMessageValidationResult result = new DirectMessageValidationResult();
+//        result.setStatus(DirectMessageValidationStatus.SUCCESS);
+//        
+//        mockDirectMessageValidationProxy = mock(DirectMessageValidationProxy.class);
+//        when(mockDirectMessageValidationProxy.validateDirectMessage(any(MessageProcessResult.class))).thenReturn(result);
     }
 
     /**
@@ -162,10 +157,10 @@ public class DirectInboundMsgHandlerTest extends DirectBaseTest {
                 return mockSmtpAgent;
             }
 
-            @Override
-            protected DirectMessageValidationProxy getDirectMessageValidationProxy() {
-            	return mockDirectMessageValidationProxy;
-            }
+//            @Override
+//            protected DirectMessageValidationProxy getDirectMessageValidationProxy() {
+//            	return mockDirectMessageValidationProxy;
+//            }
         };
         testInboundMsgHandler = new DirectInboundMsgHandler(directReceiver) {
         };
@@ -186,10 +181,10 @@ public class DirectInboundMsgHandlerTest extends DirectBaseTest {
                 return mockSmtpAgent;
             }
 
-            @Override
-            protected DirectMessageValidationProxy getDirectMessageValidationProxy() {
-            	return mockDirectMessageValidationProxy;
-            }
+//            @Override
+//            protected DirectMessageValidationProxy getDirectMessageValidationProxy() {
+//            	return mockDirectMessageValidationProxy;
+//            }
         };
 
         testInboundMsgHandler = new DirectInboundMsgHandler(directReceiver) {

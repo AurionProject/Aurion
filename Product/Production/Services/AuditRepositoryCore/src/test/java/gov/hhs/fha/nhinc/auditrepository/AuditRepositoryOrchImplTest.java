@@ -52,7 +52,7 @@ public class AuditRepositoryOrchImplTest {
 	public void getAuditRepositoryOrchImpl() {
 		orchestrator = new AuditRepositoryOrchImpl();
 		messageId = AuditTestHelper.getMessageId();
-		 auditDAO = new AuditRepositoryDAO();
+		auditDAO = AuditRepositoryDAO.getAuditRepositoryDAOInstance();
 	}
 	
 	/*

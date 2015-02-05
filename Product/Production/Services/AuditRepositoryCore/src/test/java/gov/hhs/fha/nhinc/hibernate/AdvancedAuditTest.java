@@ -7,12 +7,6 @@ package gov.hhs.fha.nhinc.hibernate;
 import gov.hhs.fha.nhinc.auditrepository.AuditTestHelper;
 
 import org.junit.Test;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.Ignore;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,7 +19,7 @@ public class AdvancedAuditTest {
 	AuditRepositoryDAO auditDAO = null;
 	
     protected AuditRepositoryDAO getAuditRepositoryDAO() {
-    	auditDAO = (auditDAO != null ? auditDAO : new AuditRepositoryDAO());
+    	auditDAO = (auditDAO != null ? auditDAO : AuditRepositoryDAO.getAuditRepositoryDAOInstance());
     	return auditDAO;
     }
     

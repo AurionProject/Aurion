@@ -126,12 +126,12 @@ public class NhinDocQueryProxyWebServiceSecuredImpl implements NhinDocQueryProxy
             CONNECTClient<RespondingGatewayQueryPortType> client = getCONNECTClientSecured(portDescriptor, assertion,
                 url, target);
         	if (client != null){
-        		boolean overrideSuccessful = client.overrideDefaultTimeouts(
-        				NhincConstants.DOC_QUERY_CONNECT_TIMEOUT,
-        				NhincConstants.DOC_QUERY_RESPONSE_TIMEOUT);
-        		if (! overrideSuccessful){
-        			LOG.warn(this.getClass().getName() + ": Unable to set customized timeouts for DocQuery. Defaults used.");
-        		}
+//        		boolean overrideSuccessful = client.overrideDefaultTimeouts(
+//        				NhincConstants.DOC_QUERY_CONNECT_TIMEOUT,
+//        				NhincConstants.DOC_QUERY_RESPONSE_TIMEOUT);
+//        		if (! overrideSuccessful){
+//        			LOG.warn(this.getClass().getName() + ": Unable to set customized timeouts for DocQuery. Defaults used.");
+//        		}
         		
         		response = (AdhocQueryResponse) client.invokePort(RespondingGatewayQueryPortType.class,
         				"respondingGatewayCrossGatewayQuery", request);

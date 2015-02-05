@@ -88,6 +88,36 @@ public class XmlUtility {
         return serializedElement;
     }
 
+    public static String formatElementForLogging(String elementName, Element element) {
+        String elementNamePart = null;
+        String elementValuePart = null;
+
+        elementValuePart = serializeElementIgnoreFaults(element);
+
+        if (NullChecker.isNotNullish(elementName)) {
+            elementNamePart = elementName;
+        } else if (element != null) {
+            elementNamePart = element.getLocalName();
+        } else {
+            elementNamePart = "element";
+        }
+
+        String message = "{" + elementNamePart + "}=[" + elementValuePart + "]";
+        return message;
+    }
+
+    public static String serializeElementIgnoreFaults(Element element) {
+        String serializedElement = null;
+        try {
+            serializedElement = serializeElement(element);
+        } catch (Exception ex) {
+            LOG.error("Error in serializeElementIgnoreFaults(): ", ex);
+            serializedElement = "???";
+        }
+        return serializedElement;
+
+    }
+
     public static String serializeNode(Node node) throws LSException, IllegalAccessException, DOMException,
             InstantiationException, ClassNotFoundException, ClassCastException {
         String serializedElement = null;
@@ -97,6 +127,18 @@ public class XmlUtility {
             serializedElement = writer.writeToString(node);
         }
         return serializedElement;
+    }
+
+    public static String serializeNodeIgnoreFaults(Node node) {
+        String serializedNode = null;
+        try {
+            serializedNode = serializeNode(node);
+        } catch (Exception ex) {
+            LOG.error("Error in serializeNodeIgnoreFaults: ", ex);
+            serializedNode = "???";
+        }
+        return serializedNode;
+
     }
 
     /**

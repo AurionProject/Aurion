@@ -112,10 +112,6 @@ public class AdapterDocSubmissionDeferredRequestProxyWebServiceSecuredImplTest {
             
         }
         
-        @Override
-        public boolean overrideDefaultTimeouts(String connectTO, String responseTO) {
-        	return true;
-        }
     }
 
     /**

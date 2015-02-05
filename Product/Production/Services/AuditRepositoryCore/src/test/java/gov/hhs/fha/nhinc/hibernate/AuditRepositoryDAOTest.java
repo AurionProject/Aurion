@@ -59,7 +59,7 @@ public class AuditRepositoryDAOTest {
     }
 
     protected AuditRepositoryDAO getAuditRepositoryDAO() {
-    	auditDAO = (auditDAO != null ? auditDAO : new AuditRepositoryDAO());
+    	auditDAO = (auditDAO != null ? auditDAO : AuditRepositoryDAO.getAuditRepositoryDAOInstance());
     	return auditDAO;
     }
     

@@ -86,12 +86,12 @@ public class NhinPatientDiscoveryProxyWebServiceSecuredImpl implements NhinPatie
                     CONNECTClient<RespondingGatewayPortType> client = getCONNECTSecuredClient(target, portDescriptor,
                             url, assertion);
                 	if (client != null) {
-                		boolean overrideSuccessful = client.overrideDefaultTimeouts(
-                				NhincConstants.PATIENT_DISCOVERY_CONNECT_TIMEOUT,
-                				NhincConstants.PATIENT_DISCOVERY_RESPONSE_TIMEOUT);
-                		if (! overrideSuccessful){
-                			LOG.warn(this.getClass().getName() + ": Unable to set customized timeouts for DocQuery. Defaults used.");;
-                		}
+//                		boolean overrideSuccessful = client.overrideDefaultTimeouts(
+//                				NhincConstants.PATIENT_DISCOVERY_CONNECT_TIMEOUT,
+//                				NhincConstants.PATIENT_DISCOVERY_RESPONSE_TIMEOUT);
+//                		if (! overrideSuccessful){
+//                			LOG.warn(this.getClass().getName() + ": Unable to set customized timeouts for DocQuery. Defaults used.");;
+//                		}
                 		response = (PRPAIN201306UV02) client.invokePort(RespondingGatewayPortType.class,
                             "respondingGatewayPRPAIN201305UV02", request);
                 	}

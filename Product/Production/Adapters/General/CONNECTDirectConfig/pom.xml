@@ -10,7 +10,7 @@
     <groupId>org.aurionproject</groupId>
     <artifactId>CONNECTDirectConfig</artifactId>
     <packaging>war</packaging>
-    <version>4.4.1-SNAPSHOT</version>
+    <version>5.1</version>
     <name>${project.artifactId}</name>
 
     <dependencies>

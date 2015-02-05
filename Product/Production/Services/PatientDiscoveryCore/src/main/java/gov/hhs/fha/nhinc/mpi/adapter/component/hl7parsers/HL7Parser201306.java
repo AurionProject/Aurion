@@ -102,7 +102,8 @@ public class HL7Parser201306 {
     private static final Logger LOG = Logger.getLogger(HL7Parser201306.class);
     private static final String PROPERTY_FILE = "adapter";
     private static final String PROPERTY_NAME = "assigningAuthorityId";
-
+    private static final String DEFAULT_AA_OID = "1.1";
+    
     /**
      * Method to build a PRPAIN201306UV02 froma given list of Patients and a PRPAIN201305UV02 object.
      *

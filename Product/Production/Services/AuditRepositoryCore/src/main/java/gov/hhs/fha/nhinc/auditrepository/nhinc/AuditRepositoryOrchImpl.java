@@ -553,9 +553,9 @@ public class AuditRepositoryOrchImpl {
         	advancedAuditRecord.setAuditRepositoryRecord(baseAuditRecord);
         }
 
-        Long recordId = auditDAO.insertAuditRepositoryRecord(baseAuditRecord);
+        Long recordId = auditLogDao.insertAuditRepositoryRecord(baseAuditRecord);
 
-        AcknowledgementType response = new AcknowledgementType();
+        response = new AcknowledgementType();
         if (recordId != null && recordId.longValue() > 0) {
         	response.setMessage("Created Message Audit Record in Database. RecordId = " + recordId.longValue());
         } 
