@@ -102,8 +102,8 @@ public class FindAuditEventsTransformsTest {
         FAEMessage.setAssertion(assertion);
         FAEMessage.setFindAuditEvents(message);
         logMessage.setMessage(FAEMessage);
-//        logMessage.setDirection("inbound");
-//        logMessage.setInterface("nhin");
+        logMessage.setDirection("inbound");
+        logMessage.setInterface("nhin");
 
         AuditMessageType expResult = new AuditMessageType();
         AuditMessageType.ActiveParticipant participant = new AuditMessageType.ActiveParticipant();

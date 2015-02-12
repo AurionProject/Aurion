@@ -45,7 +45,6 @@ import gov.hhs.fha.nhinc.common.auditlog.DocRetrieveMessageType;
 import gov.hhs.fha.nhinc.common.auditlog.LogDocRetrieveRequestType;
 import gov.hhs.fha.nhinc.common.auditlog.LogDocRetrieveResultRequestType;
 import gov.hhs.fha.nhinc.common.auditlog.LogEventRequestType;
-
 import ihe.iti.xds_b._2007.RetrieveDocumentSetRequestType.DocumentRequest;
 import ihe.iti.xds_b._2007.RetrieveDocumentSetResponseType;
 import ihe.iti.xds_b._2007.RetrieveDocumentSetResponseType.DocumentResponse;
@@ -182,7 +181,17 @@ public class DocumentRetrieveTransforms {
             LOG.debug("=====>>>>> Create Audit Source Identification Section --> Assertion Unique Patient Id is ["
                     + uniquePatientId + "]");
         }
-        
+
+        // Create Audit Source Identification Section
+        AuditSourceIdentificationType auditSrcId = null;
+        if (responseCommunityID != null) {
+            auditSrcId = AuditDataTransformHelper.createAuditSourceIdentification(responseCommunityID,
+                    responseCommunityID, null);
+        } else {
+            auditSrcId = AuditDataTransformHelper.createAuditSourceIdentificationFromUser(userInfo, null);
+        }
+        auditMsg.getAuditSourceIdentification().add(auditSrcId);
+
         // Create Document ParticipationObjectIdentification Section
         String documentIds = "";
         if (message != null && message.getMessage() != null && message.getMessage().getRetrieveDocumentSetRequest() != null
@@ -278,8 +287,8 @@ public class DocumentRetrieveTransforms {
      * @param message
      * @return <code>LogEventRequestType</code>
      */
-    public static LogEventRequestType transformDocRetrieveResp2AuditMsg(LogDocRetrieveResultRequestType message) {
-        return transformDocRetrieveResp2AuditMsg(message, null);
+    public static LogEventRequestType transformDocRetrieveResp2AuditMsg(LogDocRetrieveResultRequestType message, String requestCommunityID) {
+        return transformDocRetrieveResp2AuditMsg(message, requestCommunityID, null);
     }
 
     /**
@@ -289,7 +298,7 @@ public class DocumentRetrieveTransforms {
      * @return <code>LogEventRequestType</code>
      */
     public static LogEventRequestType transformDocRetrieveResp2AuditMsg(
-    		LogDocRetrieveResultRequestType message,
+    		LogDocRetrieveResultRequestType message, String requestCommunityID,
             Boolean forceRedaction) 
     {
         AuditMessageType auditMsg = new AuditMessageType();
@@ -365,6 +374,16 @@ public class DocumentRetrieveTransforms {
             LOG.debug("=====>>>>> Create Audit Source Identification Section --> Assertion Unique Patient Id is ["
                     + uniquePatientId + "]");
         }
+
+        // Create Audit Source Identification Section
+        AuditSourceIdentificationType auditSrcId = null;
+        if (requestCommunityID != null) {
+            auditSrcId = AuditDataTransformHelper.createAuditSourceIdentification(requestCommunityID,
+                    requestCommunityID, null);
+        } else {
+            auditSrcId = AuditDataTransformHelper.createAuditSourceIdentificationFromUser(userInfo, null);
+        }
+        auditMsg.getAuditSourceIdentification().add(auditSrcId);
 
         // Create Community ParticipantObjectIdentification record
         if (userInfo != null && userInfo.getOrg()!= null) {

@@ -478,7 +478,7 @@ public class AuditRepositoryLogger implements AuditRepositoryDocumentRetrieveLog
             logReqMsg.setDirection(direction);
             logReqMsg.setInterface(_interface);
             logReqMsg.setMessage(message);
-            auditMsg = DocumentRetrieveTransforms.transformDocRetrieveResp2AuditMsg(logReqMsg);
+            auditMsg = DocumentRetrieveTransforms.transformDocRetrieveResp2AuditMsg(logReqMsg, requestCommunityID);
         LOG.debug("Exiting AuditRepositoryLogger.logDocRetrieveResult(...)");
         return auditMsg;
     }

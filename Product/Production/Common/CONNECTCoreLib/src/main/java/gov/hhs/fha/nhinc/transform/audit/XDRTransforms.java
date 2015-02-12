@@ -26,7 +26,7 @@
  */
 package gov.hhs.fha.nhinc.transform.audit;
 
-import com.services.nhinc.schema.auditmessage.ActiveParticipantType;
+//import com.services.nhinc.schema.auditmessage.ActiveParticipantType;
 import com.services.nhinc.schema.auditmessage.AuditMessageType;
 import com.services.nhinc.schema.auditmessage.AuditMessageType.ActiveParticipant;
 import com.services.nhinc.schema.auditmessage.AuditSourceIdentificationType;
@@ -187,6 +187,11 @@ public class XDRTransforms {
 	        auditMsg.getParticipantObjectIdentification().add(communityParticipant);
         }
 
+        /* Create the AuditSourceIdentifierType object */
+        String communityId = getMessageCommunityIdFromRequest(assertion, target, direction, _interface);
+        AuditSourceIdentificationType auditSource = getAuditSourceIdentificationType(communityId);
+        auditMsg.getAuditSourceIdentification().add(auditSource);
+
         result.setAuditMessage(auditMsg);
         result.setDirection(direction);
         result.setInterface(_interface);
@@ -319,6 +324,11 @@ public class XDRTransforms {
 	        ParticipantObjectIdentificationType communityParticipant = AuditDataTransformHelper.createParticipantCommunityRecordFromUser(userInfo);
 	        auditMsg.getParticipantObjectIdentification().add(communityParticipant);
         }
+
+        /* Create the AuditSourceIdentifierType object */
+        String communityId = getMessageCommunityIdFromRequest(assertion, target, direction, _interface);
+        AuditSourceIdentificationType auditSource = getAuditSourceIdentificationType(communityId);
+        auditMsg.getAuditSourceIdentification().add(auditSource);
 
         result.setAuditMessage(auditMsg);
         result.setDirection(direction);
@@ -453,6 +463,11 @@ public class XDRTransforms {
 	        auditMsg.getParticipantObjectIdentification().add(communityParticipant);
         }
 
+        /* Create the AuditSourceIdentifierType object */
+        String communityId = getMessageCommunityIdFromRequest(assertion, target, direction, _interface);
+        AuditSourceIdentificationType auditSource = getAuditSourceIdentificationType(communityId);
+        auditMsg.getAuditSourceIdentification().add(auditSource);
+
         result.setAuditMessage(auditMsg);
         result.setDirection(direction);
         result.setInterface(_interface);
@@ -583,6 +598,11 @@ public class XDRTransforms {
 	        auditMsg.getParticipantObjectIdentification().add(communityParticipant);
         }
 
+        /* Create the AuditSourceIdentifierType object */
+        String communityId = getMessageCommunityIdFromRequest(assertion, target, direction, _interface);
+        AuditSourceIdentificationType auditSource = getAuditSourceIdentificationType(communityId);
+        auditMsg.getAuditSourceIdentification().add(auditSource);
+
         result.setAuditMessage(auditMsg);
         result.setDirection(direction);
         result.setInterface(_interface);
@@ -709,6 +729,11 @@ public class XDRTransforms {
 	        auditMsg.getParticipantObjectIdentification().add(communityParticipant);
         }
 
+        /* Create the AuditSourceIdentifierType object */
+        String communityId = getMessageCommunityId(assertion, target, _interface, isRequesting);
+        AuditSourceIdentificationType auditSource = getAuditSourceIdentificationType(communityId);
+        auditMsg.getAuditSourceIdentification().add(auditSource);
+
         result.setAuditMessage(auditMsg);
         result.setDirection(direction);
         result.setInterface(_interface);
@@ -717,105 +742,6 @@ public class XDRTransforms {
 
     }
     
-    /**
-    *
-    */
-   public LogEventRequestType transformAcknowledgementToAuditMsg(XDRAcknowledgementType acknowledgement,
-       AssertionType assertion, NhinTargetSystemType target, String direction, String _interface, String action) {
-       LogEventRequestType result = null;
-       AuditMessageType auditMsg = null;
-
-       if (acknowledgement == null) {
-           LOG.error("Acknowledgement is null");
-           return null;
-       }
-
-       if (assertion == null) {
-           LOG.error("Assertion is null");
-           return null;
-       }
-
-       // check to see that the required fields are not null
-       boolean missingReqFields = areRequiredAcknowledgementFieldsNull(acknowledgement, assertion);
-
-       if (missingReqFields) {
-           LOG.error("One or more required fields was missing");
-           return null;
-       }
-
-       result = new LogEventRequestType();
-
-       auditMsg = new AuditMessageType();
-       // Create EventIdentification
-       CodedValueType eventID = null;
-
-       eventID = getCodedValueTypeForXDRResponse();
-
-       CodedValueType eventType = getCodedValueForEventType();
-       EventIdentificationType oEventIdentificationType = AuditDataTransformHelper.createEventIdentification(
-               AuditDataTransformConstants.XDR_RESPONSE_EVENT_ACTION_CODE,
-               AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS, 
-               eventID, 
-               eventType);
-       
-       auditMsg.setEventIdentification(oEventIdentificationType);
-
-       // Create Active Participant Section
-       boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
-       boolean isRecipient = isSender ? false : true;
-      
-       UserType userInfo = assertion.getUserInfo();
-       if (userInfo != null) {
-           ActiveParticipant participant = AuditDataTransformHelper.createActiveParticipantForHuman(userInfo);
-           auditMsg.getActiveParticipant().add(participant);
-       }
-
-       ActiveParticipant source = AuditDataTransformHelper.createActiveParticipantSource(isSender, null);
-       auditMsg.getActiveParticipant().add(source);
-       
-       ActiveParticipant destination = AuditDataTransformHelper.createActiveParticipantDestination(assertion.getSamlAuthnStatement(), isRecipient);
-       auditMsg.getActiveParticipant().add(destination);
-       
-       /* Assign ParticipationObjectIdentification */
-       /**
-        * Create a ParticipantObjectIdentification entry for Patient
-        */
-       String patId = null;
-       if (assertion != null && assertion.getUniquePatientId() != null) {
-       	patId = assertion.getUniquePatientId().get(0);
-       }
-       
-       if ((patId != null) && (! patId.isEmpty())) {
-	        CodedValueType partObjectIdType = AuditDataTransformHelper.getPatientParticipantRoleIdCodedValue();
-	
-	        // Participant Object Identification Entry $1 Patient
-	        ParticipantObjectIdentificationType partObjId = AuditDataTransformHelper.createParticipantObjectIdentification(
-	        		AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_PERSON,
-	        		AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_ROLE_PATIENT,
-	        		partObjectIdType,
-	        		patId,
-	        		null);
-	
-	        auditMsg.getParticipantObjectIdentification().add(partObjId);
-       }
-
-       //TODO: How to find the SubmissionSet UniqueId
-
-       // Create a ParticipantObjectIdentification record for Source Community
-       if ((userInfo != null) && (userInfo.getOrg().getHomeCommunityId()!= null)) {
-	        ParticipantObjectIdentificationType communityParticipant = AuditDataTransformHelper.createParticipantCommunityRecordFromUser(userInfo);
-	        auditMsg.getParticipantObjectIdentification().add(communityParticipant);
-       }
-
-       result.setAuditMessage(auditMsg);
-       result.setDirection(direction);
-       result.setInterface(_interface);
-
-       return result;
-
-   }
-
-
     /**
      * Retrieves the community id for auditing when the message being audited is a request message. For example, this
      * method should be used when the message being audited is an ProvideAndRegister request.
@@ -1278,6 +1204,9 @@ public class XDRTransforms {
         }
     }
 
+    private AuditSourceIdentificationType getAuditSourceIdentificationType(String communityId) {
+        return AuditDataTransformHelper.createAuditSourceIdentification(communityId, communityId, null);
+    }
 
     private CodedValueType getCodedValueTypeForXDRRequest() {
         // Create EventIdentification
@@ -1313,6 +1242,109 @@ public class XDRTransforms {
         return eventType;
     }
 
+
+    /**
+     *
+     */
+    public LogEventRequestType transformAcknowledgementToAuditMsg(XDRAcknowledgementType acknowledgement,
+        AssertionType assertion, NhinTargetSystemType target, String direction, String _interface, String action) {
+        LogEventRequestType result = null;
+        AuditMessageType auditMsg = null;
+
+        if (acknowledgement == null) {
+            LOG.error("Acknowledgement is null");
+            return null;
+        }
+
+        if (assertion == null) {
+            LOG.error("Assertion is null");
+            return null;
+        }
+
+        // check to see that the required fields are not null
+        boolean missingReqFields = areRequiredAcknowledgementFieldsNull(acknowledgement, assertion);
+
+        if (missingReqFields) {
+            LOG.error("One or more required fields was missing");
+            return null;
+        }
+
+        result = new LogEventRequestType();
+
+        auditMsg = new AuditMessageType();
+        // Create EventIdentification
+        CodedValueType eventID = null;
+
+       eventID = getCodedValueTypeForXDRResponse();
+
+       CodedValueType eventType = getCodedValueForEventType();
+       EventIdentificationType oEventIdentificationType = AuditDataTransformHelper.createEventIdentification(
+               AuditDataTransformConstants.XDR_RESPONSE_EVENT_ACTION_CODE,
+               AuditDataTransformConstants.EVENT_OUTCOME_INDICATOR_SUCCESS, 
+               eventID, 
+               eventType);
+       
+       auditMsg.setEventIdentification(oEventIdentificationType);
+
+       // Create Active Participant Section
+       boolean isSender = AuditDataTransformHelper.isSender(_interface, direction);
+       boolean isRecipient = isSender ? false : true;
+      
+       UserType userInfo = assertion.getUserInfo();
+       if (userInfo != null) {
+           ActiveParticipant participant = AuditDataTransformHelper.createActiveParticipantForHuman(userInfo);
+           auditMsg.getActiveParticipant().add(participant);
+       }
+
+       ActiveParticipant source = AuditDataTransformHelper.createActiveParticipantSource(isSender, null);
+       auditMsg.getActiveParticipant().add(source);
+       
+       ActiveParticipant destination = AuditDataTransformHelper.createActiveParticipantDestination(assertion.getSamlAuthnStatement(), isRecipient);
+       auditMsg.getActiveParticipant().add(destination);
+       
+       /* Assign ParticipationObjectIdentification */
+       /**
+        * Create a ParticipantObjectIdentification entry for Patient
+        */
+       String patId = null;
+       if ((assertion != null) && (assertion.getUniquePatientId() != null) && (!assertion.getUniquePatientId().isEmpty())) {
+       	patId = assertion.getUniquePatientId().get(0);
+       }
+       
+       if ((patId != null) && (! patId.isEmpty())) {
+	        CodedValueType partObjectIdType = AuditDataTransformHelper.getPatientParticipantRoleIdCodedValue();
+	
+	        // Participant Object Identification Entry $1 Patient
+	        ParticipantObjectIdentificationType partObjId = AuditDataTransformHelper.createParticipantObjectIdentification(
+	        		AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_PERSON,
+	        		AuditDataTransformConstants.PARTICIPANT_OBJECT_TYPE_CODE_ROLE_PATIENT,
+	        		partObjectIdType,
+	        		patId,
+	        		null);
+	
+	        auditMsg.getParticipantObjectIdentification().add(partObjId);
+       }
+
+       //TODO: How to find the SubmissionSet UniqueId
+
+       // Create a ParticipantObjectIdentification record for Source Community
+       if ((userInfo != null) && (userInfo.getOrg().getHomeCommunityId()!= null)) {
+	        ParticipantObjectIdentificationType communityParticipant = AuditDataTransformHelper.createParticipantCommunityRecordFromUser(userInfo);
+	        auditMsg.getParticipantObjectIdentification().add(communityParticipant);
+       }
+
+        /* Create the AuditSourceIdentifierType object */
+        String communityId = getMessageCommunityIdFromResponse(assertion, target, direction, _interface);
+        AuditSourceIdentificationType auditSource = getAuditSourceIdentificationType(communityId);
+        auditMsg.getAuditSourceIdentification().add(auditSource);
+
+        result.setAuditMessage(auditMsg);
+        result.setDirection(direction);
+        result.setInterface(_interface);
+
+        return result;
+
+    }
 
     /**
      *

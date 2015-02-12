@@ -167,7 +167,7 @@ public class PatientDiscoveryTransformsTest {
         Assert.assertNotNull(expected);
         Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
         Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
-        Assert.assertTrue(expected.getAuditMessage().getParticipantObjectIdentification().size() == 1);
+        Assert.assertEquals(2, expected.getAuditMessage().getParticipantObjectIdentification().size());
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification());
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification().getEventID());
     }
@@ -212,7 +212,7 @@ public class PatientDiscoveryTransformsTest {
         Assert.assertNotNull(expected);
         Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
         Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
-        Assert.assertTrue(expected.getAuditMessage().getParticipantObjectIdentification().size() == 1);
+        Assert.assertEquals(2, expected.getAuditMessage().getParticipantObjectIdentification().size());
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification());
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification().getEventID());
     }
@@ -257,7 +257,7 @@ public class PatientDiscoveryTransformsTest {
         Assert.assertNotNull(expected);
         Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
         Assert.assertTrue(expected.getAuditMessage().getAuditSourceIdentification().size() == 1);
-        Assert.assertTrue(expected.getAuditMessage().getParticipantObjectIdentification().size() == 1);
+        Assert.assertEquals(2, expected.getAuditMessage().getParticipantObjectIdentification().size());
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification());
         Assert.assertNotNull(expected.getAuditMessage().getEventIdentification().getEventID());
     }
@@ -315,7 +315,7 @@ public class PatientDiscoveryTransformsTest {
         Assert.assertNotNull(expectedResult);
         Assert.assertTrue(expectedResult.getAuditMessage().getAuditSourceIdentification().size() == 1);
         Assert.assertTrue(expectedResult.getAuditMessage().getAuditSourceIdentification().size() == 1);
-        Assert.assertTrue(expectedResult.getAuditMessage().getParticipantObjectIdentification().size() == 1);
+        Assert.assertEquals(3, expectedResult.getAuditMessage().getParticipantObjectIdentification().size());
         Assert.assertNotNull(expectedResult.getAuditMessage().getEventIdentification());
         Assert.assertNotNull(expectedResult.getAuditMessage().getEventIdentification().getEventID());
     }
@@ -362,7 +362,7 @@ public class PatientDiscoveryTransformsTest {
         Assert.assertNotNull(expectedResult);
         Assert.assertTrue(expectedResult.getAuditMessage().getAuditSourceIdentification().size() == 1);
         Assert.assertTrue(expectedResult.getAuditMessage().getAuditSourceIdentification().size() == 1);
-        Assert.assertTrue(expectedResult.getAuditMessage().getParticipantObjectIdentification().size() == 1);
+        Assert.assertEquals(3, expectedResult.getAuditMessage().getParticipantObjectIdentification().size());
         Assert.assertNotNull(expectedResult.getAuditMessage().getEventIdentification());
         Assert.assertNotNull(expectedResult.getAuditMessage().getEventIdentification().getEventID());
 

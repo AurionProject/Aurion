@@ -186,9 +186,9 @@ public class XDRTransformsTest {
         assertNotNull(result.getAuditMessage().getActiveParticipant());
         assertNotNull(result.getAuditMessage().getAuditSourceIdentification());
 
-        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(3, result.getAuditMessage().getActiveParticipant().size());
 
-        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(3, result.getAuditMessage().getActiveParticipant().size());
         assertEquals(1, result.getAuditMessage().getAuditSourceIdentification().size());
 
         assertEquals(NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, result.getDirection());
@@ -268,9 +268,9 @@ public class XDRTransformsTest {
         assertNotNull(result.getAuditMessage().getActiveParticipant());
         assertNotNull(result.getAuditMessage().getAuditSourceIdentification());
 
-        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(3, result.getAuditMessage().getActiveParticipant().size());
 
-        assertEquals(1, result.getAuditMessage().getActiveParticipant().size());
+        assertEquals(3, result.getAuditMessage().getActiveParticipant().size());
         assertEquals(1, result.getAuditMessage().getAuditSourceIdentification().size());
 
         assertEquals(NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, result.getDirection());

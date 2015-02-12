@@ -83,7 +83,7 @@ import org.hl7.v3.RespondingGatewayPRPAIN201306UV02ResponseType;
  */
 public class PatientDiscoveryTransforms {
 
-    private static final String JAXB_HL7_CONTEXT_NAME = "org.hl7.v3";
+//    private static final String JAXB_HL7_CONTEXT_NAME = "org.hl7.v3";
     private static final Logger LOG = Logger.getLogger(PatientDiscoveryTransforms.class);
 
     /**
@@ -233,6 +233,17 @@ public class PatientDiscoveryTransforms {
 
         messageId = oAssertion.getMessageId();
         
+        // Based on IHE XCPD specifications, the sender contains the home community id
+        // Based on IHE XCPD specification the sender does not contain the home community name
+        String sCommunityId = getPatientDiscoveryMessageCommunityId(oPatientDiscoveryRequestMessage, direction,
+            _interface, _type, _process);
+
+        /* Create the AuditSourceIdentifierType object */
+        AuditSourceIdentificationType auditSource = getAuditSourceIdentificationType(sCommunityId, sCommunityId);
+        oAuditMessageType.getAuditSourceIdentification().add(auditSource);
+        addLogDebug("Audit record AuditMessageType.getAuditSourceIdentification().get(0).getAuditSourceID(): "
+            + oAuditMessageType.getAuditSourceIdentification().get(0).getAuditSourceID());
+
         // Put the contents of the actual message into the Audit Log Message
         if (messageBytes != null && messageBytes.length > 0){
     		CodedValueType dataTransportType = AuditDataTransformHelper.getDataTransportParticipantRoleIdCodedValue();
@@ -319,6 +330,16 @@ public class PatientDiscoveryTransforms {
         ActiveParticipant destination = AuditDataTransformHelper.createActiveParticipantDestination(oAssertion.getSamlAuthnStatement(), isRecipient);
         oAuditMessageType.getActiveParticipant().add(destination);
         
+        // Based on IHE XCPD specifications, the receiver contains the home community id
+        // Based on IHE XCPD specification the receiver does not contain the home community name
+        String sourceCommunityId = getPatientDiscoveryMessageCommunityId(oPatientDiscoveryResponseMessage, direction,
+            _interface, _type);
+
+        AuditSourceIdentificationType oAuditSource = getAuditSourceIdentificationType(sourceCommunityId, sourceCommunityId);
+        oAuditMessageType.getAuditSourceIdentification().add(oAuditSource);
+        addLogDebug("Audit record AuditMessageType.getAuditSourceIdentification().get(0).getAuditSourceID(): "
+            + oAuditMessageType.getAuditSourceIdentification().get(0).getAuditSourceID());
+
         /* Get Composite Patient Id */
         String sCommunityId = "";
         String sPatientId = "";
@@ -395,7 +416,7 @@ public class PatientDiscoveryTransforms {
          */
         byte[] messageBytes = null;
         String messageId = null;
-        ByteArrayOutputStream baOutStrm = new ByteArrayOutputStream();
+//        ByteArrayOutputStream baOutStrm = new ByteArrayOutputStream();
         messageBytes = marshallPatientDiscoveryMessage(oPatientDiscoveryResponseMessage);
 
         messageId = oAssertion.getMessageId();
@@ -784,11 +805,11 @@ public class PatientDiscoveryTransforms {
         return participant;
     }
 
-//    protected AuditSourceIdentificationType getAuditSourceIdentificationType(String sCommunityId, String sCommunityName) {
-//        AuditSourceIdentificationType auditSource = AuditDataTransformHelper.createAuditSourceIdentification(
-//            sCommunityId, sCommunityName);
-//        return auditSource;
-//    }
+    protected AuditSourceIdentificationType getAuditSourceIdentificationType(String sCommunityId, String sCommunityName) {
+        AuditSourceIdentificationType auditSource = AuditDataTransformHelper.createAuditSourceIdentification(
+            sCommunityId, sCommunityName, null);
+        return auditSource;
+    }
 
     protected CodedValueType getCodedValueTypeFor201305UV() {
        CodedValueType eventID = AuditDataTransformHelper.createCodedValue(
@@ -1201,6 +1222,17 @@ public class PatientDiscoveryTransforms {
             ActiveParticipant participant = AuditDataTransformHelper.createActiveParticipantForHuman(userInfo);
             auditMsg.getActiveParticipant().add(participant);
         }
+
+        // AuditSourceIdentification
+        // Based on IHE XCPD specifications, the receiver contains the home community id
+        // Based on IHE XCPD specification the receiver does not contain the home community name
+        String sCommunityId = getPatientDiscoveryMessageCommunityId(message, direction, _interface);
+
+        LOG.info("Setting ACK CommunityID : " + sCommunityId);
+
+        AuditSourceIdentificationType auditSource = AuditDataTransformHelper.createAuditSourceIdentification(
+            sCommunityId, sCommunityId, null);
+        auditMsg.getAuditSourceIdentification().add(auditSource);
 
         ActiveParticipant source = AuditDataTransformHelper.createActiveParticipantSource(isSender, null);
         auditMsg.getActiveParticipant().add(source);

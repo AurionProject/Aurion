@@ -120,8 +120,8 @@ public class DocumentQueryTransformsTest {
         adhocMessage.setAssertion(assertion);
 
         logMessage.setMessage(adhocMessage);
-//        logMessage.setDirection("inbound");
-//        logMessage.setInterface("nhin");
+        logMessage.setDirection("inbound");
+        logMessage.setInterface("nhin");
 
         auditData.setReceiverPatientId("12345");
 
@@ -186,8 +186,8 @@ public class DocumentQueryTransformsTest {
         logMessage.setMessage(adhocMessage);
         auditData.setReceiverPatientId("999999");
 
-//        logMessage.setDirection("inbound");
-//        logMessage.setInterface("nhin");
+        logMessage.setDirection("inbound");
+        logMessage.setInterface("nhin");
         
         // Build Registry Object List for response
         oasis.names.tc.ebxml_regrep.xsd.rim._3.ObjectFactory rimObjFact = new oasis.names.tc.ebxml_regrep.xsd.rim._3.ObjectFactory();
@@ -288,8 +288,8 @@ public class DocumentQueryTransformsTest {
         logMessage.setMessage(adhocMessage);
         auditData.setReceiverPatientId("999999");
 
-//        logMessage.setDirection("inbound");
-//        logMessage.setInterface("nhin");
+        logMessage.setDirection("inbound");
+        logMessage.setInterface("nhin");
         
         // Build expected result
         AuditMessageType expResult = new AuditMessageType();

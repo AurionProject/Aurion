@@ -107,8 +107,8 @@ public class DocumentRetrieveTransformsTest {
         docReqMessage.setAssertion(assertion);
         docReqMessage.setRetrieveDocumentSetRequest(message);
         logMessage.setMessage(docReqMessage);
-//        logMessage.setDirection("inbound");
-//        logMessage.setInterface("nhin");
+        logMessage.setDirection("inbound");
+        logMessage.setInterface("nhin");
 
         AuditData auditData = new AuditData();
         auditData.setReceiverPatientId("999999");
@@ -174,8 +174,8 @@ public class DocumentRetrieveTransformsTest {
         docRespMessage.setAssertion(assertion);
         docRespMessage.setRetrieveDocumentSetResponse(message);
         logMessage.setMessage(docRespMessage);
-//        logMessage.setDirection("inbound");
-//        logMessage.setInterface("nhin");
+        logMessage.setDirection("inbound");
+        logMessage.setInterface("nhin");
         
         AuditData auditData = new AuditData();
         auditData.setReceiverPatientId("78987");
@@ -198,7 +198,7 @@ public class DocumentRetrieveTransformsTest {
         LogEventRequestType expected = new LogEventRequestType();
         expected.setAuditMessage(expResult);
 
-        LogEventRequestType result = DocumentRetrieveTransforms.transformDocRetrieveResp2AuditMsg(logMessage);
+        LogEventRequestType result = DocumentRetrieveTransforms.transformDocRetrieveResp2AuditMsg(logMessage, "2.16.840.1.113883.3.166.4");
 
         assertEquals(expected.getAuditMessage().getActiveParticipant().get(0).getUserName(), result.getAuditMessage()
                 .getActiveParticipant().get(0).getUserName());

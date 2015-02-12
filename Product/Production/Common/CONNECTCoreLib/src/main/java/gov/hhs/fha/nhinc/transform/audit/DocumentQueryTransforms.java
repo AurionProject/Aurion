@@ -165,6 +165,15 @@ public class DocumentQueryTransforms {
         auditMsg.getActiveParticipant().add(destination);
 
         // Create Audit Source Identification Section
+        AuditSourceIdentificationType auditSrcId = null;
+        if (responseCommunityID != null) {
+            auditSrcId = AuditDataTransformHelper.createAuditSourceIdentification(responseCommunityID,
+                responseCommunityID, null);
+        } else {
+            auditSrcId = AuditDataTransformHelper.createAuditSourceIdentificationFromUser(userInfo, null);
+        }
+
+        auditMsg.getAuditSourceIdentification().add(auditSrcId);
 
         // Create Participant Object Identification Section
         // Patient ParticipantObjectIdentification
@@ -432,7 +441,25 @@ public class DocumentQueryTransforms {
                 }
 
             } 
-            
+
+            // Home Community ID
+            // -------------------
+            String communityId = null;
+            if (requestCommunityID != null) {
+                communityId = requestCommunityID;
+                LOG.debug("=====>>>>> Create Audit Source Identification Section --> requestCommunityID is ["
+                    + requestCommunityID + "]");
+            } else if ((oExtObj != null) && (oExtObj.getHome() != null) && (oExtObj.getHome().length() > 0)) {
+                communityId = oExtObj.getHome();
+            } else if ((oObjRef != null) && (NullChecker.isNotNullish(oObjRef.getHome()))) {
+                communityId = oObjRef.getHome();
+            }
+            if (communityId != null) {
+                AuditSourceIdentificationType auditSrcId = AuditDataTransformHelper.createAuditSourceIdentification(
+                    communityId, communityId, null);
+                auditMsg.getAuditSourceIdentification().add(auditSrcId);
+            }
+
             /*
              * Create the Community ParticipantObjectIdentification record 
              */
@@ -628,6 +655,18 @@ public class DocumentQueryTransforms {
 	        	null);
         }
         
+        // Home Community ID
+        // -------------------
+        /* Create the AuditSourceIdentifierType object */
+        AuditSourceIdentificationType auditSource = null;
+        if (requestCommunityID != null) {
+            auditSource = AuditDataTransformHelper.createAuditSourceIdentification(requestCommunityID,
+                requestCommunityID, null);
+        } else {
+            auditSource = AuditDataTransformHelper.createAuditSourceIdentificationFromUser(assertion.getUserInfo(), null);
+        }
+        auditMsg.getAuditSourceIdentification().add(auditSource);
+
         result.setAuditMessage(auditMsg);
         result.setDirection(direction);
         result.setInterface(_interface);
