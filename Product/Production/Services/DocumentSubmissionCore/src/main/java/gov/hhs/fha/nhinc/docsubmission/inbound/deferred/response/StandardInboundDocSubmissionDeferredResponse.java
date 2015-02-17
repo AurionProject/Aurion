@@ -97,11 +97,7 @@ public class StandardInboundDocSubmissionDeferredResponse extends AbstractInboun
     XDRAcknowledgementType processDocSubmissionResponse(RegistryResponseType body, AssertionType assertion) {
         XDRAcknowledgementType response;
 
-        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
-
-        if (auditAdapter) {
-        	auditRequestToAdapter(body, assertion);
-        }
+       	auditRequestToAdapter(body, assertion);
         
         String localHCID = getLocalHCID();
         if (isPolicyValid(body, assertion, localHCID)) {
@@ -112,9 +108,7 @@ public class StandardInboundDocSubmissionDeferredResponse extends AbstractInboun
             response = msgUtils.createFailedPolicyCheckXDRAcknowledgementType();
         }
         
-        if (auditAdapter) {
-        	auditResponseFromAdapter(response, assertion);
-        }
+       	auditResponseFromAdapter(response, assertion);
 
         return response;
     }

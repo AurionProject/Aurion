@@ -9,7 +9,7 @@
 
     <groupId>org.aurionproject</groupId>
     <artifactId>CORE_X12DocumentSubmission_10</artifactId>
-    <version>4.4.1-SNAPSHOT</version>
+    <version>5.1</version>
     <packaging>war</packaging>
 
     <name>CONNECT Gateway - ${project.artifactId}</name>

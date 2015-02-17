@@ -99,11 +99,7 @@ public class StandardInboundDocQuery extends AbstractInboundDocQuery {
 
         String respondingHcid = HomeCommunityMap.getLocalHomeCommunityId();
         
-        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
-        
-        if(auditAdapter) {
-        	auditRequestToAdapter(msg, assertion, respondingHcid);
-        }
+       	auditRequestToAdapter(msg, assertion, respondingHcid);
 
         if (isPolicyValid(msg, assertion)) {
             resp = sendToAdapter(msg, assertion);
@@ -111,9 +107,7 @@ public class StandardInboundDocQuery extends AbstractInboundDocQuery {
             resp = MessageGeneratorUtils.getInstance().createPolicyErrorResponse();
         }
 
-        if(auditAdapter) {
-        	auditRequestFromAdapter(resp, assertion, respondingHcid);
-        }
+       	auditRequestFromAdapter(resp, assertion, respondingHcid);
 
         return resp;
     }
@@ -129,18 +123,24 @@ public class StandardInboundDocQuery extends AbstractInboundDocQuery {
 
     private AcknowledgementType auditRequestToAdapter(AdhocQueryRequest msg, AssertionType assertion,
             String requestCommunityID) {
-        AcknowledgementType ack = auditLogger
-                .auditDQRequest(msg, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION,
-                        NhincConstants.AUDIT_LOG_ADAPTER_INTERFACE, requestCommunityID);
+        AcknowledgementType ack = null;
+        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
+        if(auditAdapter) {
+            ack = auditLogger.auditDQRequest(msg, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION,
+                    NhincConstants.AUDIT_LOG_ADAPTER_INTERFACE, requestCommunityID);
+        }
 
         return ack;
     }
     
     private AcknowledgementType auditRequestFromAdapter(AdhocQueryResponse response, AssertionType assertion,
             String requestCommunityID) {
-        AcknowledgementType ack = auditLogger
-                .auditDQResponse(response, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
-                        NhincConstants.AUDIT_LOG_ADAPTER_INTERFACE, requestCommunityID);
+        AcknowledgementType ack = null;
+        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
+        if(auditAdapter) {
+            ack = auditLogger.auditDQResponse(response, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
+                    NhincConstants.AUDIT_LOG_ADAPTER_INTERFACE, requestCommunityID);
+        }
 
         return ack;
     }

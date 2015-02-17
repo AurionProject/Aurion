@@ -56,35 +56,41 @@ public abstract class AbstractInboundPatientDiscovery implements InboundPatientD
     public PRPAIN201306UV02 respondingGatewayPRPAIN201305UV02(PRPAIN201305UV02 body, AssertionType assertion)
             throws PatientDiscoveryException {
     	
-    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, 
-    			NhincConstants.NHIN_AUDIT_PROPERTY);
-    	if (auditNhin) {
-    		auditRequestFromNhin(body, assertion);
-    	}
+   		auditRequestFromNhin(body, assertion);
     	
         PRPAIN201306UV02 response = process(body, assertion);
             
-        if (auditNhin) {
-        	auditResponseToNhin(response, assertion);    
-        }
+       	auditResponseToNhin(response, assertion);    
         
         return response;
     }
 
     protected void auditRequestFromNhin(PRPAIN201305UV02 body, AssertionType assertion) {
-        getAuditLogger().auditNhin201305(body, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION);
+    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
+    	if (auditNhin) {
+            getAuditLogger().auditNhin201305(body, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION);
+    	}
     }
 
     protected void auditResponseToNhin(PRPAIN201306UV02 response, AssertionType assertion) {
-        getAuditLogger().auditNhin201306(response, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION);
+    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
+    	if (auditNhin) {
+            getAuditLogger().auditNhin201306(response, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION);
+    	}
     }
 
     protected void auditRequestToAdapter(PRPAIN201305UV02 body, AssertionType assertion) {
-        getAuditLogger().auditAdapter201305(body, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION);
+    	boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
+    	if (auditAdapter) {
+            getAuditLogger().auditAdapter201305(body, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION);
+    	}
     }
 
     protected void auditResponseFromAdapter(PRPAIN201306UV02 response, AssertionType assertion) {
-        getAuditLogger().auditAdapter201306(response, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION);
+    	boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
+    	if (auditAdapter) {
+            getAuditLogger().auditAdapter201306(response, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION);
+    	}
     }
     
 	/**

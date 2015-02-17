@@ -26,12 +26,9 @@
  */
 package gov.hhs.fha.nhinc.docquery.inbound;
 
-import gov.hhs.fha.nhinc.aspect.InboundProcessingEvent;
 import gov.hhs.fha.nhinc.common.nhinccommon.AcknowledgementType;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.docquery.DocQueryAuditLog;
-import gov.hhs.fha.nhinc.docquery.aspect.AdhocQueryRequestDescriptionBuilder;
-import gov.hhs.fha.nhinc.docquery.aspect.AdhocQueryResponseDescriptionBuilder;
 import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
@@ -69,35 +66,36 @@ public abstract class AbstractInboundDocQuery implements InboundDocQuery {
             senderHcid = HomeCommunityMap.getCommunityIdFromAssertion(assertion);
         }
 
-        boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
-
-        if (auditNhin) {
-        	auditRequestFromNhin(msg, assertion, senderHcid);
-        }
+       	auditRequestFromNhin(msg, assertion, senderHcid);
 
         AdhocQueryResponse resp = processDocQuery(msg, assertion, HomeCommunityMap.getLocalHomeCommunityId());
 
-        if (auditNhin) {
-        	auditResponseToNhin(resp, assertion, senderHcid);
-        }
+       	auditResponseToNhin(resp, assertion, senderHcid);
 
         return resp;
     }
 
     protected AcknowledgementType auditRequestFromNhin(AdhocQueryRequest msg, AssertionType assertion,
             String requestCommunityID) {
-        AcknowledgementType ack = auditLogger
-                .auditDQRequest(msg, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
-                        NhincConstants.AUDIT_LOG_NHIN_INTERFACE, requestCommunityID);
+        AcknowledgementType ack = null;
+        boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
+        if (auditNhin) {
+            ack = auditLogger.auditDQRequest(msg, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
+                    NhincConstants.AUDIT_LOG_NHIN_INTERFACE, requestCommunityID);
+        }
 
         return ack;
     }
 
     protected AcknowledgementType auditResponseToNhin(AdhocQueryResponse msg, AssertionType assertion,
             String requestCommunityID) {
-        AcknowledgementType ack = auditLogger.auditDQResponse(msg, assertion,
-                NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, NhincConstants.AUDIT_LOG_NHIN_INTERFACE,
-                requestCommunityID);
+        AcknowledgementType ack = null;
+        boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
+        if (auditNhin) {
+            ack = auditLogger.auditDQResponse(msg, assertion,
+                    NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION, NhincConstants.AUDIT_LOG_NHIN_INTERFACE,
+                    requestCommunityID);
+        }
 
         return ack;
     }

@@ -204,7 +204,7 @@
         include each dependency in the EAR manually and the JARS will be magically
         removed from the WAR's WEB-INF/lib -->
         <dependency>
-            <groupId>org.connectopensource</groupId>
+            <groupId>org.aurionproject</groupId>
             <artifactId>CONNECTAdminGUI</artifactId>
             <version>${project.parent.version}</version>
             <type>war</type>

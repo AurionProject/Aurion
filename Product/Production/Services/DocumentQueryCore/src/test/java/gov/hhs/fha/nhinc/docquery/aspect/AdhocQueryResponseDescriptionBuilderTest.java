@@ -119,8 +119,8 @@ public class AdhocQueryResponseDescriptionBuilderTest extends BaseDescriptionBui
     public void mixedPayloadTypes() {
         AdhocQueryResponse response = new AdhocQueryResponse();
 
-        addQueryResult(response, Optional.of("payloadType"), Optional.of(12345));
-        addQueryResult(response, Optional.of("payloadType2"), Optional.of(1));
+        addQueryResult(response, Optional.of("payloadType"), Optional.of(12345), 1);
+        addQueryResult(response, Optional.of("payloadType2"), Optional.of(1), 2);
 
         AdhocQueryResponseDescriptionBuilder builder = new AdhocQueryResponseDescriptionBuilder(response);
         EventDescription eventDescription = getEventDescription(builder);
@@ -137,8 +137,8 @@ public class AdhocQueryResponseDescriptionBuilderTest extends BaseDescriptionBui
     public void keepDuplicateDescriptionElements() {
         AdhocQueryResponse response = new AdhocQueryResponse();
 
-        addQueryResult(response, Optional.of("payloadType"), Optional.of(12345));
-        addQueryResult(response, Optional.of("payloadType"), Optional.of(12345));
+        addQueryResult(response, Optional.of("payloadType"), Optional.of(12345), 1);
+        addQueryResult(response, Optional.of("payloadType"), Optional.of(12345), 2);
 
         AdhocQueryResponseDescriptionBuilder builder = new AdhocQueryResponseDescriptionBuilder(response);
         EventDescription eventDescription = getEventDescription(builder);
@@ -150,15 +150,15 @@ public class AdhocQueryResponseDescriptionBuilderTest extends BaseDescriptionBui
         assertEquals("" + 12345, eventDescription.getPayloadSizes().get(0));
         assertEquals("" + 12345, eventDescription.getPayloadSizes().get(1));
         assertEquals(2, eventDescription.getRespondingHCIDs().size());
-        assertEquals("home", eventDescription.getRespondingHCIDs().get(0));
-        assertEquals("home", eventDescription.getRespondingHCIDs().get(1));
+        assertEquals("home1", eventDescription.getRespondingHCIDs().get(0));
+        assertEquals("home2", eventDescription.getRespondingHCIDs().get(1));
     }
 
     @Test
     public void missingPayloadInfoCoercedToEmpty() {
         AdhocQueryResponse response = new AdhocQueryResponse();
 
-        addQueryResult(response, Optional.<String> absent(), Optional.<Integer> absent());
+        addQueryResult(response, Optional.<String> absent(), Optional.<Integer> absent(), 1);
 
         AdhocQueryResponseDescriptionBuilder builder = new AdhocQueryResponseDescriptionBuilder(response);
         EventDescription eventDescription = getEventDescription(builder);
@@ -172,7 +172,7 @@ public class AdhocQueryResponseDescriptionBuilderTest extends BaseDescriptionBui
     private AdhocQueryResponse getBasicResponse() {
         AdhocQueryResponse response = new AdhocQueryResponse();
         response.setStatus(DocumentConstants.XDS_QUERY_RESPONSE_STATUS_PARTIAL_SUCCESS);
-        addQueryResult(response, Optional.of("payloadType"), Optional.of(12345));
+        addQueryResult(response, Optional.of("payloadType"), Optional.of(12345), 1);
         return response;
     }
 
@@ -182,7 +182,7 @@ public class AdhocQueryResponseDescriptionBuilderTest extends BaseDescriptionBui
         assertEquals(1, eventDescription.getStatuses().size());
         assertEquals(DocumentConstants.XDS_QUERY_RESPONSE_STATUS_PARTIAL_SUCCESS, eventDescription.getStatuses().get(0));
         assertEquals(1, eventDescription.getRespondingHCIDs().size());
-        assertEquals("home", eventDescription.getRespondingHCIDs().get(0));
+        assertEquals("home1", eventDescription.getRespondingHCIDs().get(0));
         assertEquals(1, eventDescription.getPayloadTypes().size());
         assertEquals("payloadType", eventDescription.getPayloadTypes().get(0));
         assertEquals(1, eventDescription.getPayloadSizes().size());
@@ -203,10 +203,11 @@ public class AdhocQueryResponseDescriptionBuilderTest extends BaseDescriptionBui
         registryError.add(error);
     }
 
-    private void addQueryResult(AdhocQueryResponse response, Optional<String> payloadType, Optional<Integer> size) {
+    private void addQueryResult(AdhocQueryResponse response, Optional<String> payloadType, Optional<Integer> size, int resultNumber) {
+    	// Added resultNumber because the HCID is a hash set in the event description. Setting to the same value results in 1 entry when 2 are expected.
         ExtrinsicObjectType extrinsicObject = new ExtrinsicObjectType();
         extrinsicObject.setStatus(DocumentConstants.XDS_QUERY_RESPONSE_STATUS_SUCCESS);
-        extrinsicObject.setHome("home");
+        extrinsicObject.setHome("home" + resultNumber);
 
         if (payloadType.isPresent()) {
             addPayloadType(extrinsicObject, payloadType.get());

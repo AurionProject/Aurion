@@ -511,14 +511,14 @@
                             <version>5.1.6</version>
                         </dependency>
                         <dependency>
-                            <groupId>org.connectopensource</groupId>
-                            <artifactId>CONNECTCommonTypesLib</artifactId>
+                            <groupId>org.aurionproject</groupId>
+                            <artifactId>AurionCommonTypesLib</artifactId>
                             <version>${connect.commontypes.version}</version>
                         </dependency>
                         <dependency>
-                            <groupId>org.connectopensource</groupId>
+                            <groupId>org.aurionproject</groupId>
                             <artifactId>FileUtils</artifactId>
-                            <version>4.4.1-SNAPSHOT</version>
+                            <version>5.1</version>
                         </dependency>
                     </dependencies>
                 </plugin>

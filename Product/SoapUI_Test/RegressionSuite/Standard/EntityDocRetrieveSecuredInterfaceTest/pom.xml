@@ -141,7 +141,7 @@
                                         <artifactItem>
                                             <!-- Artifact that Holds our
                                                 custom templates -->
-                                            <groupId>org.connectopensource</groupId>
+                                            <groupId>org.aurionproject</groupId>
                                             <artifactId>Properties</artifactId>
                                             <version>${project.parent.version}</version>
                                             <type>jar</type>
@@ -181,7 +181,7 @@
                                     <silent>true</silent>
                                     <artifactItems>
                                         <artifactItem>
-                                            <groupId>org.connectopensource</groupId>
+                                            <groupId>org.aurionproject</groupId>
                                             <artifactId>Properties</artifactId>
                                             <version>${project.version}</version>
                                             <type>jar</type>
@@ -281,7 +281,7 @@
                                         <artifactItem>
                                             <!-- Artifact that Holds our
                                                 SQL scripts -->
-                                            <groupId>org.connectopensource</groupId>
+                                            <groupId>org.aurionproject</groupId>
                                             <artifactId>DBScripts</artifactId>
                                             <version>${project.parent.version}</version>
                                             <type>jar</type>

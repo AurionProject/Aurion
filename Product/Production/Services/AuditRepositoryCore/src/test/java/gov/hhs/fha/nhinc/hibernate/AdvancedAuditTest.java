@@ -6,6 +6,7 @@ package gov.hhs.fha.nhinc.hibernate;
 
 import gov.hhs.fha.nhinc.auditrepository.AuditTestHelper;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -24,6 +25,7 @@ public class AdvancedAuditTest {
     }
     
 	@Test
+	@Ignore
 	public void insertBaseAndAdvanced() {
 		auditDAO = getAuditRepositoryDAO();
 		

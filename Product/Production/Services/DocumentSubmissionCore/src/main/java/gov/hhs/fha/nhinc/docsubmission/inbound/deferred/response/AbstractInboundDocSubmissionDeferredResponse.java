@@ -59,17 +59,11 @@ public abstract class AbstractInboundDocSubmissionDeferredResponse implements In
     public XDRAcknowledgementType provideAndRegisterDocumentSetBResponse(RegistryResponseType body,
             AssertionType assertion) {
     	
-    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
-    	
-    	if (auditNhin) {
-    		auditRequestFromNhin(body, assertion);
-    	}
+   		auditRequestFromNhin(body, assertion);
 
         XDRAcknowledgementType response = processDocSubmissionResponse(body, assertion);
 
-        if (auditNhin) {
-        	auditResponseToNhin(response, assertion);
-        }
+       	auditResponseToNhin(response, assertion);
 
         return response;
     }
@@ -80,21 +74,33 @@ public abstract class AbstractInboundDocSubmissionDeferredResponse implements In
     }
 
     protected void auditRequestToAdapter(RegistryResponseType body, AssertionType assertion) {
-        auditLogger.auditAdapterXDRResponse(body, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION);
+        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
+        if (auditAdapter) {
+            auditLogger.auditAdapterXDRResponse(body, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION);
+        }
     }
 
     protected void auditResponseFromAdapter(XDRAcknowledgementType response, AssertionType assertion) {
-        auditLogger.auditAdapterAcknowledgement(response, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
-                NhincConstants.XDR_RESPONSE_ACTION);
+        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
+        if (auditAdapter) {
+            auditLogger.auditAdapterAcknowledgement(response, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
+                    NhincConstants.XDR_RESPONSE_ACTION);
+        }
     }
 
     protected void auditRequestFromNhin(RegistryResponseType body, AssertionType assertion) {
-        auditLogger.auditNhinXDRResponse(body, assertion, null, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION, false);
+    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
+    	if (auditNhin) {
+            auditLogger.auditNhinXDRResponse(body, assertion, null, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION, false);
+    	}
     }
 
     protected void auditResponseToNhin(XDRAcknowledgementType response, AssertionType assertion) {
-        auditLogger.auditAcknowledgement(response, assertion, null, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION,
-                NhincConstants.XDR_RESPONSE_ACTION);
+    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
+    	if (auditNhin) {
+            auditLogger.auditAcknowledgement(response, assertion, null, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION,
+                    NhincConstants.XDR_RESPONSE_ACTION);
+    	}
     }
     
     /**

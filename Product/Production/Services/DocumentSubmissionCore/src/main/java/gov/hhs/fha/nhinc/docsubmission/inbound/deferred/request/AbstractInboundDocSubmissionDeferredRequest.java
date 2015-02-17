@@ -26,13 +26,10 @@
  */
 package gov.hhs.fha.nhinc.docsubmission.inbound.deferred.request;
 
-import gov.hhs.fha.nhinc.aspect.InboundProcessingEvent;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.docsubmission.XDRAuditLogger;
 import gov.hhs.fha.nhinc.docsubmission.adapter.deferred.request.proxy.AdapterDocSubmissionDeferredRequestProxy;
 import gov.hhs.fha.nhinc.docsubmission.adapter.deferred.request.proxy.AdapterDocSubmissionDeferredRequestProxyObjectFactory;
-import gov.hhs.fha.nhinc.docsubmission.aspect.DocSubmissionArgTransformerBuilder;
-import gov.hhs.fha.nhinc.docsubmission.aspect.DocSubmissionBaseEventDescriptionBuilder;
 import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
@@ -60,17 +57,11 @@ public abstract class AbstractInboundDocSubmissionDeferredRequest implements Inb
     public XDRAcknowledgementType provideAndRegisterDocumentSetBRequest(ProvideAndRegisterDocumentSetRequestType body,
             AssertionType assertion) {
 
-    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
-    	
-    	if (auditNhin) {
-    		auditRequestFromNhin(body, assertion);
-    	}
+   		auditRequestFromNhin(body, assertion);
         
         XDRAcknowledgementType response = processDocSubmissionRequest(body, assertion);
 
-        if (auditNhin) {
-        	auditResponseToNhin(response, assertion);
-        }
+       	auditResponseToNhin(response, assertion);
 
         return response;
     }
@@ -81,21 +72,33 @@ public abstract class AbstractInboundDocSubmissionDeferredRequest implements Inb
     }
     
     protected void auditRequestToAdapter(ProvideAndRegisterDocumentSetRequestType request, AssertionType assertion) {
-        auditLogger.auditAdapterXDR(request, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION);
+        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
+        if (auditAdapter) {
+            auditLogger.auditAdapterXDR(request, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION);
+        }
     }
 
     protected void auditResponseFromAdapter(XDRAcknowledgementType response, AssertionType assertion) {
-        auditLogger.auditAdapterAcknowledgement(response, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
-                NhincConstants.XDR_REQUEST_ACTION);
+        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
+        if (auditAdapter) {
+            auditLogger.auditAdapterAcknowledgement(response, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION,
+                    NhincConstants.XDR_REQUEST_ACTION);
+        }
     }
 
     protected void auditRequestFromNhin(ProvideAndRegisterDocumentSetRequestType request, AssertionType assertion) {
-        auditLogger.auditNhinXDR(request, assertion, null, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION);
+    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
+    	if (auditNhin) {
+            auditLogger.auditNhinXDR(request, assertion, null, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION);
+    	}
     }
 
     protected void auditResponseToNhin(XDRAcknowledgementType response, AssertionType assertion) {
-        auditLogger.auditAcknowledgement(response, assertion, null, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION,
-                NhincConstants.XDR_REQUEST_ACTION);
+    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
+    	if (auditNhin) {
+            auditLogger.auditAcknowledgement(response, assertion, null, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION,
+                    NhincConstants.XDR_REQUEST_ACTION);
+    	}
     }
     
     /**

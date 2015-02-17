@@ -28,7 +28,6 @@ package gov.hhs.fha.nhinc.patientdiscovery.inbound.deferred.request;
 
 import gov.hhs.fha.nhinc.aspect.InboundProcessingEvent;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
-import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditLogger;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditor;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryPolicyChecker;
@@ -97,11 +96,7 @@ public class StandardInboundPatientDiscoveryDeferredRequest extends AbstractInbo
     @Override
     MCCIIN000002UV01 process(PRPAIN201305UV02 request, AssertionType assertion) {
         MCCIIN000002UV01 response = null;
-        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, 
-        		NhincConstants.ADAPTER_AUDIT_PROPERTY);
-        if (auditAdapter) {
-        	auditRequestToAdapter(request, assertion);
-        }
+       	auditRequestToAdapter(request, assertion);
         
         String errMsg = null;
         if (isPolicyValid(request, assertion)) {
@@ -113,9 +108,7 @@ public class StandardInboundPatientDiscoveryDeferredRequest extends AbstractInbo
             response = sendErrorToAdapter(request, assertion, errMsg);
         }
         
-        if (auditAdapter) {
-        	auditResponseFromAdapter(response, assertion);
-        }
+       	auditResponseFromAdapter(response, assertion);
         
         return response;
     }

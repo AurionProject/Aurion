@@ -101,8 +101,7 @@ public class StandardInboundDocSubmission extends AbstractInboundDocSubmission {
     RegistryResponseType processDocSubmission(ProvideAndRegisterDocumentSetRequestType body, AssertionType assertion) {
         RegistryResponseType response = null;
         
-        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);
-        
+        boolean auditAdapter = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.ADAPTER_AUDIT_PROPERTY);        
         String localHCID = getLocalHCID();
         if (isPolicyValid(body, assertion, localHCID)) {
         	try {

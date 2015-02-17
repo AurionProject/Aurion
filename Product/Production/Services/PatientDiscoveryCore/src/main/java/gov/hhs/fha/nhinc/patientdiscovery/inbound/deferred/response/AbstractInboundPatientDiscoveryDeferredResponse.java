@@ -67,17 +67,11 @@ public abstract class AbstractInboundPatientDiscoveryDeferredResponse implements
     @Override
     public MCCIIN000002UV01 respondingGatewayDeferredPRPAIN201306UV02(PRPAIN201306UV02 request, AssertionType assertion) {
         
-    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, 
-    			NhincConstants.NHIN_AUDIT_PROPERTY);
-        if (auditNhin) {
-        	auditRequestFromNhin(request, assertion);
-        }
+       	auditRequestFromNhin(request, assertion);
 
         MCCIIN000002UV01 response = process(request, assertion);
 
-        if (auditNhin) {
-        	auditResponseToNhin(response, assertion);
-        }
+       	auditResponseToNhin(response, assertion);
         
         return response;
     }
@@ -89,12 +83,19 @@ public abstract class AbstractInboundPatientDiscoveryDeferredResponse implements
     }
 
     protected void auditRequestFromNhin(PRPAIN201306UV02 request, AssertionType assertion) {
-        getAuditLogger().auditNhinDeferred201306(request, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION);
+    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
+        if (auditNhin) {
+        	getAuditLogger().auditNhinDeferred201306(request, assertion, NhincConstants.AUDIT_LOG_INBOUND_DIRECTION);
+        }
+        
     }
 
     protected void auditResponseToNhin(MCCIIN000002UV01 response, AssertionType assertion) {
-        getAuditLogger().auditAck(response, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION,
-                NhincConstants.AUDIT_LOG_NHIN_INTERFACE);
+    	boolean auditNhin = isAuditEnabled(NhincConstants.GATEWAY_PROPERTY_FILE, NhincConstants.NHIN_AUDIT_PROPERTY);
+        if (auditNhin) {
+            getAuditLogger().auditAck(response, assertion, NhincConstants.AUDIT_LOG_OUTBOUND_DIRECTION,
+                    NhincConstants.AUDIT_LOG_NHIN_INTERFACE);
+        }
     }
     
 	/**
