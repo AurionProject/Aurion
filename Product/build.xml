@@ -246,19 +246,6 @@
                 <include name="ThirdParty/**"/>
             </fileset>
         </copy>
-<!--        <copy todir="${mvnrepoload.artifact.dir}/stage" flatten="false">
-            <fileset dir="${maven_root}/CONNECTSolution/**/*"/>
-            <fileset dir="${maven_root}/Product/**"/>
-            <fileset dir="${maven_root}/Production/**"/>
-            <fileset dir="${maven_root}/Adapters/**"/>
-            <fileset dir="${maven_root}/General/**"/>
-            <fileset dir="${maven_root}/Common/**"/>
-            <fileset dir="${maven_root}/Deploy/**/*"/>
-            <fileset dir="${maven_root}/Gateway/**/*"/>
-            <fileset dir="${maven_root}/Services/**/*"/>
-            <fileset dir="${maven_root}/Utilities/**/*"/>
-            <fileset dir="${maven_root}/ThirdParty/**/*"/>
-        </copy> -->
         <zip destfile="${mvnrepoload.artifact.dir}/${mvnrepoload.zip.filename}">
             <fileset dir="${mvnrepoload.artifact.dir}/stage/"/>
         </zip>
