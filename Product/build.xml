@@ -127,6 +127,7 @@
                 <include name="DocumentRetrieveWebservices/${connect_ws_version}/DocumentRetrieveWebservices-${connect_ws_version}.jar" />
                 <include name="DocumentRetrieveWebservices/${connect_ws_version}/DocumentRetrieveWebservices-${connect_ws_version}.pom" />
                 <include name="DocumentSubmissionWebervices/${connect_ws_version}/DocumentSubmissionWebervices-${connect_ws_version}.jar" />
+                <include name="DocumentSubmissionWebervices/${connect_ws_version}/DocumentSubmissionWebervices-${connect_ws_version}.pom" />
                 <include name="HIEMWebservices/${connect_ws_version}/HIEMWebservices-${connect_ws_version}.jar" />
                 <include name="HIEMWebservices/${connect_ws_version}/HIEMWebservices-${connect_ws_version}.pom" />
                 <include name="PatientCorrelationWebservices/${connect_ws_version}/PatientCorrelationWebservices-${connect_ws_version}.jar" />
@@ -214,7 +215,6 @@
                 <include name="DocumentSubmission_20/${maven_version}/DocumentSubmission_20-${maven_version}.pom" />
                 <include name="DocumentSubmission_a0/${maven_version}/DocumentSubmission_a0-${maven_version}.pom" />
                 <include name="DocumentSubmissionCore/${maven_version}/DocumentSubmissionCore-${maven_version}.pom" />
-                <include name="DocumentSubmissionWebervices/${maven_version}/DocumentSubmissionWebervices-${maven_version}.pom" />
                 <include name="FileUtils/${maven_version}/FileUtils-${maven_version}.pom" />
                 <include name="HIEM_20/${maven_version}/HIEM_20-${maven_version}.pom" />
                 <include name="HIEMCore/${maven_version}/HIEMCore-${maven_version}.pom" />
