@@ -228,6 +228,18 @@
                 <include name="RedactionEngineCore/${maven_version}/RedactionEngineCore-${maven_version}.pom" />
                 <include name="SharedEngineCore/${maven_version}/SharedEngineCore-${maven_version}.jar" />
                 <include name="SharedEngineCore/${maven_version}/SharedEngineCore-${maven_version}.pom" />
+                <include name="CONNECTSolution/${maven_version}/CONNECTSolution-${maven_version}.pom" />
+                <include name="Product/${maven_version}/Product-${maven_version}.pom" />
+                <include name="Production/${maven_version}/Production-${maven_version}.pom" />
+                <include name="Adapters/${maven_version}/Adapters-${maven_version}.pom" />
+                <include name="General/${maven_version}/General-${maven_version}.pom" />
+                <include name="Common/${maven_version}/Common-${maven_version}.pom" />
+                <include name="Deploy/${maven_version}/Deploy-${maven_version}.pom" />
+                <include name="Gateway/${maven_version}/Gateway-${maven_version}.pom" />
+                <include name="Services/${maven_version}/Services-${maven_version}.pom" />
+                <include name="Utilities/${maven_version}/Utilities-${maven_version}.pom" />
+                <include name="ThirdParty/${maven_version}/ThirdParty-${maven_version}.pom" />
+
             </fileset>
         </copy>
         <zip destfile="${mvnrepoload.artifact.dir}/${mvnrepoload.zip.filename}">
