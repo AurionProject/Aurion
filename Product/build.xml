@@ -228,20 +228,37 @@
                 <include name="RedactionEngineCore/${maven_version}/RedactionEngineCore-${maven_version}.pom" />
                 <include name="SharedEngineCore/${maven_version}/SharedEngineCore-${maven_version}.jar" />
                 <include name="SharedEngineCore/${maven_version}/SharedEngineCore-${maven_version}.pom" />
-                <include name="CONNECTSolution/${maven_version}/CONNECTSolution-${maven_version}.pom" />
-                <include name="Product/${maven_version}/Product-${maven_version}.pom" />
-                <include name="Production/${maven_version}/Production-${maven_version}.pom" />
-                <include name="Adapters/${maven_version}/Adapters-${maven_version}.pom" />
-                <include name="General/${maven_version}/General-${maven_version}.pom" />
-                <include name="Common/${maven_version}/Common-${maven_version}.pom" />
-                <include name="Deploy/${maven_version}/Deploy-${maven_version}.pom" />
-                <include name="Gateway/${maven_version}/Gateway-${maven_version}.pom" />
-                <include name="Services/${maven_version}/Services-${maven_version}.pom" />
-                <include name="Utilities/${maven_version}/Utilities-${maven_version}.pom" />
-                <include name="ThirdParty/${maven_version}/ThirdParty-${maven_version}.pom" />
 
             </fileset>
         </copy>
+        <copy todir="${mvnrepoload.artifact.dir}/stage" flatten="false">
+            <fileset dir="${maven_root}/" >
+                <include name="CONNECTSolution/**"/>
+                <include name="Product/**"/>
+                <include name="Production/**"/>
+                <include name="Adapters/**"/>
+                <include name="General/**"/>
+                <include name="Common/**"/>
+                <include name="Deploy/**"/>
+                <include name="Gateway/**"/>
+                <include name="Services/**"/>
+                <include name="Utilities/**"/>
+                <include name="ThirdParty/**"/>
+            </fileset>
+        </copy>
+<!--        <copy todir="${mvnrepoload.artifact.dir}/stage" flatten="false">
+            <fileset dir="${maven_root}/CONNECTSolution/**/*"/>
+            <fileset dir="${maven_root}/Product/**"/>
+            <fileset dir="${maven_root}/Production/**"/>
+            <fileset dir="${maven_root}/Adapters/**"/>
+            <fileset dir="${maven_root}/General/**"/>
+            <fileset dir="${maven_root}/Common/**"/>
+            <fileset dir="${maven_root}/Deploy/**/*"/>
+            <fileset dir="${maven_root}/Gateway/**/*"/>
+            <fileset dir="${maven_root}/Services/**/*"/>
+            <fileset dir="${maven_root}/Utilities/**/*"/>
+            <fileset dir="${maven_root}/ThirdParty/**/*"/>
+        </copy> -->
         <zip destfile="${mvnrepoload.artifact.dir}/${mvnrepoload.zip.filename}">
             <fileset dir="${mvnrepoload.artifact.dir}/stage/"/>
         </zip>
