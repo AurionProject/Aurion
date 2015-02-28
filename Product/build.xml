@@ -156,6 +156,8 @@
                 <include name="CONNECTAdapterPDPOpenSSO/${maven_version}/CONNECTAdapterPDPOpenSSO-${maven_version}.pom" />
                 <include name="CONNECTAdapterWeb/${maven_version}/CONNECTAdapterWeb-${maven_version}.war" />
                 <include name="CONNECTAdapterWeb/${maven_version}/CONNECTAdapterWeb-${maven_version}.pom" />
+                <include name="CONNECTAdminGUI/${maven_version}/CONNECTAdminGUI-${maven_version}.war" />
+                <include name="CONNECTAdminGUI/${maven_version}/CONNECTAdminGUI-${maven_version}.pom" />
                 <include name="CONNECTCommonWeb/${maven_version}/CONNECTCommonWeb-${maven_version}.war" />
                 <include name="CONNECTCommonWeb/${maven_version}/CONNECTCommonWeb-${maven_version}.pom" />
                 <include name="CONNECTConsumerPreferencesProfileGUI/${maven_version}/CONNECTConsumerPreferencesProfileGUI-${maven_version}.war" />
