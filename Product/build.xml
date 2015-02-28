@@ -138,7 +138,7 @@
                 <include name="PolicyEngineWebservices/${connect_ws_version}/PolicyEngineWebservices-${connect_ws_version}.pom" />
                 <include name="RedactionEngineWebservices/${connect_ws_version}/RedactionEngineWebservices-${connect_ws_version}.jar" />
                 <include name="RedactionEngineWebservices/${connect_ws_version}/RedactionEngineWebservices-${connect_ws_version}.pom" />
-                <include name="AdapterAuthenticationCore/${connect_ws_version}/AdapterAuthenticationCore-${connect_ws_version}.jar" />
+                <include name="AdapterAuthenticationCore/${maven_version}/AdapterAuthenticationCore-${maven_version}.jar" />
                 <include name="AdapterAuthenticationCore/${maven_version}/AdapterAuthenticationCore-${maven_version}.pom" />
                 <include name="AuditRepositoryCore/${maven_version}/AuditRepositoryCore-${maven_version}.jar" />
                 <include name="AuditRepositoryCore/${maven_version}/AuditRepositoryCore-${maven_version}.pom" />
