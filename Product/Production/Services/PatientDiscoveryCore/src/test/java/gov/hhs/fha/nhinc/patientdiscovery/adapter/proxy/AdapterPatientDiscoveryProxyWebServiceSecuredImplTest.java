@@ -35,6 +35,8 @@ import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
 
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+
 import java.lang.reflect.Method;
 
 import org.hl7.v3.PRPAIN201305UV02;
@@ -59,5 +61,17 @@ public class AdapterPatientDiscoveryProxyWebServiceSecuredImplTest {
         assertEquals("1.0", annotation.version());
     }
 
-
+    @Test
+    public void hasAdapterDelegationEventPLQ() throws Exception {
+        Class<AdapterPatientDiscoveryProxyWebServiceSecuredImpl> clazz = 
+                AdapterPatientDiscoveryProxyWebServiceSecuredImpl.class;
+        Method method = clazz.getMethod("respondingGatewayPatientLocationQuery", 
+        		PatientLocationQueryRequestType.class, AssertionType.class);
+        AdapterDelegationEvent annotation = method.getAnnotation(AdapterDelegationEvent.class);
+        assertNotNull(annotation);
+        assertEquals(PRPAIN201305UV02EventDescriptionBuilder.class, annotation.beforeBuilder());
+        assertEquals(PRPAIN201306UV02EventDescriptionBuilder.class, annotation.afterReturningBuilder());
+        assertEquals("Patient Discovery", annotation.serviceType());
+        assertEquals("1.0", annotation.version());
+    }
 }

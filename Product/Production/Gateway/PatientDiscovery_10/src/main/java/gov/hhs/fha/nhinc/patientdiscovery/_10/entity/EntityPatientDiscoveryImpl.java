@@ -29,6 +29,8 @@ package gov.hhs.fha.nhinc.patientdiscovery._10.entity;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.gateway.servlet.InitServlet;
 import gov.hhs.fha.nhinc.patientdiscovery.outbound.OutboundPatientDiscovery;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
 import org.hl7.v3.RespondingGatewayPRPAIN201305UV02RequestType;
 import org.hl7.v3.RespondingGatewayPRPAIN201306UV02ResponseType;
@@ -47,5 +49,11 @@ public class EntityPatientDiscoveryImpl {
             RespondingGatewayPRPAIN201305UV02RequestType request, AssertionType assertion) {
 
         return outboundPatientDiscovery.respondingGatewayPRPAIN201305UV02(request, assertion);
+    }
+    
+    public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+    		RespondingGatewayPatientLocationQueryRequestType request, AssertionType assertion) {
+
+        return outboundPatientDiscovery.respondingGatewayPatientLocationQuery(request, assertion);
     }
 }

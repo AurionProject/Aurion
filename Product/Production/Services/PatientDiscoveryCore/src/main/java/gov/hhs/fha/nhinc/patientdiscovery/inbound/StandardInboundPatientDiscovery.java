@@ -36,6 +36,14 @@ import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditor;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryException;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
+import gov.hhs.fha.nhinc.patientlocationquery.PatientLocationQueryProcessor;
+import ihe.iti.xcpd._2009.PRPAIN201305UV02Fault;
+import ihe.iti.xcpd._2009.PatientLocationQueryFault;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.hl7.v3.PRPAIN201305UV02;
 import org.hl7.v3.PRPAIN201306UV02;
@@ -47,14 +55,18 @@ import org.hl7.v3.PRPAIN201306UV02;
 public class StandardInboundPatientDiscovery extends AbstractInboundPatientDiscovery {
 
     private final PatientDiscovery201305Processor patientDiscoveryProcessor;
+    private final PatientLocationQueryProcessor patientLocationQueryProcessor;
     private final PatientDiscoveryAuditor auditLogger;
+    private Log log = null;
 
     /**
      * Constructor.
      */
     public StandardInboundPatientDiscovery() {
         patientDiscoveryProcessor = new PatientDiscovery201305Processor();
+        patientLocationQueryProcessor = new PatientLocationQueryProcessor();
         auditLogger = new PatientDiscoveryAuditLogger();
+        log = createLogger();
     }
 
     /**
@@ -63,12 +75,19 @@ public class StandardInboundPatientDiscovery extends AbstractInboundPatientDisco
      * @param patientDiscoveryProcessor
      * @param auditLogger
      */
-    public StandardInboundPatientDiscovery(PatientDiscovery201305Processor patientDiscoveryProcessor,
+    public StandardInboundPatientDiscovery(PatientDiscovery201305Processor patientDiscoveryProcessor, 
+    		PatientLocationQueryProcessor patientLocationQueryProcessor,
             PatientDiscoveryAuditor auditLogger) {
         this.patientDiscoveryProcessor = patientDiscoveryProcessor;
+        this.patientLocationQueryProcessor = patientLocationQueryProcessor;
         this.auditLogger = auditLogger;
+        log = createLogger();
     }
     
+    protected Log createLogger() {
+		return ((log != null) ? log : LogFactory.getLog(getClass()));
+	}
+
     @Override
     @InboundProcessingEvent(beforeBuilder = PRPAIN201305UV02EventDescriptionBuilder.class, afterReturningBuilder = PRPAIN201306UV02EventDescriptionBuilder.class, serviceType = "Patient Discovery", version = "1.0")
     public PRPAIN201306UV02 respondingGatewayPRPAIN201305UV02(PRPAIN201305UV02 body, AssertionType assertion)
@@ -102,7 +121,19 @@ public class StandardInboundPatientDiscovery extends AbstractInboundPatientDisco
         
         return response;
     }
+    
+    @Override
+	PatientLocationQueryResponseType processPatientLocationQuery(PatientLocationQueryRequestType body, 
+			AssertionType assertion) throws PatientDiscoveryException, PatientLocationQueryFault
+    {
+    	
+    	log.debug("Calling method processPatientLocationQuery in class StandardInboundPatientDiscovery...");
 
+		PatientLocationQueryResponseType response = patientLocationQueryProcessor.processPatientLocationQuery(body, assertion);
+        
+        return response;
+	}
+    
     /*
      * (non-Javadoc)
      * 

@@ -38,10 +38,22 @@ import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.common.nhinccommon.HomeCommunityType;
 import gov.hhs.fha.nhinc.common.nhinccommon.NhinTargetCommunitiesType;
 import gov.hhs.fha.nhinc.common.nhinccommon.NhinTargetCommunityType;
+import gov.hhs.fha.nhinc.common.nhinccommon.NhinTargetSystemType;
+import gov.hhs.fha.nhinc.connectmgr.UrlInfo;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditLogger;
 import gov.hhs.fha.nhinc.patientdiscovery.entity.OutboundPatientDiscoveryDelegate;
 import gov.hhs.fha.nhinc.patientdiscovery.entity.OutboundPatientDiscoveryOrchestratable;
+import gov.hhs.fha.nhinc.patientdiscovery.nhin.proxy.NhinPatientDiscoveryProxy;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType.PatientLocationResponse;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hl7.v3.II;
 import org.hl7.v3.PRPAIN201305UV02;
 import org.hl7.v3.PRPAIN201306UV02;
 import org.hl7.v3.RespondingGatewayPRPAIN201305UV02RequestType;
@@ -84,6 +96,68 @@ public class PassthroughOutboundPatientDiscoveryTest {
         verify(auditLogger, never()).auditEntity201306(any(RespondingGatewayPRPAIN201306UV02ResponseType.class),
                 any(AssertionType.class), any(String.class));
     }
+    
+    @Test
+    public void invokePLQ() throws Exception {
+    	final String gatewayHcid = "1.1";
+    	final String gatewayUrl = "1.1.1.1:8080";
+    	final String reqPatientIdExt = "12345";
+    	final String reqPatientIdRoot = "4.4";
+    	final String corrPatientIdExt = "5678";
+    	final String corrPatientIdRoot = "2.2";
+    	final String correspondingHcid = "2.2";
+    	
+    	RespondingGatewayPatientLocationQueryRequestType request = new RespondingGatewayPatientLocationQueryRequestType();
+    	request.setPatientLocationQueryRequest(new PatientLocationQueryRequestType());
+    	request.setNhinTargetCommunities(createNhinTargetCommunitiesType(gatewayHcid));
+        AssertionType assertion = new AssertionType();
+
+        OutboundPatientDiscoveryDelegate delegate = mock(OutboundPatientDiscoveryDelegate.class);
+        PatientDiscoveryAuditLogger auditLogger = mock(PatientDiscoveryAuditLogger.class);
+        final NhinPatientDiscoveryProxy mockNhinPDProxy = mock(NhinPatientDiscoveryProxy.class);
+
+        PassthroughOutboundPatientDiscovery passthroughPatientDiscovery = new PassthroughOutboundPatientDiscovery(
+                delegate, auditLogger) {
+        	@Override
+    	    protected NhinPatientDiscoveryProxy getNhinProxy() {
+				return mockNhinPDProxy;
+    		}
+        	
+        	@Override 
+        	protected List<UrlInfo> getEndpoints(NhinTargetCommunitiesType targetCommunities){
+        		List<UrlInfo> urlInfoList = new ArrayList<UrlInfo>();
+        		UrlInfo urlToQuery = new UrlInfo();
+        		urlToQuery.setHcid(gatewayHcid);
+        		urlToQuery.setUrl(gatewayUrl);
+        		urlInfoList.add(urlToQuery);
+        		return urlInfoList;
+        	}
+        	
+        	@Override
+        	protected PatientLocationQueryResponseType sendPLQToNhin(PatientLocationQueryRequestType nhinRequest, 
+            		AssertionType assertion, NhinTargetSystemType target) {
+        		PatientLocationQueryResponseType expectedResponse = createExpectedResponse();
+        		return expectedResponse;
+        	}
+        };
+
+        PatientLocationQueryResponseType actualResponse = passthroughPatientDiscovery.respondingGatewayPatientLocationQuery(request, assertion);
+        
+        assertNotNull(actualResponse);
+        assertNotNull(actualResponse.getPatientLocationResponse());
+        assertNotNull(actualResponse.getPatientLocationResponse().get(0));
+        
+        PatientLocationResponse location = actualResponse.getPatientLocationResponse().get(0);
+
+        assertNotNull(location.getHomeCommunityId());
+        assertEquals(correspondingHcid, location.getHomeCommunityId());
+        assertNotNull(location.getRequestedPatientId());
+        assertEquals(reqPatientIdExt, location.getRequestedPatientId().getExtension());
+        assertEquals(reqPatientIdRoot, location.getRequestedPatientId().getRoot());
+        assertNotNull(location.getCorrespondingPatientId());
+        assertEquals(corrPatientIdExt, location.getCorrespondingPatientId().getExtension());
+        assertEquals(corrPatientIdRoot, location.getCorrespondingPatientId().getRoot());
+    }
 
     private NhinTargetCommunitiesType createNhinTargetCommunitiesType(String hcid) {
         NhinTargetCommunitiesType targetCommunities = new NhinTargetCommunitiesType();
@@ -94,6 +168,26 @@ public class PassthroughOutboundPatientDiscoveryTest {
         targetCommunities.getNhinTargetCommunity().add(targetCommunity);
 
         return targetCommunities;
+    }
+    
+    /**
+     * Returns a PatientLocationQueryResponse message with one PatientLocationResponse.
+     */
+    private PatientLocationQueryResponseType createExpectedResponse() {
+    	PatientLocationQueryResponseType response = new PatientLocationQueryResponseType();
+    	PatientLocationResponse location = new PatientLocationResponse();
+    	II requestedPatientId = new II();
+    	requestedPatientId.setRoot("4.4");
+    	requestedPatientId.setExtension("12345");
+    	location.setRequestedPatientId(requestedPatientId);
+    	location.setHomeCommunityId("2.2");
+    	II correspondingPatientId = new II();
+    	correspondingPatientId.setRoot("2.2");
+    	correspondingPatientId.setExtension("5678");
+    	location.setCorrespondingPatientId(correspondingPatientId);
+    	response.getPatientLocationResponse().add(location);
+    	
+    	return response;
     }
 
 }

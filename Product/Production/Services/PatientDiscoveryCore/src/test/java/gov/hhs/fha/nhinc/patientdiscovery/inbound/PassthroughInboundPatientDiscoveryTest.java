@@ -42,6 +42,11 @@ import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditLogger;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryException;
 import gov.hhs.fha.nhinc.patientdiscovery.adapter.proxy.AdapterPatientDiscoveryProxy;
 import gov.hhs.fha.nhinc.patientdiscovery.adapter.proxy.AdapterPatientDiscoveryProxyObjectFactory;
+import ihe.iti.xcpd._2009.PatientLocationQueryFault;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+
+import java.lang.reflect.Method;
 
 import org.hl7.v3.PRPAIN201305UV02;
 import org.hl7.v3.PRPAIN201306UV02;
@@ -142,5 +147,28 @@ public class PassthroughInboundPatientDiscoveryTest {
 
         verify(auditLogger, never()).auditAdapter201306(any(PRPAIN201306UV02.class), any(AssertionType.class),
                 any(String.class));
+    }
+    
+    @Test
+    public void passthroughInboundPatientDiscoveryPLQTest() throws PatientDiscoveryException, PatientLocationQueryFault {
+    	PatientLocationQueryRequestType request = new PatientLocationQueryRequestType();
+    	AssertionType assertion = new AssertionType();
+        PatientLocationQueryResponseType expectedResponse = new PatientLocationQueryResponseType();
+
+        AdapterPatientDiscoveryProxyObjectFactory adapterFactory = mock(AdapterPatientDiscoveryProxyObjectFactory.class);
+        AdapterPatientDiscoveryProxy adapterProxy = mock(AdapterPatientDiscoveryProxy.class);
+        PatientDiscoveryAuditLogger auditLogger = mock(PatientDiscoveryAuditLogger.class);
+
+        when(adapterFactory.create()).thenReturn(adapterProxy);
+
+        when(adapterProxy.respondingGatewayPatientLocationQuery(any(PatientLocationQueryRequestType.class), any(AssertionType.class))).thenReturn(expectedResponse);
+
+        PassthroughInboundPatientDiscovery passthroughPatientDiscovery = new PassthroughInboundPatientDiscovery(
+                adapterFactory, auditLogger);
+
+        PatientLocationQueryResponseType actualResponse = passthroughPatientDiscovery
+        		.respondingGatewayPatientLocationQuery(request, assertion);
+
+        assertSame(expectedResponse, actualResponse);
     }
 }

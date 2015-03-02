@@ -32,6 +32,8 @@ import gov.hhs.fha.nhinc.aspect.InboundMessageEvent;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
 
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+
 import java.lang.reflect.Method;
 
 import org.hl7.v3.PRPAIN201305UV02;
@@ -51,4 +53,15 @@ public class NhinPatientDiscoveryTest {
         assertEquals("1.0", annotation.version());
     }
 
+    @Test
+    public void hasInboundMessageEventPLQ() throws Exception {
+        Class<NhinPatientDiscovery> clazz = NhinPatientDiscovery.class;
+        Method method = clazz.getMethod("respondingGatewayPatientLocationQuery", PatientLocationQueryRequestType.class);
+        InboundMessageEvent annotation = method.getAnnotation(InboundMessageEvent.class);
+        assertNotNull(annotation);
+        assertEquals(PRPAIN201305UV02EventDescriptionBuilder.class, annotation.beforeBuilder());
+        assertEquals(PRPAIN201306UV02EventDescriptionBuilder.class, annotation.afterReturningBuilder());
+        assertEquals("Patient Discovery", annotation.serviceType());
+        assertEquals("1.0", annotation.version());
+    }
 }

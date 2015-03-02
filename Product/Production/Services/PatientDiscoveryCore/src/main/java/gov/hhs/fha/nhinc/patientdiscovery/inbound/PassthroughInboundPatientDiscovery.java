@@ -26,6 +26,8 @@
  */
 package gov.hhs.fha.nhinc.patientdiscovery.inbound;
 
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditLogger;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditor;
@@ -86,6 +88,21 @@ public class PassthroughInboundPatientDiscovery extends AbstractInboundPatientDi
             throws PatientDiscoveryException {
         AdapterPatientDiscoveryProxy proxy = adapterFactory.create();
         return proxy.respondingGatewayPRPAIN201305UV02(request, assertion);
+    }
+
+	@Override
+	PatientLocationQueryResponseType processPatientLocationQuery(PatientLocationQueryRequestType body, 
+			AssertionType assertion) throws PatientDiscoveryException {
+		
+		PatientLocationQueryResponseType response = sendPLQToAdapter(body, assertion);
+
+        return response;
+	}
+	
+	private PatientLocationQueryResponseType sendPLQToAdapter(PatientLocationQueryRequestType request, AssertionType assertion)
+            throws PatientDiscoveryException {
+        AdapterPatientDiscoveryProxy proxy = adapterFactory.create();
+        return proxy.respondingGatewayPatientLocationQuery(request, assertion);
     }
 
 }

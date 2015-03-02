@@ -28,6 +28,8 @@ package gov.hhs.fha.nhinc.patientdiscovery.adapter;
 
 import gov.hhs.fha.nhinc.adapterpatientdiscoverysecured.AdapterPatientDiscoverySecuredFault;
 import gov.hhs.healthit.nhin.PatientDiscoveryFaultType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
 import javax.annotation.Resource;
 import javax.jws.WebService;
@@ -67,4 +69,13 @@ public class AdapterPatientDiscoverySecured implements gov.hhs.fha.nhinc.adapter
         return response;
 
     }
+
+	public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+			RespondingGatewayPatientLocationQueryRequestType request) {
+		
+		PatientLocationQueryResponseType response = null;
+        AdapterPatientDiscoveryImpl impl = new AdapterPatientDiscoveryImpl();
+        response = impl.respondingGatewayPatientLocationQuery(true, request, context);
+        return response;
+	}
 }

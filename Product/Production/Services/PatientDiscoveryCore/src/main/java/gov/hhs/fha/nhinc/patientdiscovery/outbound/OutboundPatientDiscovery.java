@@ -26,6 +26,9 @@
  */
 package gov.hhs.fha.nhinc.patientdiscovery.outbound;
 
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
+
 import java.util.concurrent.ExecutorService;
 
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
@@ -41,6 +44,9 @@ public interface OutboundPatientDiscovery {
 
     public RespondingGatewayPRPAIN201306UV02ResponseType respondingGatewayPRPAIN201305UV02(
             RespondingGatewayPRPAIN201305UV02RequestType request, AssertionType assertion);
+    
+    public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+    		RespondingGatewayPatientLocationQueryRequestType request, AssertionType assertion);
 
     public void setExecutorService(ExecutorService regularExecutor, ExecutorService largeJobExecutor);
 

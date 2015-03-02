@@ -28,8 +28,11 @@ package gov.hhs.fha.nhinc.patientdiscovery.adapter.proxy;
 
 import gov.hhs.fha.nhinc.aspect.AdapterDelegationEvent;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
+import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryException;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
 
 import org.apache.log4j.Logger;
 import org.hl7.v3.PRPAIN201306UV02;
@@ -58,4 +61,14 @@ public class AdapterPatientDiscoveryProxyNoOpImpl implements AdapterPatientDisco
         LOG.debug("Entering AdapterPatientDiscoveryProxyNoOpImpl.respondingGatewayPRPAIN201305UV02");
         return new PRPAIN201306UV02();
     }
+
+    @AdapterDelegationEvent(beforeBuilder = PRPAIN201305UV02EventDescriptionBuilder.class,
+            afterReturningBuilder = PRPAIN201306UV02EventDescriptionBuilder.class, serviceType = "Patient Discovery",
+            version = "1.0")
+	public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+			PatientLocationQueryRequestType body, AssertionType assertion)
+			throws PatientDiscoveryException {
+    	LOG.debug("Entering AdapterPatientDiscoveryProxyNoOpImpl.respondingGatewayPatientLocationQuery");
+        return new PatientLocationQueryResponseType();
+	}
 }

@@ -26,6 +26,8 @@
  */
 package gov.hhs.fha.nhinc.patientdiscovery.nhin.proxy;
 
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.common.nhinccommon.NhinTargetSystemType;
 
@@ -40,4 +42,7 @@ public interface NhinPatientDiscoveryProxy {
 
     public PRPAIN201306UV02 respondingGatewayPRPAIN201305UV02(PRPAIN201305UV02 request, AssertionType assertion,
             NhinTargetSystemType target) throws Exception;
+    
+    public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(PatientLocationQueryRequestType request, 
+    		AssertionType assertion, NhinTargetSystemType target) throws Exception;
 }

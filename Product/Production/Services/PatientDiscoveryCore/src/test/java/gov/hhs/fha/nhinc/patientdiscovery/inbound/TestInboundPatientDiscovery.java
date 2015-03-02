@@ -28,6 +28,8 @@ package gov.hhs.fha.nhinc.patientdiscovery.inbound;
 
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryException;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
 
 import org.hl7.v3.PRPAIN201305UV02;
 import org.hl7.v3.PRPAIN201306UV02;
@@ -44,5 +46,11 @@ public class TestInboundPatientDiscovery implements InboundPatientDiscovery {
             throws PatientDiscoveryException {
         return new PRPAIN201306UV02();
     }
+
+	@Override
+	public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(PatientLocationQueryRequestType body, 
+			AssertionType assertion) throws PatientDiscoveryException {
+		return new PatientLocationQueryResponseType();
+	}
 
 }

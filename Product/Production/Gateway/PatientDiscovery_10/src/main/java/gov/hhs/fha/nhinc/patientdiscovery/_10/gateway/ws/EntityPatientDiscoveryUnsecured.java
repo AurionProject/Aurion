@@ -35,6 +35,8 @@ import gov.hhs.fha.nhinc.patientdiscovery._10.entity.EntityPatientDiscoveryImpl;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02ArgTransformer;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.RespondingGatewayPRPAIN201306UV02Builder;
 import gov.hhs.fha.nhinc.patientdiscovery.outbound.OutboundPatientDiscovery;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
 import javax.annotation.Resource;
 import javax.xml.ws.BindingType;
@@ -86,5 +88,17 @@ public class EntityPatientDiscoveryUnsecured extends BaseService implements Enti
     public OutboundPatientDiscovery getOutboundPatientDiscovery() {
         return this.outboundPatientDiscovery;
     }
+
+    @OutboundMessageEvent(beforeBuilder = PRPAIN201305UV02ArgTransformer.class,
+            afterReturningBuilder = RespondingGatewayPRPAIN201306UV02Builder.class, serviceType = "Patient Discovery",
+            version = "1.0")
+	public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+			RespondingGatewayPatientLocationQueryRequestType request) {
+    	//AssertionType assertion = getAssertion(context, null);
+    	AssertionType assertion = request.getAssertion();
+        
+        return new EntityPatientDiscoveryImpl(outboundPatientDiscovery).respondingGatewayPatientLocationQuery(request,
+                assertion);
+	}
 
 }

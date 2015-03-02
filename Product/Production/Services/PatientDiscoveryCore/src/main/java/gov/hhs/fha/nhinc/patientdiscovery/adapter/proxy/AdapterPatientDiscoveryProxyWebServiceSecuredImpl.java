@@ -39,6 +39,9 @@ import gov.hhs.fha.nhinc.patientdiscovery.adapter.proxy.service.AdapterPatientDi
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.webserviceproxy.WebServiceProxyHelper;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
 import org.apache.log4j.Logger;
 import org.hl7.v3.PRPAIN201306UV02;
@@ -108,5 +111,52 @@ public class AdapterPatientDiscoveryProxyWebServiceSecuredImpl implements Adapte
 
         return response;
     }
+
+    @AdapterDelegationEvent(beforeBuilder = PRPAIN201305UV02EventDescriptionBuilder.class,
+            afterReturningBuilder = PRPAIN201306UV02EventDescriptionBuilder.class, serviceType = "Patient Discovery",
+            version = "1.0")
+	public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+			PatientLocationQueryRequestType body, AssertionType assertion)
+			throws PatientDiscoveryException {
+    	String url = null;
+    	PatientLocationQueryResponseType response = new PatientLocationQueryResponseType();
+        String sServiceName = NhincConstants.ADAPTER_PATIENT_DISCOVERY_SECURED_SERVICE_NAME;
+
+        try {
+            if (body != null) {
+                LOG.debug("Before target system URL look up.");
+                url = oProxyHelper.getAdapterEndPointFromConnectionManager(sServiceName);
+                LOG.debug("After target system URL look up. URL for service: " + sServiceName + " is: " + url);
+
+                if (NullChecker.isNotNullish(url)) {
+                    RespondingGatewayPatientLocationQueryRequestType request = 
+                            new RespondingGatewayPatientLocationQueryRequestType();
+                    request.setAssertion(assertion);
+                    request.setPatientLocationQueryRequest(body);
+                    request.setNhinTargetCommunities(null);
+
+                    ServicePortDescriptor<AdapterPatientDiscoverySecuredPortType> portDescriptor = 
+                            new AdapterPatientDiscoverySecuredServicePortDescriptor();
+                    CONNECTClient<AdapterPatientDiscoverySecuredPortType> client = CONNECTClientFactory.getInstance()
+                            .getCONNECTClientSecured(portDescriptor, url, assertion);
+
+                    response = (PatientLocationQueryResponseType) client.invokePort(AdapterPatientDiscoverySecuredPortType.class,
+                            "respondingGatewayPatientLocationQuery", request);
+                } else {
+                    throw new PatientDiscoveryException("Failed to call the adapter web service (" + sServiceName
+                            + ") for PatientLocationQuery.  The URL is null.");
+                }
+            } else {
+                throw new PatientDiscoveryException("Failed to call the web service (" + sServiceName
+                        + ") for PatientLocationQuery.  The input parameter is null.");
+            }
+        } catch (Exception e) {
+            LOG.error("Failed to call the web service (" + sServiceName + ") for PatientLocationQuery.  An unexpected exception occurred.  "
+                    + "Exception: " + e.getMessage(), e);
+            throw new PatientDiscoveryException(e.fillInStackTrace());
+        }
+
+        return response;
+	}
 
 }

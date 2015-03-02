@@ -31,6 +31,7 @@ import static org.junit.Assert.assertNotNull;
 import gov.hhs.fha.nhinc.aspect.OutboundMessageEvent;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02ArgTransformer;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.RespondingGatewayPRPAIN201306UV02Builder;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
 import java.lang.reflect.Method;
 
@@ -45,6 +46,19 @@ public class EntityPatientDiscoveryUnsecuredTest {
         Class<EntityPatientDiscoveryUnsecured> clazz = EntityPatientDiscoveryUnsecured.class;
         Method method = clazz.getMethod("respondingGatewayPRPAIN201305UV02",
                 RespondingGatewayPRPAIN201305UV02RequestType.class);
+        OutboundMessageEvent annotation = method.getAnnotation(OutboundMessageEvent.class);
+        assertNotNull(annotation);
+        assertEquals(PRPAIN201305UV02ArgTransformer.class, annotation.beforeBuilder());
+        assertEquals(RespondingGatewayPRPAIN201306UV02Builder.class, annotation.afterReturningBuilder());
+        assertEquals("Patient Discovery", annotation.serviceType());
+        assertEquals("1.0", annotation.version());
+    }
+    
+    @Test
+    public void hasOutboundMessageEventPLQ() throws Exception {
+        Class<EntityPatientDiscoveryUnsecured> clazz = EntityPatientDiscoveryUnsecured.class;
+        Method method = clazz.getMethod("respondingGatewayPatientLocationQuery",
+        		RespondingGatewayPatientLocationQueryRequestType.class);
         OutboundMessageEvent annotation = method.getAnnotation(OutboundMessageEvent.class);
         assertNotNull(annotation);
         assertEquals(PRPAIN201305UV02ArgTransformer.class, annotation.beforeBuilder());

@@ -27,6 +27,8 @@
 package gov.hhs.fha.nhinc.patientdiscovery.adapter;
 
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
 import org.apache.log4j.Logger;
 import org.hl7.v3.PRPAIN201306UV02;
@@ -52,6 +54,14 @@ public class AdapterPatientDiscoveryOrchImpl {
             AssertionType assertion) {
         LOG.debug("Entering AdapterPatientDiscoveryOrchImpl.respondingGatewayPRPAIN201305UV02");
         PRPAIN201306UV02 response = new PRPAIN201306UV02();
+        return response;
+    }
+    
+    public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(RespondingGatewayPatientLocationQueryRequestType request,
+            AssertionType assertion) {
+        LOG.debug("Entering AdapterPatientDiscoveryOrchImpl.respondingGatewayPatientLocationQuery");
+        PatientLocationQueryResponseType response = new PatientLocationQueryResponseType();
+        // TODO: Work undone HERE!
         return response;
     }
 

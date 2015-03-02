@@ -39,6 +39,8 @@ import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditLogger;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02ArgTransformer;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.RespondingGatewayPRPAIN201306UV02Builder;
 
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
+
 import java.lang.reflect.Method;
 
 import org.hl7.v3.PRPAIN201305UV02;
@@ -126,6 +128,19 @@ public class StandardOutboundPatientDiscoveryTest {
     public void hasOutboundProcessingEvent() throws Exception {
         Class<StandardOutboundPatientDiscovery> clazz = StandardOutboundPatientDiscovery.class;
         Method method = clazz.getMethod("respondingGatewayPRPAIN201305UV02", RespondingGatewayPRPAIN201305UV02RequestType.class,
+                AssertionType.class);
+        OutboundProcessingEvent annotation = method.getAnnotation(OutboundProcessingEvent.class);
+        assertNotNull(annotation);
+        assertEquals(PRPAIN201305UV02ArgTransformer.class, annotation.beforeBuilder());
+        assertEquals(RespondingGatewayPRPAIN201306UV02Builder.class, annotation.afterReturningBuilder());
+        assertEquals("Patient Discovery", annotation.serviceType());
+        assertEquals("1.0", annotation.version());
+    }
+    
+    @Test
+    public void hasOutboundProcessingEventPLQ() throws Exception {
+        Class<StandardOutboundPatientDiscovery> clazz = StandardOutboundPatientDiscovery.class;
+        Method method = clazz.getMethod("respondingGatewayPatientLocationQuery", RespondingGatewayPatientLocationQueryRequestType.class,
                 AssertionType.class);
         OutboundProcessingEvent annotation = method.getAnnotation(OutboundProcessingEvent.class);
         assertNotNull(annotation);

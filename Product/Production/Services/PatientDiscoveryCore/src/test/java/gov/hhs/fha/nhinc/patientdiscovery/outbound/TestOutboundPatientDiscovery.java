@@ -27,6 +27,8 @@
 package gov.hhs.fha.nhinc.patientdiscovery.outbound;
 
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
 import java.util.concurrent.ExecutorService;
 
@@ -50,4 +52,10 @@ public class TestOutboundPatientDiscovery implements OutboundPatientDiscovery {
         // Do Nothing
     }
 
+	@Override
+	public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+			RespondingGatewayPatientLocationQueryRequestType request,
+			AssertionType assertion) {
+		return new PatientLocationQueryResponseType();
+	}
 }

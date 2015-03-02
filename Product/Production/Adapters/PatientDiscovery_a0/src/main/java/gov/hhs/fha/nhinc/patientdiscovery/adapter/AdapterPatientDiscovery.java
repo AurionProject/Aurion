@@ -26,6 +26,9 @@
  */
 package gov.hhs.fha.nhinc.patientdiscovery.adapter;
 
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
+
 import javax.annotation.Resource;
 import javax.xml.ws.BindingType;
 import javax.xml.ws.WebServiceContext;
@@ -45,4 +48,9 @@ public class AdapterPatientDiscovery implements gov.hhs.fha.nhinc.adapterpatient
         return new AdapterPatientDiscoveryImpl().respondingGatewayPRPAIN201305UV02(false,
                 respondingGatewayPRPAIN201305UV02Request, context);
     }
+
+	public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+			RespondingGatewayPatientLocationQueryRequestType request) {
+		return new AdapterPatientDiscoveryImpl().respondingGatewayPatientLocationQuery(false, request, context);
+	}
 }

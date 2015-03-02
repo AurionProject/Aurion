@@ -32,6 +32,10 @@ import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditor;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
+import ihe.iti.xcpd._2009.PRPAIN201305UV02Fault;
+import ihe.iti.xcpd._2009.PatientLocationQueryFault;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
 
 import org.apache.log4j.Logger;
 import org.hl7.v3.PRPAIN201305UV02;
@@ -42,6 +46,8 @@ public abstract class AbstractInboundPatientDiscovery implements InboundPatientD
 	private static final Logger LOG = Logger.getLogger(AbstractInboundPatientDiscovery.class);
 
     abstract PRPAIN201306UV02 process(PRPAIN201305UV02 body, AssertionType assertion) throws PatientDiscoveryException;
+    abstract PatientLocationQueryResponseType processPatientLocationQuery(PatientLocationQueryRequestType body, 
+    		AssertionType assertion) throws PatientDiscoveryException, PatientLocationQueryFault;
 
     abstract PatientDiscoveryAuditor getAuditLogger();
 
@@ -61,6 +67,22 @@ public abstract class AbstractInboundPatientDiscovery implements InboundPatientD
         PRPAIN201306UV02 response = process(body, assertion);
             
        	auditResponseToNhin(response, assertion);    
+        
+        return response;
+    }
+
+    /**
+     * Method that processes the Patient Location Query requests (ITI-56)
+     * 
+     * @param body the body of the PLQ request
+     * @param assertion the assertion of the PLQ request
+     * @return PatientLocationQueryResponseType response message
+     */
+    @Override
+    public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+			PatientLocationQueryRequestType body, AssertionType assertion) throws PatientDiscoveryException, PatientLocationQueryFault {
+    	
+    	PatientLocationQueryResponseType response = processPatientLocationQuery(body, assertion);
         
         return response;
     }

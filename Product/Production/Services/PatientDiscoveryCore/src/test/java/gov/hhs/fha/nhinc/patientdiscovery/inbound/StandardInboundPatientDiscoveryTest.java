@@ -42,6 +42,10 @@ import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryAuditLogger;
 import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryException;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
+import gov.hhs.fha.nhinc.patientlocationquery.PatientLocationQueryProcessor;
+import ihe.iti.xcpd._2009.PatientLocationQueryFault;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
 
 import java.lang.reflect.Method;
 
@@ -75,12 +79,13 @@ public class StandardInboundPatientDiscoveryTest {
         PRPAIN201306UV02 expectedResponse = new PRPAIN201306UV02();
 
         PatientDiscovery201305Processor patientDiscoveryProcessor = mock(PatientDiscovery201305Processor.class);
+        PatientLocationQueryProcessor patientLocationQueryProcessor = mock(PatientLocationQueryProcessor.class);
         PatientDiscoveryAuditLogger auditLogger = mock(PatientDiscoveryAuditLogger.class);
 
         when(patientDiscoveryProcessor.process201305(request, assertion)).thenReturn(expectedResponse);
 
         StandardInboundPatientDiscovery standardPatientDiscovery = new StandardInboundPatientDiscovery(
-                patientDiscoveryProcessor, auditLogger){
+                patientDiscoveryProcessor, patientLocationQueryProcessor, auditLogger){
         	
         	@Override
         	protected boolean isAuditEnabled(String propertyFile, String propertyName) {
@@ -117,12 +122,13 @@ public class StandardInboundPatientDiscoveryTest {
         PRPAIN201306UV02 expectedResponse = new PRPAIN201306UV02();
 
         PatientDiscovery201305Processor patientDiscoveryProcessor = mock(PatientDiscovery201305Processor.class);
+        PatientLocationQueryProcessor patientLocationQueryProcessor = mock(PatientLocationQueryProcessor.class);
         PatientDiscoveryAuditLogger auditLogger = mock(PatientDiscoveryAuditLogger.class);
 
         when(patientDiscoveryProcessor.process201305(request, assertion)).thenReturn(expectedResponse);
 
         StandardInboundPatientDiscovery standardPatientDiscovery = new StandardInboundPatientDiscovery(
-                patientDiscoveryProcessor, auditLogger){
+                patientDiscoveryProcessor, patientLocationQueryProcessor, auditLogger){
         	
         	@Override
         	protected boolean isAuditEnabled(String propertyFile, String propertyName) {
@@ -145,5 +151,30 @@ public class StandardInboundPatientDiscoveryTest {
         verify(auditLogger, never()).auditAdapter201306(eq(actualResponse), eq(assertion),
                 eq(NhincConstants.AUDIT_LOG_INBOUND_DIRECTION));
 
+    }
+    
+    /**
+     * Test for PatientLocationQuery (ITI-56)
+     * @throws PatientDiscoveryException 
+     * @throws PatientLocationQueryFault 
+     */
+    @Test
+    public void standardInboundPatientDiscoveryPLQTest() throws PatientDiscoveryException, PatientLocationQueryFault {
+    	PatientLocationQueryRequestType request = new PatientLocationQueryRequestType();
+    	AssertionType assertion = new AssertionType();
+        PatientLocationQueryResponseType expectedResponse = new PatientLocationQueryResponseType();
+
+        PatientDiscovery201305Processor patientDiscoveryProcessor = mock(PatientDiscovery201305Processor.class);
+        PatientLocationQueryProcessor patientLocationQueryProcessor = mock(PatientLocationQueryProcessor.class);
+        PatientDiscoveryAuditLogger auditLogger = mock(PatientDiscoveryAuditLogger.class);
+
+        when(patientLocationQueryProcessor.processPatientLocationQuery(request, assertion)).thenReturn(expectedResponse);
+
+        StandardInboundPatientDiscovery standardPatientDiscovery = new StandardInboundPatientDiscovery(
+                patientDiscoveryProcessor, patientLocationQueryProcessor, auditLogger);
+        
+        PatientLocationQueryResponseType actualResponse = standardPatientDiscovery.respondingGatewayPatientLocationQuery(request, assertion);
+        
+        assertSame(expectedResponse, actualResponse);
     }
 }

@@ -38,7 +38,10 @@ import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
 import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
+import gov.hhs.fha.nhinc.patientdiscovery.nhin.proxy.service.RespondingGatewayServicePLQPortDescriptor;
 import gov.hhs.fha.nhinc.patientdiscovery.nhin.proxy.service.RespondingGatewayServicePortDescriptor;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 import ihe.iti.xcpd._2009.RespondingGatewayPortType;
 
@@ -111,4 +114,58 @@ public class NhinPatientDiscoveryProxyWebServiceSecuredImpl implements NhinPatie
 
         return response;
     }
+	
+	@Override
+	@NwhinInvocationEvent(beforeBuilder = PRPAIN201305UV02EventDescriptionBuilder.class, 
+		afterReturningBuilder = PRPAIN201306UV02EventDescriptionBuilder.class, 
+		serviceType = "Patient Discovery", version = "1.0")
+	public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+			PatientLocationQueryRequestType request, AssertionType assertion,
+			NhinTargetSystemType target) throws Exception {
+		LOG.debug("Entering respondingGatewayPatientLocationQuery...");
+		PatientLocationQueryResponseType response = new PatientLocationQueryResponseType();
+
+        try {
+            if ((request != null) && (target != null)) {
+
+                LOG.debug("Request and target are !null...Before target system URL look up.");
+                String url = target.getUrl();
+                LOG.debug("url: " + url);
+                if (NullChecker.isNullish(url)) {
+                	LOG.debug("The url is null...getting the URL from the Connection Manager.");
+                    url = ConnectionManagerCache.getInstance().getDefaultEndpointURLByServiceName(
+                            target.getHomeCommunity().getHomeCommunityId(),
+                            NhincConstants.PATIENT_DISCOVERY_SERVICE_NAME);
+                    LOG.debug("After target system URL look up. URL for service: "
+                            + NhincConstants.PATIENT_DISCOVERY_SERVICE_NAME + " is: " + url);
+                }
+
+                if (NullChecker.isNotNullish(url)) {
+                	LOG.debug("The url is !null...getting portDescriptor.");
+                    ServicePortDescriptor<RespondingGatewayPortType> portDescriptor = new RespondingGatewayServicePLQPortDescriptor();
+                    LOG.debug("portDescriptor.getWSAddressingAction(): " + portDescriptor.getWSAddressingAction());
+                    LOG.debug("getCONNECTSecuredClient...");
+                    CONNECTClient<RespondingGatewayPortType> client = getCONNECTSecuredClient(target, portDescriptor,
+                            url, assertion);
+                    
+                    LOG.debug("Invoking port to call web service for PatientLocationQuery...");
+
+                    response = (PatientLocationQueryResponseType) client.invokePort(RespondingGatewayPortType.class,
+                            "respondingGatewayPatientLocationQuery", request);
+                } else {
+                    LOG.error("Failed to call the web service (" + NhincConstants.PATIENT_DISCOVERY_SERVICE_NAME
+                            + ") for PatientLocationQuery.  The URL is null.");
+                }
+            } else {
+                LOG.error("Failed to call the web service (" + NhincConstants.PATIENT_DISCOVERY_SERVICE_NAME
+                        + ") for PatientLocationQuery.  The input parameters are null.");
+            }
+        } catch (Exception e) {
+            LOG.error("Failed to call the web service (" + NhincConstants.PATIENT_DISCOVERY_SERVICE_NAME
+                    + ") for PatientLocationQuery.  An unexpected exception occurred.  " + "Exception: " + e.getMessage(), e);
+            throw e;
+        }
+
+        return response;
+	}
 }

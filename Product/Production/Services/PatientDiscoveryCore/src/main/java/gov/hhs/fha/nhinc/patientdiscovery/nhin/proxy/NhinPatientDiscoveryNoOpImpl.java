@@ -31,6 +31,8 @@ import gov.hhs.fha.nhinc.common.nhinccommon.NhinTargetSystemType;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.aspect.NwhinInvocationEvent;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
 
 import org.hl7.v3.PRPAIN201305UV02;
 import org.hl7.v3.PRPAIN201306UV02;
@@ -49,4 +51,12 @@ public class NhinPatientDiscoveryNoOpImpl implements NhinPatientDiscoveryProxy {
         return new PRPAIN201306UV02();
     }
 
+    @NwhinInvocationEvent(beforeBuilder = PRPAIN201305UV02EventDescriptionBuilder.class,
+            afterReturningBuilder = PRPAIN201306UV02EventDescriptionBuilder.class, serviceType = "Patient Discovery",
+            version = "1.0")
+	public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+			PatientLocationQueryRequestType request, AssertionType assertion,
+			NhinTargetSystemType target) {
+		return new PatientLocationQueryResponseType();
+	}
 }

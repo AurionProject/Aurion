@@ -38,6 +38,7 @@ import gov.hhs.fha.nhinc.messaging.client.CONNECTClient;
 import gov.hhs.fha.nhinc.messaging.service.port.ServicePortDescriptor;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
 import ihe.iti.xcpd._2009.RespondingGatewayPortType;
 
 import java.lang.reflect.Method;
@@ -100,6 +101,19 @@ public class NhinPatientDiscoveryProxyWebServiceSecuredImplTest {
     public void hasNwhinInvocationEvent() throws Exception {
         Class<NhinPatientDiscoveryProxyWebServiceSecuredImpl> clazz = NhinPatientDiscoveryProxyWebServiceSecuredImpl.class;
         Method method = clazz.getMethod("respondingGatewayPRPAIN201305UV02", PRPAIN201305UV02.class,
+                AssertionType.class, NhinTargetSystemType.class);
+        NwhinInvocationEvent annotation = method.getAnnotation(NwhinInvocationEvent.class);
+        assertNotNull(annotation);
+        assertEquals(PRPAIN201305UV02EventDescriptionBuilder.class, annotation.beforeBuilder());
+        assertEquals(PRPAIN201306UV02EventDescriptionBuilder.class, annotation.afterReturningBuilder());
+        assertEquals("Patient Discovery", annotation.serviceType());
+        assertEquals("1.0", annotation.version());
+    }
+    
+    @Test
+    public void hasNwhinInvocationEventPLQ() throws Exception {
+        Class<NhinPatientDiscoveryProxyWebServiceSecuredImpl> clazz = NhinPatientDiscoveryProxyWebServiceSecuredImpl.class;
+        Method method = clazz.getMethod("respondingGatewayPatientLocationQuery", PatientLocationQueryRequestType.class,
                 AssertionType.class, NhinTargetSystemType.class);
         NwhinInvocationEvent annotation = method.getAnnotation(NwhinInvocationEvent.class);
         assertNotNull(annotation);

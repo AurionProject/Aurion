@@ -34,7 +34,11 @@ import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptio
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.inbound.InboundPatientDiscovery;
 import gov.hhs.healthit.nhin.PatientDiscoveryFaultType;
+import gov.hhs.healthit.nhin.PatientLocationQueryFaultType;
 import ihe.iti.xcpd._2009.PRPAIN201305UV02Fault;
+import ihe.iti.xcpd._2009.PatientLocationQueryFault;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
 import ihe.iti.xcpd._2009.RespondingGatewayPortType;
 
 import javax.annotation.Resource;
@@ -42,6 +46,8 @@ import javax.xml.ws.BindingType;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.soap.Addressing;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hl7.v3.PRPAIN201305UV02;
 import org.hl7.v3.PRPAIN201306UV02;
 
@@ -52,13 +58,20 @@ public class NhinPatientDiscovery extends BaseService implements RespondingGatew
     private InboundPatientDiscovery inboundPatientDiscovery;
 
     private WebServiceContext context;
+    
+    private Log log = null;
 
     /**
      * Constructor.
      */
     public NhinPatientDiscovery() {
         super();
+        log = createLogger();
     }
+    
+    protected Log createLogger() {
+		return ((log != null) ? log : LogFactory.getLog(getClass()));
+	}
 
     /**
      * The web service implementation of Patient Discovery.
@@ -101,4 +114,33 @@ public class NhinPatientDiscovery extends BaseService implements RespondingGatew
     public InboundPatientDiscovery getInboundPatientDiscovery() {
         return this.inboundPatientDiscovery;
     }
+
+    /**
+     * The web service implementation of Patient Location Query (ITI-56).
+     * 
+     * @param body the body of the request
+     * @return the Patient discovery Response
+     * @throws PatientLocationQueryFault a fault if there's an exception
+     */
+    @InboundMessageEvent(beforeBuilder = PRPAIN201305UV02EventDescriptionBuilder.class, 
+            afterReturningBuilder = PRPAIN201306UV02EventDescriptionBuilder.class, 
+            serviceType = "Patient Discovery", version = "1.0")
+    public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(PatientLocationQueryRequestType request) throws PatientLocationQueryFault
+    {
+    	log.debug("Entering respondingGatewayPatientLocationQuery...");
+		
+        try {
+        	AssertionType assertion = getAssertion(context, null);
+			return inboundPatientDiscovery.respondingGatewayPatientLocationQuery(request, assertion);
+		} 
+        catch (PatientDiscoveryException e) 
+        {
+			PatientLocationQueryFaultType type = new PatientLocationQueryFaultType();
+			type.setErrorCode("Sender");
+			type.setReason(e.getLocalizedMessage());
+            PatientLocationQueryFault fault = new PatientLocationQueryFault(e.getMessage(), type);
+            throw fault;
+
+		}
+	}
 }

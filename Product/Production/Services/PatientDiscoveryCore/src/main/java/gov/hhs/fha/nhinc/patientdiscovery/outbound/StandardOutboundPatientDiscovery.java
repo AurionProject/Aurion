@@ -54,11 +54,17 @@ import gov.hhs.fha.nhinc.patientdiscovery.aspect.RespondingGatewayPRPAIN201306UV
 import gov.hhs.fha.nhinc.patientdiscovery.entity.OutboundPatientDiscoveryDelegate;
 import gov.hhs.fha.nhinc.patientdiscovery.entity.OutboundPatientDiscoveryOrchestratable;
 import gov.hhs.fha.nhinc.patientdiscovery.entity.OutboundPatientDiscoveryProcessor;
+import gov.hhs.fha.nhinc.patientdiscovery.nhin.proxy.NhinPatientDiscoveryProxy;
+import gov.hhs.fha.nhinc.patientdiscovery.nhin.proxy.NhinPatientDiscoveryProxyObjectFactory;
 import gov.hhs.fha.nhinc.properties.PropertyAccessException;
 import gov.hhs.fha.nhinc.properties.PropertyAccessor;
 import gov.hhs.fha.nhinc.transform.subdisc.HL7DataTransformHelper;
 import gov.hhs.fha.nhinc.transform.subdisc.HL7PRPA201306Transforms;
+import gov.hhs.fha.nhinc.util.HomeCommunityMap;
 import gov.hhs.fha.nhinc.util.MessageGeneratorUtils;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -499,5 +505,82 @@ public class StandardOutboundPatientDiscovery implements OutboundPatientDiscover
 		}
 		return propertyValue;
 	}  
+	
+	/**
+	 * Standard Outbound implementation of the PatientLocationQuery operation (ITI-56). Calls the NHIN service to handle the request.
+	 * @param RespondingGatewayPatientLocationQueryRequestType message
+	 * @param assertion
+	 * @return RespondingGatewayPatientLocationQueryResponseType message
+	 */
+	@Override
+    @OutboundProcessingEvent(beforeBuilder = PRPAIN201305UV02ArgTransformer.class,
+    	afterReturningBuilder = RespondingGatewayPRPAIN201306UV02Builder.class, serviceType = "Patient Discovery",
+    	version = "1.0")
+    public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+    		RespondingGatewayPatientLocationQueryRequestType request, AssertionType assertion) {
+		LOG.debug("Entering method entityPatientLocationQuery...");
+    	PatientLocationQueryResponseType response = new PatientLocationQueryResponseType();
+        PatientLocationQueryRequestType nhinRequest = request.getPatientLocationQueryRequest();
+        List<UrlInfo> urlInfoList = getEndpoints(request.getNhinTargetCommunities());
+        if (NullChecker.isNullish(urlInfoList)) {
+            LOG.error("Error: EntityPatientLocationQuery No NHIN endpoints for Patient Discovery Service for community " + request.getNhinTargetCommunities().getNhinTargetCommunity().get(0).getHomeCommunity().getHomeCommunityId());
+        } else {
+            for (UrlInfo urlInfo : urlInfoList){
+                LOG.debug("Processing entityPatientLocationQuery Target: " + urlInfo.getHcid());
+                NhinTargetSystemType targetSystem = buildTargetSystem(urlInfo);
+                response = sendPLQToNhin(nhinRequest,assertion,targetSystem);
+            }
+        }
+        return response;
+    }
+	
+	/**
+	 * Constructs and NhinTargetSystemType from the URL passed in by the calling method.
+	 * @param urlInfo
+	 * @return NhinTargetSystemType
+	 */
+	private NhinTargetSystemType buildTargetSystem(UrlInfo urlInfo){
+        LOG.debug("Building the NhinTargetSystemType object...");
+        NhinTargetSystemType result = new NhinTargetSystemType();
+        HomeCommunityType hc = new HomeCommunityType();
+
+        hc.setHomeCommunityId(urlInfo.getHcid());
+        result.setHomeCommunity(hc);
+        result.setUrl(urlInfo.getUrl());
+
+        return result;
+    }
+    
+	/**
+	 * Sends the PatientLocationQueryRequest message to the Nhin Patient Discovery service for processing. The
+	 * Nhin service takes the PatientLocationQueryRequestType and returns the PatientLocationQueryResponseType message.
+	 * @param PatientLocationQueryRequestType nhinRequest
+	 * @param assertion
+	 * @param target
+	 * @return PatientLocationQueryResponseType message
+	 */
+    protected PatientLocationQueryResponseType sendPLQToNhin(PatientLocationQueryRequestType nhinRequest, 
+    		AssertionType assertion, NhinTargetSystemType target) {
+    	
+        PatientLocationQueryResponseType response = new PatientLocationQueryResponseType();
+        NhinPatientDiscoveryProxy proxy = getNhinProxy();
+        
+		try {
+			LOG.debug("Sending PatientLocationQueryRequest message to NhinPatientDiscoveryProxy...");
+			response = proxy.respondingGatewayPatientLocationQuery(nhinRequest, assertion, target);
+		} catch (Exception e) {
+			LOG.error("The call to NhinPatientDiscoveryProxy was unsuccessful!!");
+			e.printStackTrace();
+		}
+		LOG.debug("Returning response...");
+		return response;
+    }
+
+    /**
+     * Returns an instance of the NhinPatientDiscoveryProxy. Protected method is used for mocking in unit tests.
+     */
+    protected NhinPatientDiscoveryProxy getNhinProxy(){
+        return new NhinPatientDiscoveryProxyObjectFactory().getNhinPatientDiscoveryProxy();
+    }
 
 }

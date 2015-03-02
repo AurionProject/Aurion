@@ -28,6 +28,8 @@ package gov.hhs.fha.nhinc.patientdiscovery.adapter;
 
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.messaging.server.BaseService;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
 import javax.xml.ws.WebServiceContext;
 
@@ -68,6 +70,25 @@ public class AdapterPatientDiscoveryImpl extends BaseService {
 
         // Send response back to the initiating Gateway
         LOG.debug("Exiting AdapterPatientDiscoveryImpl.respondingGatewayPRPAIN201305UV02");
+        return response;
+    }
+    
+    public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(Boolean bIsSecure,
+            RespondingGatewayPatientLocationQueryRequestType request, WebServiceContext context) {
+        LOG.debug("Entering AdapterPatientDiscoveryImpl.respondingGatewayPatientLocationQuery");
+
+        AssertionType assertion = null;
+        if ((bIsSecure) && (context != null)) {
+            assertion = extractAssertion(context);
+        } else {
+            assertion = new AssertionType();
+        }
+
+        AdapterPatientDiscoveryOrchImpl oOrchestrator = new AdapterPatientDiscoveryOrchImpl();
+        PatientLocationQueryResponseType response = oOrchestrator.respondingGatewayPatientLocationQuery(request, assertion);
+
+        // Send response back to the initiating Gateway
+        LOG.debug("Exiting AdapterPatientDiscoveryImpl.respondingGatewayPatientLocationQuery");
         return response;
     }
 }

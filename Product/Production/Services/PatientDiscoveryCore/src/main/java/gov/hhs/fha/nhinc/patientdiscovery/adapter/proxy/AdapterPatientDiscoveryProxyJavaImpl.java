@@ -28,9 +28,13 @@ package gov.hhs.fha.nhinc.patientdiscovery.adapter.proxy;
 
 import gov.hhs.fha.nhinc.aspect.AdapterDelegationEvent;
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
+import gov.hhs.fha.nhinc.patientdiscovery.PatientDiscoveryException;
 import gov.hhs.fha.nhinc.patientdiscovery.adapter.AdapterPatientDiscoveryOrchImpl;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201305UV02EventDescriptionBuilder;
 import gov.hhs.fha.nhinc.patientdiscovery.aspect.PRPAIN201306UV02EventDescriptionBuilder;
+import ihe.iti.xcpd._2009.PatientLocationQueryRequestType;
+import ihe.iti.xcpd._2009.PatientLocationQueryResponseType;
+import ihe.iti.xcpd._2009.RespondingGatewayPatientLocationQueryRequestType;
 
 import org.apache.log4j.Logger;
 import org.hl7.v3.PRPAIN201306UV02;
@@ -68,4 +72,20 @@ public class AdapterPatientDiscoveryProxyJavaImpl implements AdapterPatientDisco
         return oOrchestrator.respondingGatewayPRPAIN201305UV02(request, assertion);
 
     }
+
+    @AdapterDelegationEvent(beforeBuilder = PRPAIN201305UV02EventDescriptionBuilder.class,
+            afterReturningBuilder = PRPAIN201306UV02EventDescriptionBuilder.class, serviceType = "Patient Discovery",
+            version = "1.0")
+	public PatientLocationQueryResponseType respondingGatewayPatientLocationQuery(
+			PatientLocationQueryRequestType body, AssertionType assertion)
+			throws PatientDiscoveryException {
+    	LOG.debug("Entering AdapterPatientDiscoveryProxyJavaImpl.respondingGatewayPatientLocationQuery");
+        AdapterPatientDiscoveryOrchImpl oOrchestrator = new AdapterPatientDiscoveryOrchImpl();
+        RespondingGatewayPatientLocationQueryRequestType request = new RespondingGatewayPatientLocationQueryRequestType();
+        request.setAssertion(assertion);
+        request.setPatientLocationQueryRequest(body);
+        request.setNhinTargetCommunities(null);
+        LOG.debug("Leaving AdapterPatientDiscoveryProxyJavaImpl.respondingGatewayPatientLocationQuery");
+        return oOrchestrator.respondingGatewayPatientLocationQuery(request, assertion);
+	}
 }
