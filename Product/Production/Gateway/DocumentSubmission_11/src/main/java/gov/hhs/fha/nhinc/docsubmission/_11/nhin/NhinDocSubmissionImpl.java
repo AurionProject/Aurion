@@ -26,12 +26,18 @@
  */
 package gov.hhs.fha.nhinc.docsubmission._11.nhin;
 
+import java.io.InputStream;
+
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.docsubmission.inbound.InboundDocSubmission;
 import gov.hhs.fha.nhinc.messaging.server.BaseService;
+import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import ihe.iti.xds_b._2007.ProvideAndRegisterDocumentSetRequestType;
+import ihe.iti.xds_b._2007.ProvideAndRegisterDocumentSetRequestType.Document;
 
 import javax.xml.ws.WebServiceContext;
+
+import org.apache.log4j.Logger;
 
 import oasis.names.tc.ebxml_regrep.xsd.rs._3.RegistryResponseType;
 
@@ -41,6 +47,7 @@ import oasis.names.tc.ebxml_regrep.xsd.rs._3.RegistryResponseType;
  */
 public class NhinDocSubmissionImpl extends BaseService {
     
+    private static final Logger LOG = Logger.getLogger(NhinDocSubmissionImpl.class);
     private InboundDocSubmission inboundDocSubmission;
     
     public NhinDocSubmissionImpl(InboundDocSubmission inboundDocSubmission) {
@@ -50,7 +57,34 @@ public class NhinDocSubmissionImpl extends BaseService {
     public RegistryResponseType documentRepositoryProvideAndRegisterDocumentSetB(
             ProvideAndRegisterDocumentSetRequestType body, WebServiceContext context) {
         AssertionType assertion = getAssertion(context, null);
-
+        resetDocumentInputStreams(body);
         return inboundDocSubmission.documentRepositoryProvideAndRegisterDocumentSetB(body, assertion);
     }
+    
+    /**
+     * Workaround for large documents being dropped after received. Unsure why this solves the problem.
+     * This was discovered when attempting to log the message at several different locations in the processing
+     * flow.
+     * 
+     * @param body Document submission request message
+     */
+	private void resetDocumentInputStreams(ProvideAndRegisterDocumentSetRequestType body) {
+		try {
+			if((body != null) && NullChecker.isNotNullish(body.getDocument())) {
+				for(Document document : body.getDocument()) {
+					if((document != null) && (document.getValue() != null)) {
+						InputStream is = document.getValue().getInputStream();
+						if(is != null) {
+							if (is.markSupported()) {
+								is.reset();
+							}
+						}
+					}
+				}
+			}
+		} catch(Throwable t) {
+			LOG.error("Exception encountered reseting inbound document submission document input streams (did not cause processing failure): " + t.getMessage(), t);
+		}
+		
+	}
 }
