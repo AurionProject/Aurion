@@ -60,11 +60,22 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<!--
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <scope>provided</scope>
         </dependency>
+-->
+        <!-- Added concrete j2ee jars for compile only to resolve errors with Direct -->
+        <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-6.0</artifactId>
+            <version>1.0.0.Final</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>

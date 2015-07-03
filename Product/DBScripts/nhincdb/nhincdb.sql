@@ -664,8 +664,9 @@ INSERT INTO address
 VALUES
 (1, 'direct.example.org', 'postmaster@direct.example.org', NULL, 1, NULL, now(), now(), 1);
 
-UPDATE address SET id = 2 WHERE id = 1;
+-- Removed updating the address id as creation of a new domain failed in the admin GUI. Further investigation required.
+--UPDATE address SET id = 2 WHERE id = 1;
 
-UPDATE domain SET postmasterAddressId = 2 WHERE id = 1;
+--UPDATE domain SET postmasterAddressId = 2 WHERE id = 1;
 
 UNLOCK TABLES;
