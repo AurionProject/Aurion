@@ -43,7 +43,7 @@
     <!--
         Address (configdb.address)
     -->
-    <class name="Address" table="address">
+    <class name="Address" table="config_address">
         <id name="id" type="long">
             <generator class="native"/>
         </id>

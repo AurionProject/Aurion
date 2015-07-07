@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS configdb.domain (
 -- Table `configdb`.`address`
 -- -----------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS configdb.address (
+CREATE TABLE IF NOT EXISTS configdb.config_address (
     id SERIAL PRIMARY KEY,
     emailAddress VARCHAR(255) NOT NULL,
     displayName VARCHAR(100),
@@ -652,21 +652,22 @@ GRANT SELECT,INSERT,UPDATE,DELETE ON messagemonitoringdb.* to nhincuser;
 -- deployment due to a bug in Direct RI
 -- -----------------------------------------------------
 USE configdb;
-LOCK TABLES domain WRITE, address WRITE;
+LOCK TABLES domain WRITE, config_address WRITE;
 
 INSERT INTO domain
 (id, domainName, postmasterAddressId, status, createTime, updateTime)
 VALUES
 (1, 'direct.example.org', NULL, 1, now(), now());
 
-INSERT INTO address
+INSERT INTO config_address
 (id, displayName, emailAddress, endpoint, status, type, createTime, updateTime, domainId)
 VALUES
 (1, 'direct.example.org', 'postmaster@direct.example.org', NULL, 1, NULL, now(), now(), 1);
 
 -- Removed updating the address id as creation of a new domain failed in the admin GUI. Further investigation required.
---UPDATE address SET id = 2 WHERE id = 1;
+-- UPDATE address SET id = 2 WHERE id = 1;
 
---UPDATE domain SET postmasterAddressId = 2 WHERE id = 1;
+-- UPDATE domain SET postmasterAddressId = 2 WHERE id = 1;
 
 UNLOCK TABLES;
+
