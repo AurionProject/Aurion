@@ -14,16 +14,16 @@
   			<param name="property">auditRepositoryRecord</param>
   		</generator>
   	</id>
-	<property column="service_name" 		name="serviceName" 		length="64" 	type="string" 	not-null="false"/>
-	<property column="subsystem" 			name="subsystem" 		length="16" 	type="string" 	not-null="false"/>
-	<property column="message_direction" 	name="messageDirection" length="8" 		type="string" 	not-null="false"/>
-	<property column="message_id" 			name="messageId" 		length="96" 	type="string" 	not-null="false"/>
-	<property column="user_name" 			name="userName" 		length="64" 	type="string" 	not-null="false"/>
-	<property column="user_roles" 			name="userRoles" 		length="64" 	type="string" 	not-null="false"/>
-	<property column="source_system" 		name="sourceSystem" 	length="64" 	type="string" 	not-null="false"/>
-	<property column="source_community"  	name="sourceCommunity" 	length="64"		type="string" 	not-null="false"/>
-	<property column="query_params"			name="queryParams"						type="clob"		not-null="false"/>
-	<property column="message_audited"		name="messageAudited"					type="clob"		not-null="false"/>		
+	<property column="service_name" 		name="serviceName" 		length="256" 	type="string" 	not-null="false"/>
+	<property column="subsystem" 			name="subsystem" 		length="256" 	type="string" 	not-null="false"/>
+	<property column="message_direction" 		name="messageDirection" 	length="256" 	type="string" 	not-null="false"/>
+	<property column="message_id" 			name="messageId" 		length="256" 	type="string" 	not-null="false"/>
+	<property column="user_name" 			name="userName" 		length="256" 	type="string" 	not-null="false"/>
+	<property column="user_roles" 			name="userRoles" 		length="256" 	type="string" 	not-null="false"/>
+	<property column="source_system" 		name="sourceSystem" 		length="256" 	type="string" 	not-null="false"/>
+	<property column="source_community"  		name="sourceCommunity" 		length="256"	type="string" 	not-null="false"/>
+	<property column="query_params"			name="queryParams"				type="clob"	not-null="false"/>
+	<property column="message_audited"		name="messageAudited"				type="clob"	not-null="false"/>		
 	<one-to-one name="auditRepositoryRecord"	class="gov.hhs.fha.nhinc.hibernate.AuditRepositoryRecord"	constrained="true"/>
   </class>
 </hibernate-mapping>
