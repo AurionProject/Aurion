@@ -270,6 +270,13 @@ public class MimeMessageBuilder {
 						bufferedOutput.flush();
 						
 				        attachmentPart.attachFile(xmlFile);	
+				        
+						// NOTE: The header added below is needed in order for the "signature" validation to succeed when sending Direct 
+						//       messages with XML attachments to the NIST TTT tool. It MUST also come AFTER the xml file has been 
+				        //		 attached by the code above this line.
+						//---------------------------------------------------------------------------------------------------------------
+						attachmentPart.setHeader("Content-Transfer-Encoding", "base64");
+						
 						attachmentParts.add(attachmentPart);				
 						
 					} catch (Exception e) {
