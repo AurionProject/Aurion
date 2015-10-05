@@ -179,7 +179,12 @@ public class MessageMonitoringAPI {
 
             //get the mail sender
             InternetAddress sender = (InternetAddress) message.getSender();
-            String senderMailId = sender.getAddress();
+            String senderMailId = null;
+            
+            if (sender != null) {
+            	senderMailId = sender.getAddress();
+			}
+            
             //Mail Subject
             String mailSubject = message.getSubject();
             //get the message id
