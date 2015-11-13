@@ -77,20 +77,24 @@ public class DirectSenderImpl extends DirectAdapter implements DirectSender {
         try {        	
         	ensureOrigDateHeaderExistsInMimeMessage(message);
             MimeMessage processedMessage = process(message).getProcessedMessage().getMessage();
+                        
             getExternalMailSender().send(message.getAllRecipients(), processedMessage);
-        } catch (Exception e) {
+        } catch (Exception e) {        	
             //if its security error then return send a message back to sender
             failed = true;
             errorMessage = e.getMessage();
             //TODO: drop the message to a delete bin directory for future ref
-            return;
+            
+            LOG.error("Error sending outbound Direct message", e);                       
+            throw new DirectException("Error sending outbound Direct message", e, message);
         } finally {
             LOG.debug("Before inserting Outgoing Message");
             //if failed then insert a row with the status failed, which will be
             //used by the Notification piece to send a message to the edge
             addOutgoingMessage(message, failed, errorMessage);
+            
+            getDirectEventLogger().log(DirectEventType.END_OUTBOUND_DIRECT, message);
         }
-        getDirectEventLogger().log(DirectEventType.END_OUTBOUND_DIRECT, message);
     }
 
     /**
@@ -115,7 +119,7 @@ public class DirectSenderImpl extends DirectAdapter implements DirectSender {
 			}
             
             sendOutboundDirect(message);
-        } catch (Exception e) {
+        } catch (Exception e) {        	
             getDirectEventLogger().log(DirectEventType.DIRECT_ERROR, message, e.getMessage());
             throw new DirectException("Error building and sending mime message.sendOutboundDirect", e, message);
         }

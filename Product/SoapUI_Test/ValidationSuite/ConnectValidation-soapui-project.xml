@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project abortOnError="false" name="ConnectValidation" resourceRoot="${projectDir}" runType="SEQUENTIAL" soapui-version="4.5.1" activeEnvironment="Default" xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-project abortOnError="false" name="ConnectValidation" resourceRoot="${projectDir}" runType="SEQUENTIAL" soapui-version="5.2.1" activeEnvironment="Default" id="63329274-47e3-4aaf-87ad-a8a33a592bab" xmlns:con="http://eviware.com/soapui/config">
 	<con:settings/>
-	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entitydocquery}EntityDocQueryBindingSoap" definition="${projectDir}/../target/wsdl/EntityDocQuery.wsdl" name="EntityDocQueryBindingSoap" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entitydocquery}EntityDocQueryBindingSoap" definition="${projectDir}/../target/wsdl/EntityDocQuery.wsdl" name="EntityDocQueryBindingSoap" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" id="eb7f6eaf-b42e-4c7f-ab2e-68c8b2159700" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:settings/>
 
 		<con:definitionCache/><con:endpoints>
 		<con:endpoint>http://localhost:8080/Gateway/DocumentQuery/2_0/EntityService/EntityDocQueryUnsecured</con:endpoint></con:endpoints>
-		<con:operation action="urn:gov:hhs:fha:nhinc:entitydocquery:RespondingGateway_CrossGatewayQueryRequest" anonymous="optional" bindingOperationName="RespondingGateway_CrossGatewayQuery" inputName="RespondingGateway_CrossGatewayQueryRequest" isOneWay="false" name="RespondingGateway_CrossGatewayQuery" outputName="RespondingGateway_CrossGatewayQueryResponse" receivesAttachments="false" sendsAttachments="false" type="Request-Response">
+		<con:operation action="urn:gov:hhs:fha:nhinc:entitydocquery:RespondingGateway_CrossGatewayQueryRequest" anonymous="optional" bindingOperationName="RespondingGateway_CrossGatewayQuery" inputName="RespondingGateway_CrossGatewayQueryRequest" isOneWay="false" name="RespondingGateway_CrossGatewayQuery" outputName="RespondingGateway_CrossGatewayQueryResponse" receivesAttachments="false" sendsAttachments="false" type="Request-Response" id="32b0e91f-c20e-43c1-a8e3-9d3a0d31e384">
 			<con:settings/>
 		</con:operation>
 	</con:interface>
 
-	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entitydocretrieve}EntityDocRetrieveBindingSoap" definition="${projectDir}/../target/wsdl/EntityDocRetrieve.wsdl" name="EntityDocRetrieveBindingSoap" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entitydocretrieve}EntityDocRetrieveBindingSoap" definition="${projectDir}/../target/wsdl/EntityDocRetrieve.wsdl" name="EntityDocRetrieveBindingSoap" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" id="825d9632-4b0a-4bbc-ab5d-6a8cf2ca0e39" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:settings/>
 
 		<con:definitionCache/><con:endpoints>
-		<con:endpoint>http://localhost:8080/Gateway/DocumentRetrieve/3_0/EntityService/EntityDocRetrieve</con:endpoint><con:endpoint>http://localhost:8080/Gateway/DocumentRetrieve/2_0/EntityService/EntityDocRetrieve</con:endpoint></con:endpoints>
-		<con:operation action="urn:gov:hhs:fha:nhinc:entitydocretrieve:RespondingGateway_CrossGatewayRetrieveRequestMessage" anonymous="optional" bindingOperationName="RespondingGateway_CrossGatewayRetrieve" inputName="RespondingGateway_CrossGatewayRetrieveRequest" isOneWay="false" name="RespondingGateway_CrossGatewayRetrieve" outputName="RespondingGateway_CrossGatewayRetrieveResponse" receivesAttachments="false" sendsAttachments="false" type="Request-Response">
+		<con:endpoint>http://localhost:8080/Gateway/DocumentRetrieve/2_0/EntityService/EntityDocRetrieve</con:endpoint><con:endpoint>http://localhost:8080/Gateway/DocumentRetrieve/3_0/EntityService/EntityDocRetrieve</con:endpoint></con:endpoints>
+		<con:operation action="urn:gov:hhs:fha:nhinc:entitydocretrieve:RespondingGateway_CrossGatewayRetrieveRequestMessage" anonymous="optional" bindingOperationName="RespondingGateway_CrossGatewayRetrieve" inputName="RespondingGateway_CrossGatewayRetrieveRequest" isOneWay="false" name="RespondingGateway_CrossGatewayRetrieve" outputName="RespondingGateway_CrossGatewayRetrieveResponse" receivesAttachments="false" sendsAttachments="false" type="Request-Response" id="ca5c51cf-9aaa-4dd6-b094-4d1151ca2c40">
 			<con:settings/>
 		</con:operation>
 	</con:interface>
@@ -24,86 +24,86 @@
 	
 	
 	
-	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:nhincentityxdr:async:request}EntityXDRAsyncRequest_Binding" definition="${projectDir}/../target/wsdl/EntityXDRRequest.wsdl" name="EntityXDRAsyncRequest_Binding" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:nhincentityxdr:async:request}EntityXDRAsyncRequest_Binding" definition="${projectDir}/../target/wsdl/EntityXDRRequest.wsdl" name="EntityXDRAsyncRequest_Binding" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" id="07834d03-40fd-4ef4-8ad1-6cd2f23c1811" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:settings/>
 
 		<con:definitionCache/><con:endpoints>
 		<con:endpoint>http://localhost:8080/Gateway/DocumentSubmission/1_1/EntityService/EntityDocSubmissionDeferredRequestUnsecured</con:endpoint></con:endpoints>
-		<con:operation action="" anonymous="optional" bindingOperationName="ProvideAndRegisterDocumentSet-bAsyncRequest" inputName="" isOneWay="false" name="ProvideAndRegisterDocumentSet-bAsyncRequest" receivesAttachments="false" sendsAttachments="false" type="Request-Response">
+		<con:operation action="" anonymous="optional" bindingOperationName="ProvideAndRegisterDocumentSet-bAsyncRequest" inputName="" isOneWay="false" name="ProvideAndRegisterDocumentSet-bAsyncRequest" receivesAttachments="false" sendsAttachments="false" type="Request-Response" id="cfcf79d4-a483-4830-8264-2d713bb0f976">
 			<con:settings/>
 
 		</con:operation>
 	</con:interface>
-	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entitypatientdiscoveryasyncreq}EntityPatientDiscoveryAsyncReqBindingSoap" definition="${projectDir}/../target/wsdl/EntityPatientDiscoveryAsyncReq.wsdl" name="EntityPatientDiscoveryAsyncReqBindingSoap" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entitypatientdiscoveryasyncreq}EntityPatientDiscoveryAsyncReqBindingSoap" definition="${projectDir}/../target/wsdl/EntityPatientDiscoveryAsyncReq.wsdl" name="EntityPatientDiscoveryAsyncReqBindingSoap" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" id="e103293e-3d3f-4cba-baaa-30675bd7913f" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:settings/>
 
 		<con:definitionCache/><con:endpoints>
 		<con:endpoint>http://localhost:8080/Gateway/PatientDiscovery/1_0/EntityService/EntityPatientDiscoveryDeferredRequestUnsecured</con:endpoint></con:endpoints>
-		<con:operation action="" anonymous="optional" bindingOperationName="ProcessPatientDiscoveryAsyncReq" inputName="ProcessPatientDiscoveryAsyncReqAsyncRequest" isOneWay="false" name="ProcessPatientDiscoveryAsyncReq" outputName="ProcessPatientDiscoveryAsyncReqAsyncResponse" receivesAttachments="false" sendsAttachments="false" type="Request-Response">
+		<con:operation action="" anonymous="optional" bindingOperationName="ProcessPatientDiscoveryAsyncReq" inputName="ProcessPatientDiscoveryAsyncReqAsyncRequest" isOneWay="false" name="ProcessPatientDiscoveryAsyncReq" outputName="ProcessPatientDiscoveryAsyncReqAsyncResponse" receivesAttachments="false" sendsAttachments="false" type="Request-Response" id="588b0b52-eb21-4c0d-b0bc-7084c0c9dbb6">
 			<con:settings/>
 		</con:operation>
 	</con:interface>
-	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entitypatientdiscoveryasyncresp}EntityPatientDiscoveryAsyncRespBindingSoap" definition="${projectDir}/../target/wsdl/EntityPatientDiscoveryAsyncResp.wsdl" name="EntityPatientDiscoveryAsyncRespBindingSoap" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entitypatientdiscoveryasyncresp}EntityPatientDiscoveryAsyncRespBindingSoap" definition="${projectDir}/../target/wsdl/EntityPatientDiscoveryAsyncResp.wsdl" name="EntityPatientDiscoveryAsyncRespBindingSoap" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" id="1bd2a0f7-d3f3-4b5f-9118-73947d17f664" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:settings/>
 
 		<con:definitionCache/><con:endpoints>
 		<con:endpoint>http://localhost:8080/Gateway/PatientDiscovery/1_0/EntityService/EntityPatientDiscoveryDeferredResponseUnsecured</con:endpoint></con:endpoints>
-		<con:operation action="" bindingOperationName="ProcessPatientDiscoveryAsyncResp" inputName="ProcessPatientDiscoveryAsyncRespAsyncRequest" isOneWay="false" name="ProcessPatientDiscoveryAsyncResp" outputName="ProcessPatientDiscoveryAsyncRespAsyncResponse" receivesAttachments="false" sendsAttachments="false" type="Request-Response" anonymous="optional">
+		<con:operation action="" bindingOperationName="ProcessPatientDiscoveryAsyncResp" inputName="ProcessPatientDiscoveryAsyncRespAsyncRequest" isOneWay="false" name="ProcessPatientDiscoveryAsyncResp" outputName="ProcessPatientDiscoveryAsyncRespAsyncResponse" receivesAttachments="false" sendsAttachments="false" type="Request-Response" anonymous="optional" id="342c5afe-5ccd-44e7-8392-15adfd729929">
 			<con:settings/>
 		</con:operation>
 	</con:interface>
-	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:nhincentityxdr}EntityXDR_Binding" definition="${projectDir}/../target/wsdl/EntityXDR.wsdl" name="EntityXDR_Binding" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:nhincentityxdr}EntityXDR_Binding" definition="${projectDir}/../target/wsdl/EntityXDR.wsdl" name="EntityXDR_Binding" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" id="21747d3d-335c-4d1b-bbb4-be9dd861c36e" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:settings/>
 
 		<con:definitionCache/><con:endpoints>
-		<con:endpoint>http://localhost:8080/Gateway/DocumentSubmission/2_0/EntityService/EntityDocSubmissionUnsecured</con:endpoint><con:endpoint>http://localhost:8080/Gateway/DocumentSubmission/1_1/EntityService/EntityDocSubmissionUnsecured</con:endpoint></con:endpoints>
-		<con:operation action="" anonymous="optional" bindingOperationName="ProvideAndRegisterDocumentSet-b" inputName="" isOneWay="false" name="ProvideAndRegisterDocumentSet-b" receivesAttachments="false" sendsAttachments="false" type="Request-Response">
+		<con:endpoint>http://localhost:8080/Gateway/DocumentSubmission/1_1/EntityService/EntityDocSubmissionUnsecured</con:endpoint><con:endpoint>http://localhost:8080/Gateway/DocumentSubmission/2_0/EntityService/EntityDocSubmissionUnsecured</con:endpoint></con:endpoints>
+		<con:operation action="" anonymous="optional" bindingOperationName="ProvideAndRegisterDocumentSet-b" inputName="" isOneWay="false" name="ProvideAndRegisterDocumentSet-b" receivesAttachments="false" sendsAttachments="false" type="Request-Response" id="d1622559-fbe3-427e-a55b-5b5330667bdc">
 			<con:settings/>
 
 		</con:operation>
 	</con:interface>
-	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entitypatientdiscovery}EntityPatientDiscoveryBindingSoap" definition="${projectDir}/../target/wsdl/EntityPatientDiscovery.wsdl" name="EntityPatientDiscoveryBindingSoap" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entitypatientdiscovery}EntityPatientDiscoveryBindingSoap" definition="${projectDir}/../target/wsdl/EntityPatientDiscovery.wsdl" name="EntityPatientDiscoveryBindingSoap" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" id="0e7a05d9-6842-46ce-979b-1e2c37cd3925" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:settings/>
 
 		<con:definitionCache/><con:endpoints>
 		<con:endpoint>http://localhost:8080/Gateway/PatientDiscovery/1_0/EntityPatientDiscovery</con:endpoint></con:endpoints>
-		<con:operation action="urn:gov:hhs:fha:nhinc:entitypatientdiscovery:RespondingGateway_PRPA_IN201305UV02RequestMessage" bindingOperationName="RespondingGateway_PRPA_IN201305UV02" inputName="RespondingGateway_PRPA_IN201305UV02Request" isOneWay="false" name="RespondingGateway_PRPA_IN201305UV02" outputName="RespondingGateway_PRPA_IN201306UV02Response" receivesAttachments="false" sendsAttachments="false" type="Request-Response" anonymous="optional">
+		<con:operation action="urn:gov:hhs:fha:nhinc:entitypatientdiscovery:RespondingGateway_PRPA_IN201305UV02RequestMessage" bindingOperationName="RespondingGateway_PRPA_IN201305UV02" inputName="RespondingGateway_PRPA_IN201305UV02Request" isOneWay="false" name="RespondingGateway_PRPA_IN201305UV02" outputName="RespondingGateway_PRPA_IN201306UV02Response" receivesAttachments="false" sendsAttachments="false" type="Request-Response" anonymous="optional" id="efc02a42-1d0c-44b6-964d-85971d86cab7">
 			<con:settings/>
 		</con:operation>
 	</con:interface>
 
-	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entityadmindistribution}AdministrativeDistribution_Binding_Soap12" definition="${projectDir}/../target/wsdl/EntityAdminDist.wsdl" name="AdministrativeDistribution_Binding_Soap12" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entityadmindistribution}AdministrativeDistribution_Binding_Soap12" definition="${projectDir}/../target/wsdl/EntityAdminDist.wsdl" name="AdministrativeDistribution_Binding_Soap12" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" id="f142b560-19f7-4d93-96f7-75f9f378d6ac" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:settings/>
 
 		<con:definitionCache/><con:endpoints>
 			
 		<con:endpoint>http://localhost:8080/Gateway/AdminDistribution/1_0/AdministrativeDistribution_Service</con:endpoint></con:endpoints>
-		<con:operation action="urn:oasis:names:tc:emergency:EDXL:DE:1.0:SendAlertMessage" anonymous="optional" bindingOperationName="SendAlertMessage" inputName="" isOneWay="false" name="SendAlertMessage" sendsAttachments="false" type="One-Way">
+		<con:operation action="urn:oasis:names:tc:emergency:EDXL:DE:1.0:SendAlertMessage" anonymous="optional" bindingOperationName="SendAlertMessage" inputName="" isOneWay="false" name="SendAlertMessage" sendsAttachments="false" type="One-Way" id="316a7ed1-ccdf-420b-8185-9d8f789cec93">
 			<con:settings/>
 
 		</con:operation>
 	</con:interface>
 
-	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:nhincentityxdr:async:response}EntityXDRAsyncResponse_Binding" definition="${projectDir}/../target/wsdl/EntityXDRResponse.wsdl" name="EntityXDRAsyncResponse_Binding" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:nhincentityxdr:async:response}EntityXDRAsyncResponse_Binding" definition="${projectDir}/../target/wsdl/EntityXDRResponse.wsdl" name="EntityXDRAsyncResponse_Binding" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" id="dd0fce11-0a73-48db-8674-8aeb564e4fff" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:settings/>
 		<con:definitionCache/><con:endpoints>
-		<con:endpoint>http://localhost:8080/Gateway/DocumentSubmission/2_0/EntityService/EntityDocSubmissionDeferredResponseUnsecured</con:endpoint><con:endpoint>http://localhost:8080/Gateway/DocumentSubmission/1_1/EntityService/EntityDocSubmissionDeferredResponseUnsecured</con:endpoint></con:endpoints>
-		<con:operation action="" anonymous="optional" bindingOperationName="ProvideAndRegisterDocumentSet-bAsyncResponse" inputName="" isOneWay="false" name="ProvideAndRegisterDocumentSet-bAsyncResponse" receivesAttachments="false" sendsAttachments="false" type="Request-Response">
+		<con:endpoint>http://localhost:8080/Gateway/DocumentSubmission/1_1/EntityService/EntityDocSubmissionDeferredResponseUnsecured</con:endpoint><con:endpoint>http://localhost:8080/Gateway/DocumentSubmission/2_0/EntityService/EntityDocSubmissionDeferredResponseUnsecured</con:endpoint></con:endpoints>
+		<con:operation action="" anonymous="optional" bindingOperationName="ProvideAndRegisterDocumentSet-bAsyncResponse" inputName="" isOneWay="false" name="ProvideAndRegisterDocumentSet-bAsyncResponse" receivesAttachments="false" sendsAttachments="false" type="Request-Response" id="d5469a47-5d62-414d-b72e-757801087e56">
 			<con:settings/>
 		</con:operation>
 	</con:interface>
 
 
-	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entityadmindistribution}AdministrativeDistribution_Binding_Soap12" definition="${projectDir}/../target/wsdl/EntityAdminDist_g1.wsdl" name="AdministrativeDistribution_Binding_Soap12_g1" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<con:interface anonymous="optional" bindingName="{urn:gov:hhs:fha:nhinc:entityadmindistribution}AdministrativeDistribution_Binding_Soap12" definition="${projectDir}/../target/wsdl/EntityAdminDist_g1.wsdl" name="AdministrativeDistribution_Binding_Soap12_g1" soapVersion="1_2" type="wsdl" wsaVersion="NONE" xsi:type="con:WsdlInterface" id="4ab16094-3d0e-4b78-9380-c8a5c8a187a2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:settings/>
 		<con:definitionCache/><con:endpoints>
 			<con:endpoint>http://localhost:8080/Gateway/AdminDistribution/2_0/AdministrativeDistribution_Service</con:endpoint>
 		</con:endpoints>
-		<con:operation action="urn:oasis:names:tc:emergency:EDXL:DE:1.0:SendAlertMessage" bindingOperationName="SendAlertMessage" inputName="" isOneWay="false" name="SendAlertMessage" sendsAttachments="false" type="One-Way">
+		<con:operation action="urn:oasis:names:tc:emergency:EDXL:DE:1.0:SendAlertMessage" bindingOperationName="SendAlertMessage" inputName="" isOneWay="false" name="SendAlertMessage" sendsAttachments="false" type="One-Way" id="b22a4fb3-1cc7-4193-93b6-215ecbe72708">
 			<con:settings/>
 		</con:operation>
 	</con:interface>
-	<con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="AdapterPatientDiscoveryBindingSoap" type="wsdl" bindingName="{urn:gov:hhs:fha:nhinc:adapterpatientdiscovery}AdapterPatientDiscoveryBindingSoap" soapVersion="1_2" anonymous="optional" definition="${projectDir}/../target/wsdl/AdapterPatientDiscovery.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/C:/CONNECT/Product/SoapUI_Test/ValidationSuite/../target/wsdl/AdapterPatientDiscovery.wsdl"><con:part><con:url>file:/C:/CONNECT/Product/SoapUI_Test/ValidationSuite/../target/wsdl/AdapterPatientDiscovery.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="AdapterPatientDiscovery" targetNamespace="urn:gov:hhs:fha:nhinc:adapterpatientdiscovery" xmlns:tns="urn:gov:hhs:fha:nhinc:adapterpatientdiscovery" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:hl7="urn:hl7-org:v3" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:nccommonadapter="urn:gov:hhs:fha:nhinc:common:nhinccommonadapter">
+	<con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="AdapterPatientDiscoveryBindingSoap" type="wsdl" bindingName="{urn:gov:hhs:fha:nhinc:adapterpatientdiscovery}AdapterPatientDiscoveryBindingSoap" soapVersion="1_2" anonymous="optional" definition="${projectDir}/../target/wsdl/AdapterPatientDiscovery.wsdl" id="fda33c0b-8998-4918-b545-fe4b98384e3c" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/C:/CONNECT/Product/SoapUI_Test/ValidationSuite/../target/wsdl/AdapterPatientDiscovery.wsdl"><con:part><con:url>file:/C:/CONNECT/Product/SoapUI_Test/ValidationSuite/../target/wsdl/AdapterPatientDiscovery.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="AdapterPatientDiscovery" targetNamespace="urn:gov:hhs:fha:nhinc:adapterpatientdiscovery" xmlns:tns="urn:gov:hhs:fha:nhinc:adapterpatientdiscovery" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:hl7="urn:hl7-org:v3" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:nccommonadapter="urn:gov:hhs:fha:nhinc:common:nhinccommonadapter">
   <wsdl:documentation>WSDL for Adapter interface of Patient Discovery</wsdl:documentation>
   <wsdl:types>
     <xsd:schema elementFormDefault="qualified" targetNamespace="urn:hl7-org:v3">
@@ -39551,7 +39551,7 @@ StaticMifToXsd.xsl version 2.0</xs:documentation>
     <xs:attribute name="classCode" type="ActClass" use="required" fixed="TRNS"/>
     <xs:attribute name="moodCode" type="x_ActMoodIntentEvent" use="required"/>
   </xs:complexType>
-</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>https://localhost:${HttpsDefaultPort}/Adapter/PatientDiscovery/A_0/AdapterPatientDiscovery</con:endpoint></con:endpoints><con:operation isOneWay="false" action="urn:RespondingGateway_PRPA_IN201305UV02" name="RespondingGateway_PRPA_IN201305UV02" bindingOperationName="RespondingGateway_PRPA_IN201305UV02" type="Request-Response" outputName="RespondingGateway_PRPA_IN201306UV02Response" inputName="RespondingGateway_PRPA_IN201305UV02Request" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="EntityCORETransactionSoapBinding" type="wsdl" bindingName="{urn:gov:hhs:fha:nhinc:nhincentitycore}EntityCORETransactionSoapBinding" soapVersion="1_2" anonymous="optional" definition="../target/wsdl/EntityCORERule2.2.0RealTime.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache/><con:endpoints><con:endpoint>http://localhost:${HttpDefaultPort}/Gateway/CORETransaction/EntityService/EntityCORETransactionUnsecured</con:endpoint></con:endpoints><con:operation isOneWay="false" action="RealTimeTransaction" name="RealTimeTransaction" bindingOperationName="RealTimeTransaction" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:${HttpDefaultPort}/Gateway/CORETransaction/EntityService/EntityCORETransactionUnsecured</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:gov:hhs:fha:nhinc:common:nhinccommonentity" xmlns:cor="http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd" xmlns:urn1="urn:gov:hhs:fha:nhinc:common:nhinccommon">
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>https://localhost:${HttpsDefaultPort}/Adapter/PatientDiscovery/A_0/AdapterPatientDiscovery</con:endpoint></con:endpoints><con:operation isOneWay="false" action="urn:RespondingGateway_PRPA_IN201305UV02" name="RespondingGateway_PRPA_IN201305UV02" bindingOperationName="RespondingGateway_PRPA_IN201305UV02" type="Request-Response" outputName="RespondingGateway_PRPA_IN201306UV02Response" inputName="RespondingGateway_PRPA_IN201305UV02Request" receivesAttachments="false" sendsAttachments="false" id="19f891a9-243d-4151-89ec-a40375d16e69"><con:settings/></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="EntityCORETransactionSoapBinding" type="wsdl" bindingName="{urn:gov:hhs:fha:nhinc:nhincentitycore}EntityCORETransactionSoapBinding" soapVersion="1_2" anonymous="optional" definition="../target/wsdl/EntityCORERule2.2.0RealTime.wsdl" id="a629e0ae-cc76-4538-a3ad-f37ad5fb896d" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache/><con:endpoints><con:endpoint>http://localhost:${HttpDefaultPort}/Gateway/CORETransaction/EntityService/EntityCORETransactionUnsecured</con:endpoint></con:endpoints><con:operation isOneWay="false" action="RealTimeTransaction" name="RealTimeTransaction" bindingOperationName="RealTimeTransaction" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional" id="0197f3ba-64b6-42bc-a42d-cdd1d5300d86"><con:settings/><con:call name="Request 1" id="6ff98dd2-7dfb-4527-9ad5-42db2f8e8065"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:${HttpDefaultPort}/Gateway/CORETransaction/EntityService/EntityCORETransactionUnsecured</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:gov:hhs:fha:nhinc:common:nhinccommonentity" xmlns:cor="http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd" xmlns:urn1="urn:gov:hhs:fha:nhinc:common:nhinccommon">
    <soap:Header/>
    <soap:Body>
       <urn:RespondingGateway_CrossGatewayRealTimeRequest>
@@ -39884,7 +39884,7 @@ StaticMifToXsd.xsl version 2.0</xs:documentation>
          </urn:NhinTargetCommunities>
       </urn:RespondingGateway_CrossGatewayRealTimeRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:ihe:iti:xdr:2007:X12RealTimeRequestMessage"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="EntityCOREGenericBatchTransactionSoapBinding" type="wsdl" bindingName="{urn:gov:hhs:fha:nhinc:nhincentitycore}EntityCOREGenericBatchTransactionSoapBinding" soapVersion="1_2" anonymous="optional" definition="${projectDir}/../target/wsdl/CORERule2.2.0GenericBatch.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache/><con:endpoints><con:endpoint>http://localhost:${HttpDefaultPort}/Gateway/COREGenericBatchTransaction/EntityService/EntityCOREGenericBatchTransactionUnsecured</con:endpoint><con:endpoint>http://localhost:8080/Gateway/CORE_X12DocumentSubmission/1_0/EntityService/EntityCOREGenericBatchRequestUnsecured</con:endpoint></con:endpoints><con:operation isOneWay="false" action="BatchSubmitTransaction" name="BatchSubmitTransaction" bindingOperationName="BatchSubmitTransaction" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:${HttpDefaultPort}/Gateway/COREGenericBatchTransaction/EntityService/EntityCOREGenericBatchTransactionUnsecured</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:gov:hhs:fha:nhinc:common:nhinccommonentity" xmlns:cor="http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd" xmlns:urn1="urn:gov:hhs:fha:nhinc:common:nhinccommon">
+</soap:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:ihe:iti:xdr:2007:X12RealTimeRequestMessage"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="EntityCOREGenericBatchTransactionSoapBinding" type="wsdl" bindingName="{urn:gov:hhs:fha:nhinc:nhincentitycore}EntityCOREGenericBatchTransactionSoapBinding" soapVersion="1_2" anonymous="optional" definition="${projectDir}/../target/wsdl/CORERule2.2.0GenericBatch.wsdl" id="b0e89f89-bfc0-4f72-8eea-62ddf8ddb75e" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache/><con:endpoints><con:endpoint>http://localhost:${HttpDefaultPort}/Gateway/COREGenericBatchTransaction/EntityService/EntityCOREGenericBatchTransactionUnsecured</con:endpoint><con:endpoint>http://localhost:8080/Gateway/CORE_X12DocumentSubmission/1_0/EntityService/EntityCOREGenericBatchRequestUnsecured</con:endpoint></con:endpoints><con:operation isOneWay="false" action="BatchSubmitTransaction" name="BatchSubmitTransaction" bindingOperationName="BatchSubmitTransaction" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional" id="f3e87d3c-b13a-4834-b324-2fd690d9bab7"><con:settings/><con:call name="Request 1" id="3060d25d-f251-412f-bccd-eaf4f0ebf4c0"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:${HttpDefaultPort}/Gateway/COREGenericBatchTransaction/EntityService/EntityCOREGenericBatchTransactionUnsecured</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:gov:hhs:fha:nhinc:common:nhinccommonentity" xmlns:cor="http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd" xmlns:urn1="urn:gov:hhs:fha:nhinc:common:nhinccommon">
    <soap:Header/>
    <soap:Body>
       <urn:RespondingGateway_CrossGatewayBatchSubmissionRequest>
@@ -40219,12 +40219,12 @@ StaticMifToXsd.xsl version 2.0</xs:documentation>
          </urn:NhinTargetCommunities>
       </urn:RespondingGateway_CrossGatewayBatchSubmissionRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="{http://schemas.xmlsoap.org/wsdl/}BatchSubmitTransaction"/></con:call></con:operation></con:interface><con:testSuite name="g1">
+</soap:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="{http://schemas.xmlsoap.org/wsdl/}BatchSubmitTransaction"/></con:call></con:operation></con:interface><con:testSuite name="g1" id="dfd7840a-0961-4dcd-b72f-d037cdae7432">
 		<con:settings/>
 		<con:runType>SEQUENTIAL</con:runType>
 		<con:testCase failOnError="true" failTestCaseOnErrors="true" id="53f821fb-e99b-4318-a86d-66e62b517650" keepSession="false" maxResults="0" name="Document Submission Deferred Req" searchProperties="true">
 			<con:settings/>
-			<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+			<con:testStep type="groovy" name="Check Passthru" id="839761ac-6b58-49a0-99f0-a08a078aa5dc"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "docsubmission.inboundDocSubmissionRequest";
@@ -40247,12 +40247,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-	<con:testStep name="Doc Submission Deferred Req" type="request">
+	<con:testStep name="Doc Submission Deferred Req" type="request" id="ec4f5c56-0f13-4517-9363-4e446c25aaf7">
 				<con:settings/>
 				<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 					<con:interface>EntityXDRAsyncRequest_Binding</con:interface>
 					<con:operation>ProvideAndRegisterDocumentSet-bAsyncRequest</con:operation>
-					<con:request incomingWss="" name="Doc Submission Deferred Req" outgoingWss="" useWsAddressing="true" wssPasswordType="">
+					<con:request incomingWss="" name="Doc Submission Deferred Req" outgoingWss="" useWsAddressing="true" wssPasswordType="" id="f1e984ee-3bba-41d4-8951-c18464470ceb">
 						<con:settings>
 							<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 				</con:settings>
@@ -40699,9 +40699,9 @@ if(passthruValue != null){
       </urn:RespondingGateway_ProvideAndRegisterDocumentSetRequest>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-				<con:assertion type="SOAP Response"/>
-				<con:assertion type="SOAP Fault Assertion"/>
-				<con:assertion name="Match content of @status" type="XPath Match">
+				<con:assertion type="SOAP Response" id="9335f782-5d70-4af2-81c8-a2f8b80a15d9"/>
+				<con:assertion type="SOAP Fault Assertion" id="d0a6e84b-66fd-4024-95ee-1f078a652133"/>
+				<con:assertion name="Match content of @status" type="XPath Match" id="ad7c2190-a9dc-408d-b720-7b66d461ee58">
 					<con:configuration>
 						<path>declare namespace ns10='http://www.hhs.gov/healthit/nhin';
 							//ns10:XDRAcknowledgement[1]/ns10:message[1]/@status</path>
@@ -40710,12 +40710,12 @@ if(passthruValue != null){
 						<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 					</con:configuration>
 				</con:assertion>
-				<con:assertion name="Schema Compliance" type="Schema Compliance">
+				<con:assertion name="Schema Compliance" type="Schema Compliance" id="7ed0b66a-acb8-448f-a56e-3f3cc4a6f896">
 					<con:configuration>
 						<definition/>
 					</con:configuration>
 				</con:assertion>
-				<con:assertion type="GroovyScriptAssertion" name="Verify RelatesTo"><con:configuration><scriptText>import com.eviware.soapui.support.XmlHolder;
+				<con:assertion type="GroovyScriptAssertion" name="Verify RelatesTo" id="2906e2be-69aa-4b24-a9ef-b4b3bcd421c4"><con:configuration><scriptText>import com.eviware.soapui.support.XmlHolder;
 def request = new XmlHolder(messageExchange.requestContentAsXml);
 def response = new XmlHolder(messageExchange.responseContentAsXml);
 request.namespaces["add"] = "http://www.w3.org/2005/08/addressing";
@@ -40769,7 +40769,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="dc3b8bf1-91e1-4aeb-b865-8b5c6b388a4f" keepSession="false" maxResults="0" name="Document Submission Deferred Resp" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="990fda3d-7211-46ec-b011-4f5bf9d26b07"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "docsubmission.inboundDocSubmissionResponse";
@@ -40792,12 +40792,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Doc Submission Deferred Resp" type="request">
+<con:testStep name="Doc Submission Deferred Resp" type="request" id="e0a05179-b722-4d4a-8b4e-1f32de36cbd1">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>EntityXDRAsyncResponse_Binding</con:interface>
 			<con:operation>ProvideAndRegisterDocumentSet-bAsyncResponse</con:operation>
-			<con:request name="Doc Submission Deferred Resp">
+			<con:request name="Doc Submission Deferred Resp" id="d352cb36-ceb5-496d-ae37-8d3e570fabd4">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 		</con:settings>
@@ -41112,12 +41112,12 @@ if(passthruValue != null){
       </urn:RespondingGateway_ProvideAndRegisterDocumentSetResponseRequest>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-		<con:assertion type="SOAP Response"/>
-		<con:assertion type="Schema Compliance">
+		<con:assertion type="SOAP Response" id="3cab1b4f-5ce4-4671-99c7-b27035d3456b"/>
+		<con:assertion type="Schema Compliance" id="1404ea18-645a-46cc-a35d-5846a3a18959">
 			<con:configuration/>
 		</con:assertion>
-		<con:assertion type="SOAP Fault Assertion"/>
-		<con:assertion type="XPath Match" name="Match content of @status">
+		<con:assertion type="SOAP Fault Assertion" id="df2a7807-6892-43b0-8820-6713ee1d2b1e"/>
+		<con:assertion type="XPath Match" name="Match content of @status" id="2d25164c-d752-4f2f-bf00-980ded9adb07">
 			<con:configuration><path>declare namespace ns10='http://www.hhs.gov/healthit/nhin';
 //ns10:XDRAcknowledgement[1]/ns10:message[1]/@status</path><content>urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:ResponseAccepted</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration>
 		</con:assertion>
@@ -41155,7 +41155,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 </con:testCase>
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="fa57d83c-8474-4625-9186-b3902fdda4ab" keepSession="false" maxResults="0" name="Document Submission" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="a735e7ad-ba9f-4e12-9308-2cb2cd51be3d"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "docsubmission.inboundDocSubmission";
@@ -41178,12 +41178,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Doc Submission" type="request">
+<con:testStep name="Doc Submission" type="request" id="57ea48bd-39c9-44df-a7a9-19807ad0d7f1">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>EntityXDR_Binding</con:interface>
 			<con:operation>ProvideAndRegisterDocumentSet-b</con:operation>
-			<con:request incomingWss="" name="Doc Submission" outgoingWss="" wssPasswordType="">
+			<con:request incomingWss="" name="Doc Submission" outgoingWss="" wssPasswordType="" id="06fefbd7-bd63-4dc8-86d8-ed451a79f4d8">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 		</con:settings>
@@ -41631,9 +41631,9 @@ if(passthruValue != null){
       </urn:RespondingGateway_ProvideAndRegisterDocumentSetRequest>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-		<con:assertion type="SOAP Response"/>
-		<con:assertion type="SOAP Fault Assertion"/>
-		<con:assertion type="XPath Match">
+		<con:assertion type="SOAP Response" id="a2ce6d61-dd19-47d8-a44e-f115a96f4ed6"/>
+		<con:assertion type="SOAP Fault Assertion" id="6e840f4e-6e55-4f0b-a742-66a477829ae5"/>
+		<con:assertion type="XPath Match" id="ff87fd4c-d1ee-4061-a22f-1f5ba5301a70">
 			<con:configuration>
 				<path>declare namespace ns11='urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0';
 							//ns11:RegistryResponse[1]/@status</path>
@@ -41642,7 +41642,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Schema Compliance" type="Schema Compliance">
+		<con:assertion name="Schema Compliance" type="Schema Compliance" id="7cb6f8f4-2785-456c-88ad-8feef15f9ceb">
 			<con:configuration>
 				<definition/>
 			</con:configuration>
@@ -41682,7 +41682,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 </con:testCase>
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="62ebf4c2-b4e0-4465-b715-df30e72f945a" keepSession="false" maxResults="0" name="Patient Discovery Deferred Req" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="76779b60-f211-4098-b1c6-6f3b8dd1097a"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "patientDiscovery.inboundPatientDiscoveryRequest";
@@ -41705,12 +41705,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Patient Discovery Deferred Req" type="request">
+<con:testStep name="Patient Discovery Deferred Req" type="request" id="51440c9e-ef07-4807-b9ed-d27774fc2f33">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>EntityPatientDiscoveryAsyncReqBindingSoap</con:interface>
 			<con:operation>ProcessPatientDiscoveryAsyncReq</con:operation>
-			<con:request name="Patient Discovery Deferred Req" useWsAddressing="true">
+			<con:request name="Patient Discovery Deferred Req" useWsAddressing="true" id="b1889ccd-0a86-4977-b5fe-1d060b9b16f5">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 		</con:settings>
@@ -41976,9 +41976,9 @@ if(passthruValue != null){
       </urn:RespondingGateway_PRPA_IN201305UV02Request>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-		<con:assertion type="SOAP Response"/>
-		<con:assertion type="SOAP Fault Assertion"/>
-		<con:assertion name="Verify Receiver" type="XPath Match">
+		<con:assertion type="SOAP Response" id="7dc6ef93-b4a8-4af0-b325-6b28c2255212"/>
+		<con:assertion type="SOAP Fault Assertion" id="e3a9fc3a-f1e3-412a-8dbf-7376b02b9b6f"/>
+		<con:assertion name="Verify Receiver" type="XPath Match" id="f554425b-65af-47bc-961b-a5585d627089">
 			<con:configuration>
 				<path>declare namespace ns3='urn:hl7-org:v3';
 							//ns3:MCCI_IN000002UV01[1]/ns3:receiver[1]/ns3:device[1]/ns3:asAgent[1]/ns3:representedOrganization[1]/ns3:id[1]/@root</path>
@@ -41987,7 +41987,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Verify Sender" type="XPath Match">
+		<con:assertion name="Verify Sender" type="XPath Match" id="14a1839f-2df2-4ee8-819a-9f5e896ff4c2">
 			<con:configuration>
 				<path>declare namespace ns3='urn:hl7-org:v3';
 							//ns3:MCCI_IN000002UV01[1]/ns3:sender[1]/ns3:device[1]/ns3:asAgent[1]/ns3:representedOrganization[1]/ns3:id[1]/@root</path>
@@ -41996,7 +41996,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Verify Message" type="XPath Match">
+		<con:assertion name="Verify Message" type="XPath Match" id="47002723-06a5-413d-a8b6-3e18b619c160">
 			<con:configuration>
 				<path>declare namespace ns3='urn:hl7-org:v3';
 							//ns3:MCCI_IN000002UV01[1]/ns3:acknowledgement[1]/ns3:acknowledgementDetail[1]/ns3:text[1]/text()</path>
@@ -42006,12 +42006,12 @@ if(passthruValue != null){
 			</con:configuration>
 		</con:assertion>
 		
-		<con:assertion name="Schema Compliance" type="Schema Compliance">
+		<con:assertion name="Schema Compliance" type="Schema Compliance" id="2a63ebd3-5954-4853-a4ba-fcf64cf3418c">
 			<con:configuration>
 				<definition/>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion type="GroovyScriptAssertion" name="Verify RelatesTo"><con:configuration><scriptText>import com.eviware.soapui.support.XmlHolder;
+		<con:assertion type="GroovyScriptAssertion" name="Verify RelatesTo" id="48cd3e48-b0a2-41be-b8ce-f6daeaeb5852"><con:configuration><scriptText>import com.eviware.soapui.support.XmlHolder;
 def request = new XmlHolder(messageExchange.requestContentAsXml);
 def response = new XmlHolder(messageExchange.responseContentAsXml);
 request.namespaces["add"] = "http://www.w3.org/2005/08/addressing";
@@ -42051,7 +42051,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 </con:testCase>
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="e98901ca-10ae-4725-ac64-5b2bd8da2b3e" keepSession="false" maxResults="0" name="Patient Discovery Deferred Resp" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="3190a723-35a9-4ef3-a3b9-708a2f628fd2"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "patientDiscovery.inboundPatientDiscoveryResponse";
@@ -42074,12 +42074,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Patient Discovery Deferred Resp" type="request">
+<con:testStep name="Patient Discovery Deferred Resp" type="request" id="4806a719-a45d-4bcc-91e5-cb47bc85a88f">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>EntityPatientDiscoveryAsyncRespBindingSoap</con:interface>
 			<con:operation>ProcessPatientDiscoveryAsyncResp</con:operation>
-			<con:request name="Patient Discovery Deferred Resp">
+			<con:request name="Patient Discovery Deferred Resp" id="5dfa9275-3051-4dfa-bf96-a3515965604c">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 		</con:settings>
@@ -42387,9 +42387,9 @@ if(passthruValue != null){
       </urn:RespondingGateway_PRPA_IN201306UV02Request>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-		<con:assertion type="SOAP Response"/>
-		<con:assertion type="SOAP Fault Assertion"/>
-		<con:assertion name="Match content of [typeCode/@code]" type="XPath Match">
+		<con:assertion type="SOAP Response" id="3cfb912c-eab5-4b3f-ad77-1db0fef8e69b"/>
+		<con:assertion type="SOAP Fault Assertion" id="214df222-9f30-4bc1-89cb-3fd3b61441fe"/>
+		<con:assertion name="Match content of [typeCode/@code]" type="XPath Match" id="039f2a8c-5175-4c04-b196-9419302f2d07">
 			<con:configuration>
 				<path>declare namespace ns2='urn:hl7-org:v3';//ns2:MCCI_IN000002UV01[1]/ns2:acknowledgement[1]/ns2:typeCode[1]/@code</path>
 				<content>CA</content>
@@ -42398,7 +42398,7 @@ if(passthruValue != null){
 			</con:configuration>
 		</con:assertion>
 
-		<con:assertion name="Match content of [acknowledgementDetail/text/text()]" type="XPath Match">
+		<con:assertion name="Match content of [acknowledgementDetail/text/text()]" type="XPath Match" id="b091d324-4e4f-4cf2-bed6-85971ea5d264">
 			<con:configuration>
 				<path>declare namespace ns2='urn:hl7-org:v3';//ns2:MCCI_IN000002UV01[1]/ns2:acknowledgement[1]/ns2:acknowledgementDetail[1]/ns2:text/text()</path>
 				<content>Success</content>
@@ -42406,7 +42406,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Schema Compliance" type="Schema Compliance">
+		<con:assertion name="Schema Compliance" type="Schema Compliance" id="8179cd49-bace-4522-98b4-322cfb516fe9">
 			<con:configuration>
 				<definition/>
 			</con:configuration>
@@ -42446,7 +42446,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 </con:testCase>
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="fe917e9c-4e89-4ce8-9828-05b542fb1be0" keepSession="false" maxResults="0" name="Patient Discovery" searchProperties="true">
 	<con:settings/>
-	<con:testStep name="clear correlations table" type="groovy">
+	<con:testStep name="clear correlations table" type="groovy" id="57932e5d-748e-4cbb-be5f-184044eb8d89">
 		<con:settings/>
 		<con:config>
 			<script>context.withSql('PatientCorrelationDB') { sql -> 
@@ -42454,7 +42454,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 			}</script>
 	</con:config>
 </con:testStep>
-<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+<con:testStep type="groovy" name="Check Passthru" id="10d7f366-264d-48a7-becf-ab22f720de27"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "patientDiscovery.inboundPatientDiscovery";
@@ -42491,7 +42491,7 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 	testRunner.gotoStepByName("Patient Discovery");
 }
-</script></con:config></con:testStep><con:testStep type="groovy" name="Set Up PassThru"><con:settings/><con:config><script>log.info "Setting Patient Discovery Adapter to unsecured";
+</script></con:config></con:testStep><con:testStep type="groovy" name="Set Up PassThru" id="18a680ad-d01f-442f-9689-35816b3292df"><con:settings/><con:config><script>log.info "Setting Patient Discovery Adapter to unsecured";
 def dir = context.findProperty('GatewayPropDir');
 nhinc.FileUtils.backupFile(dir, "PatientDiscoveryProxyConfig.xml", log);
 def alias = 'adapterpatientdiscovery'
@@ -42521,12 +42521,12 @@ nhinc.FileUtils.createOrUpdateConnection("internalConnectionInfo.xml", dir, "1.1
 	"adapterpatientdiscovery", "http://localhost:1720/MockPDAdapter", "2.0",
 	log);
 	</script></con:config></con:testStep>
-<con:testStep name="Patient Discovery" type="request">
+<con:testStep name="Patient Discovery" type="request" id="03bfe61a-ea1b-4a91-8239-7d6a770336ec">
 	<con:settings/>
 	<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:interface>EntityPatientDiscoveryBindingSoap</con:interface>
 		<con:operation>RespondingGateway_PRPA_IN201305UV02</con:operation>
-		<con:request name="Patient Discovery">
+		<con:request name="Patient Discovery" id="e60a0b5c-c263-47da-ba58-80ee995c9bf1">
 			<con:settings>
 				<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 	</con:settings>
@@ -42784,14 +42784,14 @@ nhinc.FileUtils.createOrUpdateConnection("internalConnectionInfo.xml", dir, "1.1
       </urn:RespondingGateway_PRPA_IN201305UV02Request>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-	<con:assertion type="SOAP Response"/>
-	<con:assertion disabled="true" type="Schema Compliance">
+	<con:assertion type="SOAP Response" id="1197c954-ecb4-4a55-ac02-ed35e79667ce"/>
+	<con:assertion disabled="true" type="Schema Compliance" id="2098549d-ab1d-4688-80a4-8095870e1a61">
 		<con:configuration>
 			<definition/>
 		</con:configuration>
 	</con:assertion>
-	<con:assertion type="SOAP Fault Assertion"/>
-	<con:assertion name="Check for existance of [ns3:controlActProcess]" type="XPath Match">
+	<con:assertion type="SOAP Fault Assertion" id="1cff694d-23d2-41ae-bb67-0a527eea5f72"/>
+	<con:assertion name="Check for existance of [ns3:controlActProcess]" type="XPath Match" id="c7b95005-e4f2-4793-a5f9-30bcb15e9566">
 		<con:configuration>
 			<path>declare namespace ns3='urn:hl7-org:v3';
 				exists( //ns3:PRPA_IN201306UV02/ns3:controlActProcess)</path>
@@ -42800,7 +42800,7 @@ nhinc.FileUtils.createOrUpdateConnection("internalConnectionInfo.xml", dir, "1.1
 			<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 		</con:configuration>
 	</con:assertion>
-	<con:assertion name="Given Name XPath Match" type="XPath Match">
+	<con:assertion name="Given Name XPath Match" type="XPath Match" id="54901fee-d3ae-487e-885b-6a5a7e451ec1">
 		<con:configuration>
 			<path>declare namespace ns1='urn:hl7-org:v3';
 				//ns1:PRPA_IN201306UV02[1]/ns1:controlActProcess[1]/ns1:subject[1]/ns1:registrationEvent[1]/ns1:subject1[1]/ns1:patient[1]/ns1:patientPerson[1]/ns1:name[1]/ns1:given[1]</path>
@@ -42809,7 +42809,7 @@ nhinc.FileUtils.createOrUpdateConnection("internalConnectionInfo.xml", dir, "1.1
 			<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 		</con:configuration>
 	</con:assertion>
-	<con:assertion name="Family Name XPath Match" type="XPath Match">
+	<con:assertion name="Family Name XPath Match" type="XPath Match" id="cacce57c-8062-4237-85b0-f8226528a8c3">
 		<con:configuration>
 			<path>declare namespace ns1='urn:hl7-org:v3';
 				//ns1:PRPA_IN201306UV02[1]/ns1:controlActProcess[1]/ns1:subject[1]/ns1:registrationEvent[1]/ns1:subject1[1]/ns1:patient[1]/ns1:patientPerson[1]/ns1:name[1]/ns1:family[1]</path>
@@ -42825,12 +42825,12 @@ nhinc.FileUtils.createOrUpdateConnection("internalConnectionInfo.xml", dir, "1.1
 </con:request>
 </con:config>
 </con:testStep>
-<con:testStep type="groovy" name="Skip Mock"><con:settings/><con:config><script>def runMock = context.findProperty("PassThruOn").toBoolean();
+<con:testStep type="groovy" name="Skip Mock" id="58985603-cc82-44ac-b80b-99be24b31475"><con:settings/><con:config><script>def runMock = context.findProperty("PassThruOn").toBoolean();
 
 if(!runMock){
 	testRunner.gotoStepByName("count correlations");
 }
-</script></con:config></con:testStep><con:testStep type="mockresponse" name="Mock Response"><con:settings/><con:config xsi:type="con:MockResponseStep" startStep="Set Up PassThru" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>AdapterPatientDiscoveryBindingSoap</con:interface><con:operation>RespondingGateway_PRPA_IN201305UV02</con:operation><con:path>/MockPDAdapter</con:path><con:port>1720</con:port><con:response><con:settings/><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:hl7-org:v3">
+</script></con:config></con:testStep><con:testStep type="mockresponse" name="Mock Response" id="e98870f6-7580-4acc-9baf-0774fc86461e"><con:settings/><con:config xsi:type="con:MockResponseStep" startStep="Set Up PassThru" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>AdapterPatientDiscoveryBindingSoap</con:interface><con:operation>RespondingGateway_PRPA_IN201305UV02</con:operation><con:path>/MockPDAdapter</con:path><con:port>1720</con:port><con:response id="86b3524e-446c-44a6-8404-2856970a181b"><con:settings/><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:hl7-org:v3">
    <soap:Header/>
    <soap:Body>
    <PRPA_IN201306UV02 xmlns="urn:hl7-org:v3" xmlns:ns2="urn:gov:hhs:fha:nhinc:common:nhinccommon" xmlns:ns3="http://www.w3.org/2005/08/addressing" xmlns:ns4="urn:gov:hhs:fha:nhinc:common:patientcorrelationfacade" ITSVersion="XML_1.0">
@@ -42944,7 +42944,7 @@ if(!runMock){
              </controlActProcess>
      </PRPA_IN201306UV02>
    </soap:Body>
-</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response></con:config></con:testStep><con:testStep name="count correlations" type="groovy">
+</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response></con:config></con:testStep><con:testStep name="count correlations" type="groovy" id="4318aa28-19d0-4079-a232-e1d73366614d">
 	<con:settings/>
 	<con:config><script>def pdCorrelations = 1;
 
@@ -42988,7 +42988,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="801f7f15-5164-41c3-907f-9c0a9db42262" keepSession="false" maxResults="0" name="Document Query" searchProperties="true">
 	<con:settings/>
 
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="289e13dd-b02f-4027-b451-2b89deb8680b"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "docquery.30.inboundDocQuery";
@@ -43013,11 +43013,11 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="update config" type="groovy">
+<con:testStep name="update config" type="groovy" id="617ac591-7bd9-40a1-9f7b-9825c68fa759">
 		<con:settings/>
 		<con:config><script>nhinc.FileUtils.updateProperty(context.findProperty('GatewayPropDir'), "gateway.properties", "documentQueryQuerySelf", "false", log);</script></con:config>
 </con:testStep>
-<con:testStep name="Clear Correlation Table &amp; Add Correlation" type="groovy">
+<con:testStep name="Clear Correlation Table &amp; Add Correlation" type="groovy" id="7e9a6c4b-fbde-4a22-8faa-edc2582a4688">
 	<con:settings/>
 	<con:config>
 		<script>context.withSql('PatientCorrelationDB') { sql -> 
@@ -43037,7 +43037,7 @@ if(passthruValue != null){
 </con:testStep>
 
 
-<con:testStep name="Clear AA Mapping Table &amp; Add Mapping" type="groovy">
+<con:testStep name="Clear AA Mapping Table &amp; Add Mapping" type="groovy" id="41a72eba-2860-4ace-9839-4f2b641cf4bc">
 	<con:settings/>
 	<con:config>
 		<script>context.withSql('AAMappingDB') { sql -> 
@@ -43052,12 +43052,12 @@ if(passthruValue != null){
 		sql.executeUpdate(insertSql, [remoteAA, remoteHCID])
 		}</script>
 </con:config>
-</con:testStep><con:testStep name="Document Query" type="request">
+</con:testStep><con:testStep name="Document Query" type="request" id="479e592d-05c1-46f8-b132-1565e8bd0355">
 	<con:settings/>
 	<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:interface>EntityDocQueryBindingSoap</con:interface>
 		<con:operation>RespondingGateway_CrossGatewayQuery</con:operation>
-		<con:request name="Document Query">
+		<con:request name="Document Query" id="dfadb633-9506-4c61-82e1-a5e8b7b8bc6f">
 			<con:settings>
 				<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 	</con:settings>
@@ -43315,12 +43315,12 @@ if(passthruValue != null){
       </urn:RespondingGateway_CrossGatewayQueryRequest>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-	<con:assertion type="SOAP Response"/>
-	<con:assertion type="Schema Compliance">
+	<con:assertion type="SOAP Response" id="a792fa0b-9eea-4a60-a916-a51c15bdf661"/>
+	<con:assertion type="Schema Compliance" id="bdc0bb65-9dd6-4666-944d-91d741543f6b">
 		<con:configuration/>
 	</con:assertion>
-	<con:assertion type="SOAP Fault Assertion"/>
-	<con:assertion name="DocID Match" type="GroovyScriptAssertion">
+	<con:assertion type="SOAP Fault Assertion" id="bb90fdfc-2d8e-4294-81e1-379777b541a8"/>
+	<con:assertion name="DocID Match" type="GroovyScriptAssertion" id="dd0cc62c-1ef0-4a28-9b58-7288d8fb859d">
 		<con:configuration><scriptText>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context );
 				def holder = groovyUtils.getXmlHolder( messageExchange.responseContent );
 				holder.namespaces["ns1"] = "urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0";
@@ -43377,7 +43377,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 </con:testCase>
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="08c7914d-69d5-40a5-951d-5774a8836aad" keepSession="false" maxResults="0" name="Document Retrieve" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="96a93bae-c60d-4d01-acc5-ad5560f52922"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "docretrieve.30.inbound";
@@ -43400,12 +43400,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Document Retrieve" type="request">
+<con:testStep name="Document Retrieve" type="request" id="25ef8cc6-3734-473b-b6cd-9165bb4b0f3b">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>EntityDocRetrieveBindingSoap</con:interface>
 			<con:operation>RespondingGateway_CrossGatewayRetrieve</con:operation>
-			<con:request incomingWss="" name="Document Retrieve" outgoingWss="" wssPasswordType="">
+			<con:request incomingWss="" name="Document Retrieve" outgoingWss="" wssPasswordType="" id="050e88e0-2585-4b29-95c7-9a3bf946bcb5">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@expand-mtom-attachments">true</con:setting>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
@@ -43646,14 +43646,14 @@ if(passthruValue != null){
       </urn:RespondingGateway_CrossGatewayRetrieveRequest>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-		<con:assertion type="SOAP Response"/>
-		<con:assertion type="SOAP Fault Assertion"/>
-		<con:assertion disabled="true" type="Schema Compliance">
+		<con:assertion type="SOAP Response" id="c3b8209b-f755-4806-a679-49c7779e2d17"/>
+		<con:assertion type="SOAP Fault Assertion" id="76966311-a9e1-436c-b00b-447b1d9ce814"/>
+		<con:assertion disabled="true" type="Schema Compliance" id="09fdb931-3a57-434f-92a3-40e4b40f4aaa">
 			<con:configuration>
 				<definition/>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Doc Repository ID" type="XPath Match">
+		<con:assertion name="Doc Repository ID" type="XPath Match" id="d8f69fd0-0386-40ca-8436-863b4a0ce6fe">
 			<con:configuration>
 				<path>declare namespace ns5='urn:ihe:iti:xds-b:2007';
 					//ns5:RetrieveDocumentSetResponse[1]/ns5:DocumentResponse[1]/ns5:RepositoryUniqueId[1]</path>
@@ -43662,7 +43662,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Doc ID" type="XPath Match">
+		<con:assertion name="Doc ID" type="XPath Match" id="ed8e94bd-3ae2-4f8e-9ab9-4484f572c374">
 			<con:configuration>
 				<path>declare namespace ns5='urn:ihe:iti:xds-b:2007';
 					//ns5:RetrieveDocumentSetResponse[1]/ns5:DocumentResponse[1]/ns5:DocumentUniqueId[1]</path>
@@ -43671,7 +43671,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Document Data" type="GroovyScriptAssertion">
+		<con:assertion name="Document Data" type="GroovyScriptAssertion" id="57db0754-7bdb-48d7-9309-7c4ec4dd65eb">
 			<con:configuration>
 				<scriptText>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
 					def holder = groovyUtils.getXmlHolder( messageExchange.responseContent )
@@ -43723,7 +43723,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="61dc50b8-2600-4cdf-899e-d4f6079d9602" keepSession="false" maxResults="0" name="Admin Distribution" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="bed2e1c6-681a-468f-972e-90d4739e0df4"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "admindist.inboundAdminDist";
@@ -43746,12 +43746,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Admin Distribution" type="request">
+<con:testStep name="Admin Distribution" type="request" id="a3c435bf-4475-4739-8789-7b3c28c02ca8">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>AdministrativeDistribution_Binding_Soap12_g1</con:interface>
 			<con:operation>SendAlertMessage</con:operation>
-			<con:request name="Admin Distribution">
+			<con:request name="Admin Distribution" id="ee60e594-785d-4209-8068-d35802804837">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 		</con:settings>
@@ -44097,7 +44097,7 @@ if(passthruValue != null){
 		<con:wsrmConfig version="1.2"/>
 	</con:request>
 </con:config>
-</con:testStep><con:testStep type="delay" name="Delay"><con:settings/><con:config><delay>10000</delay></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty('GatewayPropDir'), log);
+</con:testStep><con:testStep type="delay" name="Delay" id="a04ed297-b56a-41a8-8bb1-9a98ccf33421"><con:settings/><con:config><delay>10000</delay></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty('GatewayPropDir'), log);
 nhinc.FileUtils.setG1ConnectionInfo(context.expand(context.testCase.testSuite.project.resourceRoot), context.findProperty('GatewayPropDir'), log);</con:setupScript>
 <con:tearDownScript>def dir = context.findProperty('GatewayPropDir');
 nhinc.FileUtils.restoreConfiguration(dir, log);
@@ -44128,12 +44128,12 @@ if(context.findProperty("PassThruOn").toBoolean()){
 <con:tearDownScript/>
 <con:reportParameters/>
 </con:testSuite>
-<con:testSuite name="g0">
+<con:testSuite name="g0" id="ee677e59-d8b9-49cb-b4b2-3fe0d9162585">
 	<con:settings/>
 	<con:runType>SEQUENTIAL</con:runType>
 	<con:testCase failOnError="true" failTestCaseOnErrors="true" id="0c38fd36-469a-44e4-829a-93b26dce8709" keepSession="false" maxResults="0" name="Document Submission Deferred Req" searchProperties="true">
 		<con:settings/>
-		<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+		<con:testStep type="groovy" name="Check Passthru" id="deab1c2b-986c-4da3-963c-9b1573c18a57"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "docsubmission.inboundDocSubmissionRequest";
@@ -44156,12 +44156,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Doc Submission Deferred Req" type="request">
+<con:testStep name="Doc Submission Deferred Req" type="request" id="4557f2a2-ccbb-4105-9722-8f5a0ba9f6ae">
 			<con:settings/>
 			<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 				<con:interface>EntityXDRAsyncRequest_Binding</con:interface>
 				<con:operation>ProvideAndRegisterDocumentSet-bAsyncRequest</con:operation>
-				<con:request incomingWss="" name="Doc Submission Deferred Req" outgoingWss="" useWsAddressing="true" wssPasswordType="">
+				<con:request incomingWss="" name="Doc Submission Deferred Req" outgoingWss="" useWsAddressing="true" wssPasswordType="" id="85111838-b859-4d62-95b8-563de22b2764">
 					<con:settings>
 						<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 			</con:settings>
@@ -44609,9 +44609,9 @@ if(passthruValue != null){
       </urn:RespondingGateway_ProvideAndRegisterDocumentSetRequest>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-			<con:assertion type="SOAP Response"/>
-			<con:assertion type="SOAP Fault Assertion"/>
-			<con:assertion name="Match content of @status" type="XPath Match">
+			<con:assertion type="SOAP Response" id="0850048f-0121-418a-a927-f243b658abd8"/>
+			<con:assertion type="SOAP Fault Assertion" id="396217d8-1bc6-47b4-bd0b-b9d327879b56"/>
+			<con:assertion name="Match content of @status" type="XPath Match" id="0ecf61f3-61dc-402c-b8be-50282ba332fe">
 				<con:configuration>
 					<path>declare namespace ns10='http://www.hhs.gov/healthit/nhin';
 							//ns10:XDRAcknowledgement[1]/ns10:message[1]/@status</path>
@@ -44621,10 +44621,10 @@ if(passthruValue != null){
 				</con:configuration>
 			</con:assertion>
 			
-			<con:assertion type="Schema Compliance">
+			<con:assertion type="Schema Compliance" id="22e978dc-d076-4495-973f-f0d65dcb2b08">
 				<con:configuration/>
 			</con:assertion>
-			<con:assertion type="GroovyScriptAssertion" name="Script Assertion"><con:configuration><scriptText>import com.eviware.soapui.support.XmlHolder;
+			<con:assertion type="GroovyScriptAssertion" name="Script Assertion" id="d6f8fdfc-5409-4224-9eac-dd957bc1b5c9"><con:configuration><scriptText>import com.eviware.soapui.support.XmlHolder;
 def request = new XmlHolder(messageExchange.requestContentAsXml);
 def response = new XmlHolder(messageExchange.responseContentAsXml);
 request.namespaces["add"] = "http://www.w3.org/2005/08/addressing";
@@ -44664,7 +44664,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 </con:testCase>
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="2622180a-2230-4df7-8f36-e1c9ad29bba8" keepSession="false" maxResults="0" name="Document Submission Deferred Resp" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="b363c9a7-4407-43a8-a697-8bdc38b43cec"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "docsubmission.inboundDocSubmissionResponse";
@@ -44687,12 +44687,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Doc Submission Deferred Resp" type="request">
+<con:testStep name="Doc Submission Deferred Resp" type="request" id="afeeb612-d24d-4b07-9bcf-a6aabcec8934">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>EntityXDRAsyncResponse_Binding</con:interface>
 			<con:operation>ProvideAndRegisterDocumentSet-bAsyncResponse</con:operation>
-			<con:request name="Doc Submission Deferred Resp">
+			<con:request name="Doc Submission Deferred Resp" id="64347ab4-5a60-46d3-9888-06a935bef05f">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 		</con:settings>
@@ -45007,12 +45007,12 @@ if(passthruValue != null){
       </urn:RespondingGateway_ProvideAndRegisterDocumentSetResponseRequest>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-		<con:assertion type="SOAP Response"/>
-		<con:assertion type="Schema Compliance">
+		<con:assertion type="SOAP Response" id="f427066b-c334-4c5b-bca8-0736e582c9bd"/>
+		<con:assertion type="Schema Compliance" id="fcda576e-6b8b-46c8-863d-fb4533208d54">
 			<con:configuration/>
 		</con:assertion>
-		<con:assertion type="SOAP Fault Assertion"/>
-		<con:assertion type="XPath Match" name="Match content of @status">
+		<con:assertion type="SOAP Fault Assertion" id="7b038004-7b81-4af4-9c3c-59fc2e50dd1f"/>
+		<con:assertion type="XPath Match" name="Match content of @status" id="ac963e45-8462-4fa1-8e7c-d4123e332c8d">
 			<con:configuration>
 				<path>declare namespace ns10='http://www.hhs.gov/healthit/nhin';
 //ns10:XDRAcknowledgement[1]/ns10:message[1]/@status</path>
@@ -45055,7 +45055,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 </con:testCase>
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="6d469896-2c35-4890-ae94-1750cd08214e" keepSession="false" maxResults="0" name="Document Submission" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="5ac9e9fa-3ace-473a-90f6-353a82d3e378"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "docsubmission.inboundDocSubmission";
@@ -45078,12 +45078,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Doc Submission" type="request">
+<con:testStep name="Doc Submission" type="request" id="a0bd707f-9f1a-466f-8fb3-cd96512173a0">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>EntityXDR_Binding</con:interface>
 			<con:operation>ProvideAndRegisterDocumentSet-b</con:operation>
-			<con:request incomingWss="" name="Doc Submission" outgoingWss="" wssPasswordType="">
+			<con:request incomingWss="" name="Doc Submission" outgoingWss="" wssPasswordType="" id="f5236a13-6376-4150-9ddf-6ed561d73c5a">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 		</con:settings>
@@ -45530,9 +45530,9 @@ if(passthruValue != null){
       </urn:RespondingGateway_ProvideAndRegisterDocumentSetRequest>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-		<con:assertion type="SOAP Response"/>
-		<con:assertion type="SOAP Fault Assertion"/>
-		<con:assertion type="XPath Match">
+		<con:assertion type="SOAP Response" id="b08e4cf5-1f1f-4a81-bb5a-13ba92cdde79"/>
+		<con:assertion type="SOAP Fault Assertion" id="e3dedd06-8dfa-48f7-86c8-428c6b8e8982"/>
+		<con:assertion type="XPath Match" id="3c73b378-1a72-44ee-bf4b-ad99fa248f9a">
 			<con:configuration>
 				<path>declare namespace ns11='urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0';
 							//ns11:RegistryResponse[1]/@status</path>
@@ -45541,7 +45541,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Schema Compliance" type="Schema Compliance">
+		<con:assertion name="Schema Compliance" type="Schema Compliance" id="e2b73a89-53e5-43fe-8844-ecf686239e65">
 			<con:configuration>
 				<definition/>
 			</con:configuration>
@@ -45585,7 +45585,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="6ab33784-c36e-403f-82f4-b0722a9fc4fc" keepSession="false" maxResults="0" name="Patient Discovery Deferred Req" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="3fadd1aa-d1bc-4436-a0bf-c62c7976a80b"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "patientDiscovery.inboundPatientDiscoveryRequest";
@@ -45608,12 +45608,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Patient Discovery Deferred Req" type="request">
+<con:testStep name="Patient Discovery Deferred Req" type="request" id="6b0581b3-8f05-40ba-b047-eecda4e87b9e">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>EntityPatientDiscoveryAsyncReqBindingSoap</con:interface>
 			<con:operation>ProcessPatientDiscoveryAsyncReq</con:operation>
-			<con:request name="Patient Discovery Deferred Req" useWsAddressing="true">
+			<con:request name="Patient Discovery Deferred Req" useWsAddressing="true" id="11e9aa1d-c9bf-4a59-a616-927ec8d63cc4">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 		</con:settings>
@@ -45880,9 +45880,9 @@ if(passthruValue != null){
       </urn:RespondingGateway_PRPA_IN201305UV02Request>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-		<con:assertion type="SOAP Response"/>
-		<con:assertion type="SOAP Fault Assertion"/>
-		<con:assertion name="Verify Receiver" type="XPath Match">
+		<con:assertion type="SOAP Response" id="4f460e7f-f77d-4bca-9f8a-b70d79e5da76"/>
+		<con:assertion type="SOAP Fault Assertion" id="11687802-a46a-4a28-8417-a691a7796846"/>
+		<con:assertion name="Verify Receiver" type="XPath Match" id="ed88aaa0-9c9d-463a-8123-9a37419c4870">
 			<con:configuration>
 				<path>declare namespace ns3='urn:hl7-org:v3';
 							//ns3:MCCI_IN000002UV01[1]/ns3:receiver[1]/ns3:device[1]/ns3:asAgent[1]/ns3:representedOrganization[1]/ns3:id[1]/@root</path>
@@ -45891,7 +45891,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Verify Sender" type="XPath Match">
+		<con:assertion name="Verify Sender" type="XPath Match" id="e7293b9a-ec6c-423d-92d9-08189d8c1d5b">
 			<con:configuration>
 				<path>declare namespace ns3='urn:hl7-org:v3';
 							//ns3:MCCI_IN000002UV01[1]/ns3:sender[1]/ns3:device[1]/ns3:asAgent[1]/ns3:representedOrganization[1]/ns3:id[1]/@root</path>
@@ -45900,7 +45900,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Verify Message" type="XPath Match">
+		<con:assertion name="Verify Message" type="XPath Match" id="26777eaf-3b11-41ee-8deb-f812f80ec88d">
 			<con:configuration>
 				<path>declare namespace ns3='urn:hl7-org:v3';
 							//ns3:MCCI_IN000002UV01[1]/ns3:acknowledgement[1]/ns3:acknowledgementDetail[1]/ns3:text[1]/text()</path>
@@ -45910,12 +45910,12 @@ if(passthruValue != null){
 			</con:configuration>
 		</con:assertion>
 		
-		<con:assertion name="Schema Compliance" type="Schema Compliance">
+		<con:assertion name="Schema Compliance" type="Schema Compliance" id="ef9f6382-f297-41bb-a606-1c5b0cb2b892">
 			<con:configuration>
 				<definition/>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion type="GroovyScriptAssertion" name="Verify RelatesTo"><con:configuration><scriptText>import com.eviware.soapui.support.XmlHolder;
+		<con:assertion type="GroovyScriptAssertion" name="Verify RelatesTo" id="a9361d8e-8319-4746-bc43-2de443eb0b0a"><con:configuration><scriptText>import com.eviware.soapui.support.XmlHolder;
 def request = new XmlHolder(messageExchange.requestContentAsXml);
 def response = new XmlHolder(messageExchange.responseContentAsXml);
 request.namespaces["add"] = "http://www.w3.org/2005/08/addressing";
@@ -45938,7 +45938,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="a873f53b-f81b-4529-b866-ccad8f7a0e4a" keepSession="false" maxResults="0" name="Patient Discovery Deferred Resp" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="ec503019-3049-4639-80ab-45a5bcedc7d9"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "patientDiscovery.inboundPatientDiscoveryResponse";
@@ -45961,12 +45961,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Patient Discovery Deferred Resp" type="request">
+<con:testStep name="Patient Discovery Deferred Resp" type="request" id="85cac95e-a532-48f5-8b9b-cd71fbd8ed92">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>EntityPatientDiscoveryAsyncRespBindingSoap</con:interface>
 			<con:operation>ProcessPatientDiscoveryAsyncResp</con:operation>
-			<con:request name="Patient Discovery Deferred Resp">
+			<con:request name="Patient Discovery Deferred Resp" id="f9042646-3ca9-424a-a22c-b293a9204453">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 		</con:settings>
@@ -46274,9 +46274,9 @@ if(passthruValue != null){
       </urn:RespondingGateway_PRPA_IN201306UV02Request>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-		<con:assertion type="SOAP Response"/>
-		<con:assertion type="SOAP Fault Assertion"/>
-		<con:assertion name="Match content of [typeCode/@code]" type="XPath Match">
+		<con:assertion type="SOAP Response" id="42fc79bd-ba78-45ca-bfa2-116235b8f317"/>
+		<con:assertion type="SOAP Fault Assertion" id="2d3798f6-e3ff-4e78-b6d1-3209d1cc5e39"/>
+		<con:assertion name="Match content of [typeCode/@code]" type="XPath Match" id="9c706ccd-bb65-4541-b768-ea7bbaafc919">
 			<con:configuration>
 				<path>declare namespace ns2='urn:hl7-org:v3';//ns2:MCCI_IN000002UV01[1]/ns2:acknowledgement[1]/ns2:typeCode[1]/@code</path>
 				<content>CA</content>
@@ -46285,7 +46285,7 @@ if(passthruValue != null){
 			</con:configuration>
 		</con:assertion>
 
-		<con:assertion name="Match content of [acknowledgementDetail/text/text()]" type="XPath Match">
+		<con:assertion name="Match content of [acknowledgementDetail/text/text()]" type="XPath Match" id="cf3c0675-16d3-458d-86b4-579bfe1db3cd">
 			<con:configuration>
 				<path>declare namespace ns2='urn:hl7-org:v3';//ns2:MCCI_IN000002UV01[1]/ns2:acknowledgement[1]/ns2:acknowledgementDetail[1]/ns2:text/text()</path>
 				<content>Success</content>
@@ -46293,7 +46293,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Schema Compliance" type="Schema Compliance">
+		<con:assertion name="Schema Compliance" type="Schema Compliance" id="299cdaa7-0d8b-4df8-8800-2aec9b025f9a">
 			<con:configuration>
 				<definition/>
 			</con:configuration>
@@ -46315,7 +46315,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 </con:testCase>
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="db617e16-46c1-4f66-9e29-bac17e0a5a44" keepSession="false" maxResults="0" name="Patient Discovery" searchProperties="true">
 	<con:settings/>
-	<con:testStep name="clear correlations table" type="groovy">
+	<con:testStep name="clear correlations table" type="groovy" id="434da525-6ef3-4ff0-8337-f43581028f38">
 		<con:settings/>
 		<con:config>
 			<script>context.withSql('PatientCorrelationDB') { sql -> 
@@ -46323,7 +46323,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 			}</script>
 	</con:config>
 </con:testStep>
-<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+<con:testStep type="groovy" name="Check Passthru" id="6f5eaaee-21a7-4406-bc1a-ce625e45bb47"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "patientDiscovery.inboundPatientDiscovery";
@@ -46361,7 +46361,7 @@ if(passthruValue != null){
 	testRunner.gotoStepByName("Patient Discovery");
 }
 </script></con:config></con:testStep>
-<con:testStep type="groovy" name="Set Up PassThru"><con:settings/><con:config><script>log.info "Setting Patient Discovery Adapter to unsecured";
+<con:testStep type="groovy" name="Set Up PassThru" id="534cac4f-9c6e-4ea0-b2f6-a5b6313f1b20"><con:settings/><con:config><script>log.info "Setting Patient Discovery Adapter to unsecured";
 def dir = context.findProperty('GatewayPropDir');
 nhinc.FileUtils.backupFile(dir, "PatientDiscoveryProxyConfig.xml", log);
 def alias = 'adapterpatientdiscovery'
@@ -46391,12 +46391,12 @@ nhinc.FileUtils.createOrUpdateConnection("internalConnectionInfo.xml", dir, "1.1
 	"adapterpatientdiscovery", "http://localhost:1720/MockPDAdapter", "2.0",
 	log);
 	</script></con:config></con:testStep>
-<con:testStep name="Patient Discovery" type="request">
+<con:testStep name="Patient Discovery" type="request" id="bbf47d8e-3f20-4634-a1d4-6bddea8d69e5">
 	<con:settings/>
 	<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:interface>EntityPatientDiscoveryBindingSoap</con:interface>
 		<con:operation>RespondingGateway_PRPA_IN201305UV02</con:operation>
-		<con:request name="Patient Discovery">
+		<con:request name="Patient Discovery" id="752bad5d-268d-4134-9466-786d971a5be0">
 			<con:settings>
 				<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 	</con:settings>
@@ -46654,14 +46654,14 @@ nhinc.FileUtils.createOrUpdateConnection("internalConnectionInfo.xml", dir, "1.1
       </urn:RespondingGateway_PRPA_IN201305UV02Request>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-	<con:assertion type="SOAP Response"/>
-	<con:assertion disabled="true" type="Schema Compliance">
+	<con:assertion type="SOAP Response" id="56e54645-ae87-4685-9535-c870b3b468af"/>
+	<con:assertion disabled="true" type="Schema Compliance" id="559e518f-a05f-4d3d-9186-73ab595ffb2b">
 		<con:configuration>
 			<definition/>
 		</con:configuration>
 	</con:assertion>
-	<con:assertion type="SOAP Fault Assertion"/>
-	<con:assertion name="Check for existance of [ns3:controlActProcess]" type="XPath Match">
+	<con:assertion type="SOAP Fault Assertion" id="b3345c81-e2fb-454f-9f23-981af4cda766"/>
+	<con:assertion name="Check for existance of [ns3:controlActProcess]" type="XPath Match" id="6f4fcd63-1192-4c53-a811-66c43d61b875">
 		<con:configuration>
 			<path>declare namespace ns3='urn:hl7-org:v3';
 				exists( //ns3:PRPA_IN201306UV02/ns3:controlActProcess)</path>
@@ -46670,7 +46670,7 @@ nhinc.FileUtils.createOrUpdateConnection("internalConnectionInfo.xml", dir, "1.1
 			<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 		</con:configuration>
 	</con:assertion>
-	<con:assertion name="Given Name XPath Match" type="XPath Match">
+	<con:assertion name="Given Name XPath Match" type="XPath Match" id="30a6f77d-1698-46a1-a785-f6b88af6d47c">
 		<con:configuration>
 			<path>declare namespace ns1='urn:hl7-org:v3';
 				//ns1:PRPA_IN201306UV02[1]/ns1:controlActProcess[1]/ns1:subject[1]/ns1:registrationEvent[1]/ns1:subject1[1]/ns1:patient[1]/ns1:patientPerson[1]/ns1:name[1]/ns1:given[1]</path>
@@ -46679,7 +46679,7 @@ nhinc.FileUtils.createOrUpdateConnection("internalConnectionInfo.xml", dir, "1.1
 			<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 		</con:configuration>
 	</con:assertion>
-	<con:assertion name="Family Name XPath Match" type="XPath Match">
+	<con:assertion name="Family Name XPath Match" type="XPath Match" id="854fa3b4-7d05-482f-8c45-245759d1b358">
 		<con:configuration>
 			<path>declare namespace ns1='urn:hl7-org:v3';
 				//ns1:PRPA_IN201306UV02[1]/ns1:controlActProcess[1]/ns1:subject[1]/ns1:registrationEvent[1]/ns1:subject1[1]/ns1:patient[1]/ns1:patientPerson[1]/ns1:name[1]/ns1:family[1]</path>
@@ -46694,12 +46694,12 @@ nhinc.FileUtils.createOrUpdateConnection("internalConnectionInfo.xml", dir, "1.1
 	<con:wsrmConfig version="1.2"/>
 </con:request>
 </con:config>
-</con:testStep><con:testStep type="groovy" name="Skip Mock"><con:settings/><con:config><script>def runMock = context.findProperty("PassThruOn").toBoolean();
+</con:testStep><con:testStep type="groovy" name="Skip Mock" id="a39d6717-54fb-4ab8-8b03-a9444b0b4fd0"><con:settings/><con:config><script>def runMock = context.findProperty("PassThruOn").toBoolean();
 
 if(!runMock){
 	testRunner.gotoStepByName("count correlations");
 }
-</script></con:config></con:testStep><con:testStep type="mockresponse" name="Mock Response"><con:settings/><con:config xsi:type="con:MockResponseStep" startStep="Set Up PassThru" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>AdapterPatientDiscoveryBindingSoap</con:interface><con:operation>RespondingGateway_PRPA_IN201305UV02</con:operation><con:path>/MockPDAdapter</con:path><con:port>1720</con:port><con:response><con:settings/><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:hl7-org:v3">
+</script></con:config></con:testStep><con:testStep type="mockresponse" name="Mock Response" id="953c28c7-344b-4b7d-bd03-0fdadcb31719"><con:settings/><con:config xsi:type="con:MockResponseStep" startStep="Set Up PassThru" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>AdapterPatientDiscoveryBindingSoap</con:interface><con:operation>RespondingGateway_PRPA_IN201305UV02</con:operation><con:path>/MockPDAdapter</con:path><con:port>1720</con:port><con:response id="f6d13610-0d08-4542-82c4-9917b72bbe75"><con:settings/><con:responseContent><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:hl7-org:v3">
    <soap:Header/>
    <soap:Body>
    <PRPA_IN201306UV02 xmlns="urn:hl7-org:v3" xmlns:ns2="urn:gov:hhs:fha:nhinc:common:nhinccommon" xmlns:ns3="http://www.w3.org/2005/08/addressing" xmlns:ns4="urn:gov:hhs:fha:nhinc:common:patientcorrelationfacade" ITSVersion="XML_1.0">
@@ -46813,7 +46813,7 @@ if(!runMock){
              </controlActProcess>
      </PRPA_IN201306UV02>
    </soap:Body>
-</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response></con:config></con:testStep><con:testStep name="count correlations" type="groovy">
+</soap:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response></con:config></con:testStep><con:testStep name="count correlations" type="groovy" id="c45a4048-aadc-4c06-9ee7-544985172090">
 	<con:settings/>
 	<con:config><script>def pdCorrelations = 1;
 
@@ -46839,7 +46839,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="a9707ab4-3b2c-484c-a302-24ab8377c2a4" keepSession="false" maxResults="0" name="Document Query" searchProperties="true">
 	<con:settings/>
 
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="1ee74d09-53d3-4f47-ad07-88fbf2df5fd4"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "docquery.20.inboundDocQuery";
@@ -46864,11 +46864,11 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="update config" type="groovy">
+<con:testStep name="update config" type="groovy" id="6c228bf5-d8a6-47aa-970a-10110b351e89">
 		<con:settings/>
 		<con:config><script>nhinc.FileUtils.updateProperty(context.findProperty('GatewayPropDir'), "gateway.properties", "documentQueryQuerySelf", "false", log);</script></con:config>
 </con:testStep>
-<con:testStep name="Clear Correlation Table &amp; Add Correlation" type="groovy">
+<con:testStep name="Clear Correlation Table &amp; Add Correlation" type="groovy" id="df97e128-5438-49c2-8f52-70ed1cf6da3f">
 	<con:settings/>
 	<con:config>
 		<script>context.withSql('PatientCorrelationDB') { sql -> 
@@ -46886,7 +46886,7 @@ if(passthruValue != null){
 		}</script>
 </con:config>
 </con:testStep>
-<con:testStep name="Clear AA Mapping Table &amp; Add Mapping" type="groovy">
+<con:testStep name="Clear AA Mapping Table &amp; Add Mapping" type="groovy" id="0a1c66b1-a7c8-4487-a516-653190d75fb6">
 	<con:settings/>
 	<con:config>
 		<script>context.withSql('AAMappingDB') { sql -> 
@@ -46903,12 +46903,12 @@ if(passthruValue != null){
 </con:config>
 </con:testStep>
 
-<con:testStep name="Document Query" type="request">
+<con:testStep name="Document Query" type="request" id="301df5fa-fcc5-4294-9971-9b88465afb8d">
 	<con:settings/>
 	<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 		<con:interface>EntityDocQueryBindingSoap</con:interface>
 		<con:operation>RespondingGateway_CrossGatewayQuery</con:operation>
-		<con:request name="Document Query">
+		<con:request name="Document Query" id="4d0b63d2-ded0-4326-8bba-b6832cdcac87">
 			<con:settings>
 				<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 	</con:settings>
@@ -47166,12 +47166,12 @@ if(passthruValue != null){
       </urn:RespondingGateway_CrossGatewayQueryRequest>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-	<con:assertion type="SOAP Response"/>
-	<con:assertion type="Schema Compliance">
+	<con:assertion type="SOAP Response" id="814038e7-69f1-422b-846c-6a18e43218fd"/>
+	<con:assertion type="Schema Compliance" id="f7cd460a-4a61-4a8e-ad14-bac4d27d0440">
 		<con:configuration/>
 	</con:assertion>
-	<con:assertion type="SOAP Fault Assertion"/>
-	<con:assertion name="DocID Match" type="GroovyScriptAssertion">
+	<con:assertion type="SOAP Fault Assertion" id="dd40597a-0466-4355-bc82-dffcfe4a5373"/>
+	<con:assertion name="DocID Match" type="GroovyScriptAssertion" id="fade19f1-6a0a-415a-a3e5-21a57d0227c2">
 		<con:configuration><scriptText>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context );
 				def holder = groovyUtils.getXmlHolder( messageExchange.responseContent );
 				holder.namespaces["ns1"] = "urn:oasis:names:tc:ebxml-regrep:xsd:query:3.0";
@@ -47212,7 +47212,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 </con:testCase>
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="3a630f37-d9fc-4fd2-bc44-bc0b04246222" keepSession="false" maxResults="0" name="Document Retrieve" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="be81f7a2-62e9-4c0b-a001-79a6af1f0ca1"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "docretrieve.20.inbound";
@@ -47235,12 +47235,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Document Retrieve" type="request">
+<con:testStep name="Document Retrieve" type="request" id="4e5a85cd-a3ae-43e3-9fe4-f7bf76bcbb0f">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>EntityDocRetrieveBindingSoap</con:interface>
 			<con:operation>RespondingGateway_CrossGatewayRetrieve</con:operation>
-			<con:request incomingWss="" name="Document Retrieve" outgoingWss="" wssPasswordType="">
+			<con:request incomingWss="" name="Document Retrieve" outgoingWss="" wssPasswordType="" id="3d2acdaa-b699-46f5-8f5d-b1650c35759b">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@expand-mtom-attachments">true</con:setting>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
@@ -47481,14 +47481,14 @@ if(passthruValue != null){
       </urn:RespondingGateway_CrossGatewayRetrieveRequest>
    </soap:Body>
 </soap:Envelope>]]></con:request>
-		<con:assertion type="SOAP Response"/>
-		<con:assertion type="SOAP Fault Assertion"/>
-		<con:assertion disabled="true" type="Schema Compliance">
+		<con:assertion type="SOAP Response" id="fe8d70aa-4316-4a35-b4f3-ed6215713786"/>
+		<con:assertion type="SOAP Fault Assertion" id="976b4aa1-f4c6-4502-8012-59c60dd5ffc5"/>
+		<con:assertion disabled="true" type="Schema Compliance" id="8ec98508-ad97-43db-85e7-b8215998948f">
 			<con:configuration>
 				<definition/>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Doc Repository ID" type="XPath Match">
+		<con:assertion name="Doc Repository ID" type="XPath Match" id="09fccecf-ed21-4232-96b0-7fba28464925">
 			<con:configuration>
 				<path>declare namespace ns5='urn:ihe:iti:xds-b:2007';
 					//ns5:RetrieveDocumentSetResponse[1]/ns5:DocumentResponse[1]/ns5:RepositoryUniqueId[1]</path>
@@ -47497,7 +47497,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Doc ID" type="XPath Match">
+		<con:assertion name="Doc ID" type="XPath Match" id="782d388f-f083-4ecc-906f-2966bebfaed6">
 			<con:configuration>
 				<path>declare namespace ns5='urn:ihe:iti:xds-b:2007';
 					//ns5:RetrieveDocumentSetResponse[1]/ns5:DocumentResponse[1]/ns5:DocumentUniqueId[1]</path>
@@ -47506,7 +47506,7 @@ if(passthruValue != null){
 				<ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
 			</con:configuration>
 		</con:assertion>
-		<con:assertion name="Document Data" type="GroovyScriptAssertion">
+		<con:assertion name="Document Data" type="GroovyScriptAssertion" id="03a73dbe-ed5e-428e-9b86-f3b564a48127">
 			<con:configuration>
 				<scriptText>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
 					def holder = groovyUtils.getXmlHolder( messageExchange.responseContent )
@@ -47560,7 +47560,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 
 <con:testCase failOnError="true" failTestCaseOnErrors="true" id="846a1055-4695-47e4-92b8-de26f5640118" keepSession="false" maxResults="0" name="Admin Distribution" searchProperties="true">
 	<con:settings/>
-	<con:testStep type="groovy" name="Check Passthru"><con:settings/><con:config><script>import nhinc.FileUtils;
+	<con:testStep type="groovy" name="Check Passthru" id="b882f770-978c-4198-b55a-e21c0572ee16"><con:settings/><con:config><script>import nhinc.FileUtils;
 def dir = context.findProperty('GatewayPropDir');
 def file = "gateway.properties";
 def passthruProp = "admindist.inboundAdminDist";
@@ -47583,12 +47583,12 @@ if(passthruValue != null){
 	testRunner.testCase.setPropertyValue("PassThruOn", "false");
 }
 </script></con:config></con:testStep>
-<con:testStep name="Admin Distribution" type="request">
+<con:testStep name="Admin Distribution" type="request" id="c900aeff-ca7f-434a-80cd-b4b8fb322ca9">
 		<con:settings/>
 		<con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<con:interface>AdministrativeDistribution_Binding_Soap12</con:interface>
 			<con:operation>SendAlertMessage</con:operation>
-			<con:request name="Admin Distribution">
+			<con:request name="Admin Distribution" id="6ccdf909-0c0c-4558-9294-013a299eb9ca">
 				<con:settings>
 					<con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
 		</con:settings>
@@ -47934,7 +47934,7 @@ if(passthruValue != null){
 		<con:wsrmConfig version="1.2"/>
 	</con:request>
 </con:config>
-</con:testStep><con:testStep type="delay" name="Delay"><con:settings/><con:config><delay>10000</delay></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty('GatewayPropDir'), log);
+</con:testStep><con:testStep type="delay" name="Delay" id="ee10c552-cf68-4f53-a1ea-0533ff943a17"><con:settings/><con:config><delay>10000</delay></con:config></con:testStep><con:setupScript>nhinc.FileUtils.backupConfiguration(context.findProperty('GatewayPropDir'), log);
 nhinc.FileUtils.setG0ConnectionInfo(context.expand(context.testCase.testSuite.project.resourceRoot), context.findProperty('GatewayPropDir'), log);</con:setupScript>
 <con:tearDownScript>def dir = context.findProperty('GatewayPropDir');
 nhinc.FileUtils.restoreConfiguration(dir, log);
@@ -47961,7 +47961,7 @@ if(context.findProperty("PassThruOn").toBoolean()){
 <con:property><con:name>PassThruOn</con:name><con:value>false</con:value></con:property></con:properties>
 <con:reportParameters/>
 </con:testCase>
-<con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="RealTimeTransaction TestCase" searchProperties="true" id="29fa4af9-cbd7-4277-a354-e200981fa082" disabled="true"><con:settings/><con:testStep type="request" name="RealTimeTransaction"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EntityCORETransactionSoapBinding</con:interface><con:operation>RealTimeTransaction</con:operation><con:request name="RealTimeTransaction"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/Gateway/CORE_X12DocumentSubmission/1_0/EntityService/EntityCORETransactionUnsecured</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:gov:hhs:fha:nhinc:common:nhinccommonentity" xmlns:cor="http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd" xmlns:urn1="urn:gov:hhs:fha:nhinc:common:nhinccommon">
+<con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="RealTimeTransaction TestCase" searchProperties="true" id="29fa4af9-cbd7-4277-a354-e200981fa082" disabled="true"><con:settings/><con:testStep type="request" name="RealTimeTransaction" id="8ef52742-f970-4bb1-bc7d-8ada5675fe5d"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EntityCORETransactionSoapBinding</con:interface><con:operation>RealTimeTransaction</con:operation><con:request name="RealTimeTransaction" id="1bd39908-c149-4712-b887-43db9d6012ac"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/Gateway/CORE_X12DocumentSubmission/1_0/EntityService/EntityCORETransactionUnsecured</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:gov:hhs:fha:nhinc:common:nhinccommonentity" xmlns:cor="http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd" xmlns:urn1="urn:gov:hhs:fha:nhinc:common:nhinccommon">
    <soap:Header/>
    <soap:Body>
       <urn:RespondingGateway_CrossGatewayRealTimeRequest>
@@ -48197,8 +48197,8 @@ if(context.findProperty("PassThruOn").toBoolean()){
          </urn:NhinTargetCommunities>
       </urn:RespondingGateway_CrossGatewayRealTimeRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response"/><con:assertion type="SOAP Fault Assertion" name="Not SOAP Fault"/><con:assertion type="XPath Match" name="XPath Match"><con:configuration><path>declare namespace ns2='http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd';
-							//ns2:COREEnvelopeRealTimeResponse/ErrorCode</path><content>Success</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration><definition/></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig action="urn:ihe:iti:xdr:2007:X12RealTimeRequestMessage" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="BatchSubmit RequestTransaction TestCase" searchProperties="true" id="8f7d43fa-ce1c-4e2c-b837-6ba31874760b" disabled="true"><con:settings/><con:testStep type="request" name="BatchSubmitTransaction"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EntityCOREGenericBatchTransactionSoapBinding</con:interface><con:operation>BatchSubmitTransaction</con:operation><con:request name="BatchSubmitTransaction"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/Gateway/CORE_X12DocumentSubmission/1_0/EntityService/EntityCOREGenericBatchRequestUnsecured</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:gov:hhs:fha:nhinc:common:nhinccommonentity" xmlns:cor="http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd" xmlns:urn1="urn:gov:hhs:fha:nhinc:common:nhinccommon">
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response" id="72890a91-275c-4329-ade1-fd64eb0380cc"/><con:assertion type="SOAP Fault Assertion" name="Not SOAP Fault" id="93ae96e1-7a53-4e8e-beab-387986ad7277"/><con:assertion type="XPath Match" name="XPath Match" id="b1d343eb-2cb5-4dd0-b42d-45ed85e60605"><con:configuration><path>declare namespace ns2='http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd';
+							//ns2:COREEnvelopeRealTimeResponse/ErrorCode</path><content>Success</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="Schema Compliance" name="Schema Compliance" id="ca46b280-2b93-411d-888b-aeb465137e98"><con:configuration><definition/></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig action="urn:ihe:iti:xdr:2007:X12RealTimeRequestMessage" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="BatchSubmit RequestTransaction TestCase" searchProperties="true" id="8f7d43fa-ce1c-4e2c-b837-6ba31874760b" disabled="true"><con:settings/><con:testStep type="request" name="BatchSubmitTransaction" id="5125a244-c4df-4034-962d-a4ab567c4665"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EntityCOREGenericBatchTransactionSoapBinding</con:interface><con:operation>BatchSubmitTransaction</con:operation><con:request name="BatchSubmitTransaction" id="87c554d7-e827-444e-8150-a4255779790d"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/Gateway/CORE_X12DocumentSubmission/1_0/EntityService/EntityCOREGenericBatchRequestUnsecured</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:gov:hhs:fha:nhinc:common:nhinccommonentity" xmlns:cor="http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd" xmlns:urn1="urn:gov:hhs:fha:nhinc:common:nhinccommon">
    <soap:Header/>
    <soap:Body>
       <urn:RespondingGateway_CrossGatewayBatchSubmissionRequest>
@@ -48436,8 +48436,8 @@ if(context.findProperty("PassThruOn").toBoolean()){
          </urn:NhinTargetCommunities>
       </urn:RespondingGateway_CrossGatewayBatchSubmissionRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response"/><con:assertion type="SOAP Fault Assertion" name="Not SOAP Fault"/><con:assertion type="XPath Match" name="XPath Match"><con:configuration><path>declare namespace ns2='http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd';
-							//ns2:COREEnvelopeBatchSubmissionResponse/ErrorCode</path><content>Success</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="Schema Compliance" name="Schema Compliance" disabled="true"><con:configuration/></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig action="{http://schemas.xmlsoap.org/wsdl/}BatchSubmitTransaction" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>startDate</con:name><con:value>2014-09-05T13:06:23Z</con:value></con:property><con:property><con:name>endDate</con:name><con:value>2014-09-05T13:16:23Z</con:value></con:property><con:property><con:name>sigDate</con:name><con:value>09/05/2014 13:06:23</con:value></con:property><con:property><con:name>expireDate</con:name><con:value>2014-10-05T00:00:00Z</con:value></con:property></con:properties></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="BatchSubmit Response Transaction TestCase" searchProperties="true" id="c40c3915-aa92-474c-9c95-35e28c2a4102" disabled="true"><con:settings/><con:testStep type="request" name="BatchSubmitTransaction"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EntityCOREGenericBatchTransactionSoapBinding</con:interface><con:operation>BatchSubmitTransaction</con:operation><con:request name="BatchSubmitTransaction"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/Gateway/CORE_X12DocumentSubmission/1_0/EntityService/EntityCOREGenericBatchResponseUnsecured</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:gov:hhs:fha:nhinc:common:nhinccommonentity" xmlns:cor="http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd" xmlns:urn1="urn:gov:hhs:fha:nhinc:common:nhinccommon">
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response" id="0048cd76-1e38-4ac8-a4bf-73314b5d0cb2"/><con:assertion type="SOAP Fault Assertion" name="Not SOAP Fault" id="487bea5f-a44f-4175-a576-3e8150fbdddb"/><con:assertion type="XPath Match" name="XPath Match" id="8b3761a5-b02f-40ea-901b-f5071b3705ee"><con:configuration><path>declare namespace ns2='http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd';
+							//ns2:COREEnvelopeBatchSubmissionResponse/ErrorCode</path><content>Success</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="Schema Compliance" name="Schema Compliance" disabled="true" id="da3411c0-d6e2-45fa-9ec4-d0980c0638fb"><con:configuration/></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig action="{http://schemas.xmlsoap.org/wsdl/}BatchSubmitTransaction" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>startDate</con:name><con:value>2014-09-05T13:06:23Z</con:value></con:property><con:property><con:name>endDate</con:name><con:value>2014-09-05T13:16:23Z</con:value></con:property><con:property><con:name>sigDate</con:name><con:value>09/05/2014 13:06:23</con:value></con:property><con:property><con:name>expireDate</con:name><con:value>2014-10-05T00:00:00Z</con:value></con:property></con:properties></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="BatchSubmit Response Transaction TestCase" searchProperties="true" id="c40c3915-aa92-474c-9c95-35e28c2a4102" disabled="true"><con:settings/><con:testStep type="request" name="BatchSubmitTransaction" id="ebe09750-8204-4102-94c1-f7daba2e902c"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EntityCOREGenericBatchTransactionSoapBinding</con:interface><con:operation>BatchSubmitTransaction</con:operation><con:request name="BatchSubmitTransaction" id="776f239f-8800-44e8-b9c1-c0391e509e3c"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/Gateway/CORE_X12DocumentSubmission/1_0/EntityService/EntityCOREGenericBatchResponseUnsecured</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:gov:hhs:fha:nhinc:common:nhinccommonentity" xmlns:cor="http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd" xmlns:urn1="urn:gov:hhs:fha:nhinc:common:nhinccommon">
    <soap:Header/>
    <soap:Body>
       <urn:RespondingGateway_CrossGatewayBatchSubmissionRequest>
@@ -48679,8 +48679,8 @@ if(context.findProperty("PassThruOn").toBoolean()){
          </urn:NhinTargetCommunities>
       </urn:RespondingGateway_CrossGatewayBatchSubmissionRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response"/><con:assertion type="SOAP Fault Assertion" name="Not SOAP Fault"/><con:assertion type="XPath Match" name="XPath Match"><con:configuration><path>declare namespace ns2='http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd';
-							//ns2:COREEnvelopeBatchSubmissionResponse/ErrorCode</path><content>Success</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="Schema Compliance" name="Schema Compliance" disabled="true"><con:configuration><definition/></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig action="{http://schemas.xmlsoap.org/wsdl/}BatchSubmitTransaction" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>startDate</con:name><con:value>2014-09-05T13:06:51Z</con:value></con:property><con:property><con:name>endDate</con:name><con:value>2014-09-05T13:16:51Z</con:value></con:property><con:property><con:name>sigDate</con:name><con:value>09/05/2014 13:06:51</con:value></con:property><con:property><con:name>expireDate</con:name><con:value>2014-10-05T00:00:00Z</con:value></con:property></con:properties></con:testCase><con:properties/>
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" name="SOAP Response" id="8d88a890-886f-4b85-b12d-636df988cb21"/><con:assertion type="SOAP Fault Assertion" name="Not SOAP Fault" id="94f7c445-e976-4ea2-a6cd-93a3c3128ffb"/><con:assertion type="XPath Match" name="XPath Match" id="793140ab-7a24-48df-927a-31379ed92555"><con:configuration><path>declare namespace ns2='http://www.caqh.org/SOAP/WSDL/CORERule2.2.0.xsd';
+							//ns2:COREEnvelopeBatchSubmissionResponse/ErrorCode</path><content>Success</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="Schema Compliance" name="Schema Compliance" disabled="true" id="2fedd75f-8d15-45a3-a9b1-1be175c6367d"><con:configuration><definition/></con:configuration></con:assertion><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig action="{http://schemas.xmlsoap.org/wsdl/}BatchSubmitTransaction" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>startDate</con:name><con:value>2014-09-05T13:06:51Z</con:value></con:property><con:property><con:name>endDate</con:name><con:value>2014-09-05T13:16:51Z</con:value></con:property><con:property><con:name>sigDate</con:name><con:value>09/05/2014 13:06:51</con:value></con:property><con:property><con:name>expireDate</con:name><con:value>2014-10-05T00:00:00Z</con:value></con:property></con:properties></con:testCase><con:properties/>
 <con:setupScript/>
 <con:tearDownScript/>
 <con:reportParameters/>
@@ -48882,7 +48882,7 @@ sql.close()
 }</con:afterLoadScript>
 <con:wssContainer/>
 <con:databaseConnectionContainer/>
-<con:reporting>
+<con:oAuth2ProfileContainer/><con:reporting>
 	<con:xmlTemplates/>
 	<con:xmlTemplates/>
 	<con:xmlTemplates/>
