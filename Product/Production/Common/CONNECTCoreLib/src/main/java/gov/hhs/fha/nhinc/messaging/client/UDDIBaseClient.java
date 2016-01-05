@@ -28,6 +28,10 @@
  */
 package gov.hhs.fha.nhinc.messaging.client;
 
+import java.util.List;
+
+import com.sun.xml.ws.api.message.Header;
+
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.messaging.service.BaseServiceEndpoint;
 import gov.hhs.fha.nhinc.messaging.service.ServiceEndpoint;
@@ -87,6 +91,10 @@ public class UDDIBaseClient<T> implements CONNECTClient<T> {
     public void enableWSA(AssertionType assertion, String wsAddressingTo, String wsAddressingActionId) {
         serviceEndpoint = new WsAddressingServiceEndpointDecorator<T>(serviceEndpoint, wsAddressingTo, wsAddressingActionId, assertion);
     }
-
     
+    @Override
+    public void setOutboundHeaders(List<Header> outboundHeaders) {
+    	// Do nothing
+    }
+
 }
