@@ -76,6 +76,7 @@ public class EntityDocSubmissionProxyWebServiceUnsecuredImpl implements EntityDo
             request.setNhinTargetCommunities(targets);
             request.setProvideAndRegisterDocumentSetRequest(message);
             request.setUrl(urlInfo);
+            request.setAssertion(assertion);
             
             response = (RegistryResponseType) client.invokePort(EntityXDRPortType.class,
                     "provideAndRegisterDocumentSetB", request);
