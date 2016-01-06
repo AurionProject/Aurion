@@ -41,6 +41,7 @@ import gov.hhs.fha.nhinc.webserviceproxy.WebServiceProxyHelper;
 import gov.hhs.healthit.nhin.XDRAcknowledgementType;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import oasis.names.tc.ebxml_regrep.xsd.rs._3.RegistryResponseType;
 
@@ -51,6 +52,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.sun.xml.ws.api.message.Header;
 
 /**
  * 
@@ -119,6 +122,12 @@ public class AdapterDocSubmissionDeferredResponseProxyWebServiceSecuredImplTest 
         public void enableWSA(AssertionType assertion, String wsAddressingTo, String wsAddressingActionId) {
             
         }
+
+		@Override
+		public void setOutboundHeaders(List<Header> outboundHeaders) {
+			// TODO Auto-generated method stub
+			
+		}
         
     }
 
