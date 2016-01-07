@@ -68,6 +68,12 @@
             <version>9.2.1.5</version>
             <scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>webservices-rt</artifactId>
+			<version>1.5</version>
+			<scope>provided</scope>
+		</dependency>
     </dependencies>
     <build>
        
