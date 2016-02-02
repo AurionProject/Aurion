@@ -54,7 +54,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.sun.xml.ws.api.message.Header;
+import org.apache.cxf.headers.Header;
 
 /**
  * 

@@ -43,7 +43,10 @@ import gov.hhs.fha.nhinc.common.nhinccommon.SamlSignatureType;
 import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
 import gov.hhs.fha.nhinc.cxf.extraction.SAMLExtractorDOM;
 import gov.hhs.fha.nhinc.nhinclib.NhincConstants;
+import gov.hhs.fha.nhinc.nhinclib.NullChecker;
 import gov.hhs.fha.nhinc.util.StringUtil;
+import gov.hhs.fha.nhinc.xmlCommon.XmlUtility;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,12 +112,28 @@ public class OpenSAMLAssertionExtractorImpl implements SAMLExtractorDOM {
         populateAttributeStatement(saml2Assertion, target);
         // Populate the Authorization Decision Statement Information
         populateAuthzDecisionStatement(saml2Assertion, target);
+        // Populate the raw assertion string received in the request
+        populateRawAssertion(element, target);
+        
         LOG.debug("end extractSamlAssertion()");
 
         return target;
     }
 
-    /**
+    private void populateRawAssertion(Element element, AssertionType target) {
+		LOG.debug("Populating the raw SAML assertion.");
+		try {
+			String serializedRawAssertion = XmlUtility.serializeElement(element);
+			if(NullChecker.isNotNullish(serializedRawAssertion)) {
+				LOG.debug("Adding serialized raw assertion: " + serializedRawAssertion);
+				target.setRawAssertion(serializedRawAssertion);
+			}
+		} catch(Exception e) {
+			LOG.error("Error serializing the assertion element: " + e.getMessage(), e);
+		}
+	}
+
+	/**
      * This method will return the first Assertion encountered in the passed in element.
      * 
      * @param element the xml element to extract the assertion from
@@ -518,6 +537,8 @@ public class OpenSAMLAssertionExtractorImpl implements SAMLExtractorDOM {
         samlSignature.setKeyInfo(samlSignatureKeyInfo);
         samlSignatureKeyInfo.setRsaKeyValueExponent(formRaw);
         samlSignatureKeyInfo.setRsaKeyValueModulus(formRaw);
+        
+        assertOut.setRawAssertion(EMPTY_STRING);
 
         return assertOut;
     }

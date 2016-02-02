@@ -29,20 +29,8 @@ package gov.hhs.fha.nhinc.openSAML.extraction;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
-import gov.hhs.fha.nhinc.common.nhinccommon.CeType;
-import gov.hhs.fha.nhinc.common.nhinccommon.HomeCommunityType;
-import gov.hhs.fha.nhinc.common.nhinccommon.PersonNameType;
-import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthnStatementType;
-import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthzDecisionStatementEvidenceAssertionType;
-import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthzDecisionStatementEvidenceConditionsType;
-import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthzDecisionStatementEvidenceType;
-import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthzDecisionStatementType;
-import gov.hhs.fha.nhinc.common.nhinccommon.SamlIssuerType;
-import gov.hhs.fha.nhinc.common.nhinccommon.SamlSignatureKeyInfoType;
-import gov.hhs.fha.nhinc.common.nhinccommon.SamlSignatureType;
-import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
 
 import java.io.File;
 import java.net.URI;
@@ -58,6 +46,20 @@ import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Evidence;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
+import gov.hhs.fha.nhinc.common.nhinccommon.CeType;
+import gov.hhs.fha.nhinc.common.nhinccommon.HomeCommunityType;
+import gov.hhs.fha.nhinc.common.nhinccommon.PersonNameType;
+import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthnStatementType;
+import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthzDecisionStatementEvidenceAssertionType;
+import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthzDecisionStatementEvidenceConditionsType;
+import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthzDecisionStatementEvidenceType;
+import gov.hhs.fha.nhinc.common.nhinccommon.SamlAuthzDecisionStatementType;
+import gov.hhs.fha.nhinc.common.nhinccommon.SamlIssuerType;
+import gov.hhs.fha.nhinc.common.nhinccommon.SamlSignatureKeyInfoType;
+import gov.hhs.fha.nhinc.common.nhinccommon.SamlSignatureType;
+import gov.hhs.fha.nhinc.common.nhinccommon.UserType;
 
 /**
  * @author dharley
@@ -103,6 +105,8 @@ public class OpenSAMLAssertionExtractorImplTest {
         verifyCeType(assertionType.getPurposeOfDisclosureCoded(), "OPERATIONS", "2.16.840.1.113883.3.18.7.1",
                 "nhin-purpose", "Healthcare Operations");
         verifySignature(assertionType.getSamlSignature());
+        assertNotNull(assertionType.getRawAssertion());
+        assertTrue(assertionType.getRawAssertion().length() > 0);
     }
 
     /**

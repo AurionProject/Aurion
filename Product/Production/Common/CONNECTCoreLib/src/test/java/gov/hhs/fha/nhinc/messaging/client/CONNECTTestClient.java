@@ -28,7 +28,7 @@ package gov.hhs.fha.nhinc.messaging.client;
 
 import java.util.List;
 
-import com.sun.xml.ws.api.message.Header;
+import org.apache.cxf.headers.Header;
 
 import gov.hhs.fha.nhinc.common.nhinccommon.AssertionType;
 import gov.hhs.fha.nhinc.messaging.service.BaseServiceEndpoint;
