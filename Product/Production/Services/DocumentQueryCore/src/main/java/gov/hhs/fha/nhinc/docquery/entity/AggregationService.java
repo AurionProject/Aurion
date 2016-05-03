@@ -139,6 +139,9 @@ public class AggregationService {
 
             Set<II> uniqueIdentities = removeDuplicates(identities);
 
+            DocQueryCorrelationFilter docQueryCorrelationFilter = new DocQueryCorrelationFilter();
+            uniqueIdentities = docQueryCorrelationFilter.filterDuplicateCorrelationsByAssigningAuthority(uniqueIdentities);            
+            
             for (II id : uniqueIdentities) {
                 NhinTargetSystemType target = new NhinTargetSystemType();
                 HomeCommunityType targetCommunity = standardOutboundDocQueryHelper.lookupHomeCommunityId(id.getRoot(),
