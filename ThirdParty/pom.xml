@@ -209,19 +209,7 @@
                             <pomFile>${basedir}/repo/org/nhind/agent/1.5.3.Aurion/agent-1.5.3.Aurion.pom</pomFile>
                             <file>${basedir}/repo/org/nhind/agent/1.5.3.Aurion/agent-1.5.3.Aurion.jar</file>
                         </configuration>
-                    </execution>					
-                     <execution>
-                        <id>org.connectopensource.thirdparty.org.nhind.gateway:gateway-3.0.1.Aurion</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <pomFile>${basedir}/repo/org/nhind/gateway/3.0.1.Aurion/gateway-3.0.1.pom</pomFile>
-                            <file>${basedir}/repo/org/nhind/gateway/3.0.1.Aurion/gateway-3.0.1.jar</file>
-                        </configuration>
-                    </execution>										
-					
+                    </execution>																		
                 </executions>
             </plugin>
         </plugins>

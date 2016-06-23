@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.nhind</groupId>
             <artifactId>gateway</artifactId>
-            <version>3.0.1</version>
+            <version>3.0.1-Intermountain.1</version>
         </dependency>
         <dependency>
             <groupId>org.nhind</groupId>
