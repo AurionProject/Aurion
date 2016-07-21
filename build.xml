@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Aurion-Gateway" basedir="." default="dist">
+
+    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"
+             classpath="ThirdParty/ant/AntExtraLibs/xmltask-1.16.jar" />
+
+    <property environment="env" />
+
+    <target name="dist" description="Create the binary distribution" depends="-maven.version, -git.commit.hash">
+        <echo message="Building binary distribution for maven version=${maven_version}, Git commit hash=${git.commit.hash}."/>
+        <echo message="Must be run after a mvn build that includes all application server profiles."/>
+        <property name="dist.artifact.dir" value="./dist" />
+        <property name="maven_root" value="${user.home}/.m2/repository" />
+        <property name="aurion_root" value="${maven_root}/org/aurionproject" />
+        <property name="dist.zip.filename" value="CONNECT-GF-${maven_version}-Build${env.BUILD_NUMBER}.zip" />
+        <property name="aurion.version" value="5.1" />
+        <echo message="aurion_root=${aurion_root}"/> 
+        <delete dir="${dist.artifact.dir}" failonerror="false" />		
+        <mkdir dir="${dist.artifact.dir}" />
+
+        <manifest file="${dist.artifact.dir}/version.txt">
+            <attribute name="Maven-Release-Version" value="${maven_version}"/>
+            <attribute name="Git-Commit-Hash" value="${git.commit.hash}"/>
+            <attribute name="Jenkins-Build-Number" value="${env.BUILD_NUMBER}"/>
+        </manifest>
+
+        <zip zipfile="${dist.artifact.dir}/${dist.zip.filename}">
+			<zipfileset dir="${aurion_root}/" includes="CONNECT-GF/${maven_version}/CONNECT-GF-${maven_version}.ear" />
+			<zipfileset prefix="Properties/nhin" src="${aurion_root}/Properties/${aurion.version}/Properties-${aurion.version}.jar">
+                <exclude name="**/META-INF/**/*" />
+                <exclude name="adapter.properties" />
+                <exclude name="AdapterMpiConfig.xml" />
+                <exclude name="DocumentQueryProxyConfig.xml" />
+                <exclude name="DocumentRetrieveProxyConfig.xml" />
+                <exclude name="DocumentSubmissionProxyConfig.xml" />
+                <exclude name="gateway.properties" />
+                <exclude name="internalConnectionInfo.xml" />
+                <exclude name="mpi.xml" />
+				<exclude name="PolicyEngineProxyConfig.xml" />
+				<exclude name="uddiConnectionInfo.xml" />
+                <exclude name="hibernate/CorrelatedIdentifers.hibernate.cfg.xml" />
+                <exclude name="hibernate/assignauthority.hibernate.cfg.xml" />			
+			</zipfileset>										
+            <zipfileset prefix="scripts" dir="Product/Production/Deploy/scripts/" />
+            <zipfileset file="${dist.artifact.dir}/version.txt"/>
+        </zip>
+    </target>
+
+    <target name="-maven.version" description="Store maven pom version in ${maven_version}.">
+        <xmltask source="pom.xml" >
+           <copy path="//*[local-name() = 'version']/text()" property="maven_version"/>
+        </xmltask>
+    </target>
+
+    <target name="-git.commit.hash" description="Store git commit hash in ${git.commit.hash}">
+        <exec executable="git" outputproperty="git.commit.hash" failonerror="false" >
+			<arg value="log" />
+			<arg value="--format=%H" />
+			<arg value="--max-count=1" />
+		</exec>		
+    </target>
+</project>
