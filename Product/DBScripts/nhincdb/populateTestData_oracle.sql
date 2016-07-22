@@ -83,14 +83,14 @@ SET DEFINE OFF;
 INSERT INTO NHINCUSER.DOMAIN ('id', 'domainname', 'postmasterAddressId', 'status', 'createTime', 'updateTime') VALUES ('1', 'direct.connectopensource.org',null, '1', sysdate, sysdate);
 
 
-REM INSERTING into NHINCUSER.ADDRESS
+REM INSERTING into NHINCUSER.CONFIG_ADDRESS
 SET DEFINE OFF;
-INSERT INTO NHINCUSER.ADDRESS ('id', 'displayName', 'eMailAddress', 'endpoint', 'status', 'type', 'createTime', 'updateTime', 'domainId') VALUES ('1', 'direct.connectopensource.org', 'postmaster@direct.connectopensource.org', NULL, '1',NULL, sysdate, sysdate, '1');
+INSERT INTO NHINCUSER.CONFIG_ADDRESS ('id', 'displayName', 'eMailAddresss', 'endpoint', 'status', 'type', 'createTime', 'updateTime', 'domainId') VALUES ('1', 'direct.connectopensource.org', 'postmaster@direct.connectopensource.org', NULL, '1',NULL, sysdate, sysdate, '1');
 
-REM UPDATE NHINCUSER.DOMAIN and NHINCUSER.ADDRESS records
+REM UPDATE NHINCUSER.DOMAIN and NHINCUSER.CONFIG_ADDRESS records
 SET DEFINE OFF;
 
-UPDATE NHINCUSER.ADDRESS SET id=2 WHERE id=1;
+UPDATE NHINCUSER.CONFIG_ADDRESS SET id=2 WHERE id=1;
 
 UPDATE NHINCUSER.DOMAIN SET postmasterAddressId=2 WHERE id=1;
 
