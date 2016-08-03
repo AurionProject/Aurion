@@ -69,7 +69,7 @@ if [ ! -d ../backup ]; then
 fi
 
 # All files to be deployed
-DEPLOY_FILES="../CONNECT-GF/*.ear"
+DEPLOY_FILES="../CONNECT-GF/*/*.ear"
 
 # Start server
 asadmin start-domain $domainName
@@ -124,6 +124,10 @@ fi
 if [ -f ../backup/uddiConnectionInfo.xml ]; then
     echo "Restoring uddiConnectionInfo.xml"
     cp -f ../backup/uddiConnectionInfo.xml "$domainLocation/config/nhin"
+fi
+if [ -f ../backup/saml.properties ]; then
+    echo "Restoring saml.properties"
+    cp -f ../backup/saml.properties "$domainLocation/config/nhin"
 fi
 
 # Update gateway.properties
