@@ -5,3 +5,4 @@
 **/target/
 **/*.zip
 **/dist
+**/META-INF/
