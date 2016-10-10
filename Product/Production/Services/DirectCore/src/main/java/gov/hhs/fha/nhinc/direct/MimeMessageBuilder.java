@@ -33,6 +33,7 @@ import ihe.iti.xds_b._2007.ProvideAndRegisterDocumentSetRequestType.Document;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -164,13 +165,20 @@ public class MimeMessageBuilder {
         try {
             message.setFrom(fromAddress);
         } catch (Exception e) {
-            throw new DirectException("Exception setting from address: " + fromAddress, e);
+            throw new DirectException("Exception setting 'from' address: " + fromAddress, e);
         }
 
         try {
             message.addRecipients(Message.RecipientType.TO, recipients);
         } catch (Exception e) {
-            throw new DirectException("Exception setting recipient to address(es): " + recipients, e);
+        	StringBuilder addressInfo = new StringBuilder();
+        	
+        	addressInfo.append("Exception setting recipient 'to' address(es):\n");
+        	for (Address address : recipients) {
+        		addressInfo.append("\tAddress: ").append(address.toString()).append("\n");				
+			}      	
+        	
+            throw new DirectException("Exception setting recipient to address(es): " + addressInfo.toString(), e);
         }
 
         try {
@@ -249,8 +257,7 @@ public class MimeMessageBuilder {
 
 			for (DirectDocument2 document : documents.getDocuments()) {
 				if (document.getData() != null) {
-					
-				    File xmlFile = null;					
+									
 					MimeBodyPart attachmentPart = getMimeBodyPart();
 					String fileName = document.getMetadata().getId();
 					
@@ -262,10 +269,13 @@ public class MimeMessageBuilder {
 					BufferedOutputStream bufferedOutput = null;					
 					
 					try {
-						xmlFile = new File(fileName);
+						File xmlFile = getXmlAttachmentFile(fileName);
 						
 						LOG.debug("Direct: Writing xml attachment to fileOutputStream");
-						bufferedOutput = new BufferedOutputStream(new FileOutputStream(xmlFile));
+						
+						FileOutputStream fos = getXmlAttachmentFileOutputStream(xmlFile);
+						
+						bufferedOutput = getXmlAttachmentBufferedOutputStream(fos);
 						bufferedOutput.write(document.getData());
 						bufferedOutput.flush();
 						
@@ -276,6 +286,8 @@ public class MimeMessageBuilder {
 				        //		 attached by the code above this line.
 						//---------------------------------------------------------------------------------------------------------------
 						attachmentPart.setHeader("Content-Transfer-Encoding", "base64");
+						
+				        attachmentPart.setHeader("Content-Type", "application/xml");
 						
 						attachmentParts.add(attachmentPart);				
 						
@@ -305,9 +317,45 @@ public class MimeMessageBuilder {
 		}
 		
 		LOG.debug("End MimeMessageBuilder.addAttachments");
+	}    
+    
+	/**
+	 * Get a BufferedOutputStream for a specified FileOutputStream.
+	 * 
+	 * @param fos
+	 * 		Contains the FileOutputStream object for which to get a BufferedOutputStream.
+	 * @return
+	 *		Returns a BufferedOutputStream object.
+	 */
+	protected BufferedOutputStream getXmlAttachmentBufferedOutputStream(FileOutputStream fos) {
+		return new BufferedOutputStream(fos);
 	}
-    
-    
+	
+	/**
+	 * Get a FileOutputStream for a specified file.
+	 * 
+	 * @param xmlFile
+	 * 		Contains the file for which to get a FileOutputStream.
+	 * @return
+	 * 		Returns a FileOutputStream object.
+	 * @throws FileNotFoundException
+	 */
+	protected FileOutputStream getXmlAttachmentFileOutputStream(File xmlFile) throws FileNotFoundException {
+		return new FileOutputStream(xmlFile);
+	}
+
+	/**
+	 * Get the XML attachment file name.
+	 * 
+	 * @param fileName
+	 * 		Contains the name of the file.
+	 * @return
+	 * 		Returns a File object.
+	 */
+	protected File getXmlAttachmentFile(String fileName) {
+		return new File(fileName);
+	}
+	
     /**
      * Format the "messageId" to be used to name the XDM attachment.
      * 
@@ -357,7 +405,7 @@ public class MimeMessageBuilder {
 	 * @return
 	 * 		Returns the direct attachment option.
 	 */
-	private String getDirectAttachmentOption() {
+	protected String getDirectAttachmentOption() {
 		String directAttachmentOption = "";
 		
 		try {

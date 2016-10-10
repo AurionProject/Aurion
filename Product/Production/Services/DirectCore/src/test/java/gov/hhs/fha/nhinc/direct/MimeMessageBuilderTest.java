@@ -31,26 +31,34 @@ import static gov.hhs.fha.nhinc.direct.DirectUnitTestUtil.getMimeMessageBuilder;
 import static gov.hhs.fha.nhinc.direct.DirectUnitTestUtil.RECIP_AT_RESPONDING_GW;
 import ihe.iti.xds_b._2007.ProvideAndRegisterDocumentSetRequestType;
 import ihe.iti.xds_b._2007.ProvideAndRegisterDocumentSetRequestType.Document;
-import java.io.ByteArrayInputStream;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.activation.DataHandler;
 import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-
 import javax.mail.Session;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
 import org.apache.commons.io.IOUtils;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import org.junit.Test;
+import org.nhindirect.xd.common.DirectDocument2;
+import org.nhindirect.xd.common.DirectDocument2.Metadata;
 import org.nhindirect.xd.common.DirectDocuments;
 
 /**
@@ -266,4 +274,144 @@ public class MimeMessageBuilderTest extends DirectBaseTest {
             assertEquals(theString, someText);
             assertNotNull(result);
     }
+    
+    @Test
+    public void testBuild_HappyWithXMLDirectAttachment() throws IOException, MessagingException
+    {
+            Address mockFromAddress = mock(Address.class);         
+            Address mockAddress1 = mock(Address.class);            
+            Set<Address> toAddresses = new HashSet<Address>();
+            toAddresses.add(mockAddress1);            
+            Address[] mockReciepients = toAddresses.toArray(new Address[0]);    
+            DirectDocuments mockDocs = mock(DirectDocuments.class);
+            DirectDocument2 mockDoc2 = mock(DirectDocument2.class);
+            List<DirectDocument2> mockDocs2 = new ArrayList<DirectDocument2>();
+            final String someText = "This is a test steam...";
+            final BufferedOutputStream mockBufferedOutputStream = mock(BufferedOutputStream.class);
+            final FileOutputStream mockFileOutputStream = mock(FileOutputStream.class);
+            final File mockFile = mock(File.class);
+            final MimeBodyPart mockMimeBodyPart = mock(MimeBodyPart.class);
+
+            when(mockDoc2.getMetadata()).thenReturn(new Metadata());
+            when(mockDoc2.getData()).thenReturn(someText.getBytes());
+            mockDoc2.getMetadata().setId("123");
+            mockDoc2.getMetadata().setMimeType("xml");
+            
+            mockDocs2.add(mockDoc2);
+            
+            when(mockDocs.getDocuments()).thenReturn(mockDocs2);
+            when(mockDoc2.getData()).thenReturn(someText.getBytes());
+            
+            MimeMessageBuilder testSubject = new MimeMessageBuilder(session, mockFromAddress, mockReciepients) {
+            	@Override
+            	protected BufferedOutputStream getXmlAttachmentBufferedOutputStream(FileOutputStream fos) {
+            		return mockBufferedOutputStream;
+            	}
+            	
+            	@Override
+            	protected FileOutputStream getXmlAttachmentFileOutputStream(File xmlFile) throws FileNotFoundException {
+            		return mockFileOutputStream;
+            	}
+            	
+            	@Override
+            	protected File getXmlAttachmentFile(String fileName) {
+            		return mockFile;
+            	}
+            	
+            	@Override
+            	protected String getDirectAttachmentOption() {
+            		return "xml";
+            	}
+            	
+            	@Override
+            	protected MimeBodyPart getMimeBodyPart() {
+            		return mockMimeBodyPart;
+            	}
+            };
+            
+            testSubject.messageId("1234");
+            testSubject.documents(mockDocs);
+            testSubject.text("Some test text");
+            
+            MimeMessage result = testSubject.build();
+            
+            verify(mockBufferedOutputStream).write(someText.getBytes());
+            verify(mockBufferedOutputStream).flush();
+                 
+            assertNotNull(result);
+			MimeMultipart multiPartContent = (MimeMultipart) result.getContent();
+			int bodyPartCount = multiPartContent.getCount();
+			
+			// One body part for the "text" of the MimeMessage and another body part for the xml attachment
+			assertEquals(2, bodyPartCount);          
+    }    
+    
+    @Test(expected=Exception.class)
+    public void testBuild_WithXMLDirectAttachmentThrowExceptionOnWriteBufferedOutputStream() throws IOException, MessagingException
+    {
+            Address mockFromAddress = mock(Address.class);         
+            Address mockAddress1 = mock(Address.class);            
+            Set<Address> toAddresses = new HashSet<Address>();
+            toAddresses.add(mockAddress1);            
+            Address[] mockReciepients = toAddresses.toArray(new Address[0]);    
+            DirectDocuments mockDocs = mock(DirectDocuments.class);
+            DirectDocument2 mockDoc2 = mock(DirectDocument2.class);
+            List<DirectDocument2> mockDocs2 = new ArrayList<DirectDocument2>();
+            final String someText = "This is a test steam...";
+            final BufferedOutputStream mockBufferedOutputStream = mock(BufferedOutputStream.class);
+            final FileOutputStream mockFileOutputStream = mock(FileOutputStream.class);
+            final File mockFile = mock(File.class);
+            final MimeBodyPart mockMimeBodyPart = mock(MimeBodyPart.class);
+
+            when(mockDoc2.getMetadata()).thenReturn(new Metadata());
+            when(mockDoc2.getData()).thenReturn(someText.getBytes());
+            mockDoc2.getMetadata().setId("123");
+            mockDoc2.getMetadata().setMimeType("xml");
+            
+            mockDocs2.add(mockDoc2);
+            
+            when(mockDocs.getDocuments()).thenReturn(mockDocs2);
+            when(mockDoc2.getData()).thenReturn(someText.getBytes());
+            
+            MimeMessageBuilder testSubject = new MimeMessageBuilder(session, mockFromAddress, mockReciepients) {
+            	@Override
+            	protected BufferedOutputStream getXmlAttachmentBufferedOutputStream(FileOutputStream fos) {
+            		return mockBufferedOutputStream;
+            	}
+            	
+            	@Override
+            	protected FileOutputStream getXmlAttachmentFileOutputStream(File xmlFile) throws FileNotFoundException {
+            		return mockFileOutputStream;
+            	}
+            	
+            	@Override
+            	protected File getXmlAttachmentFile(String fileName) {
+            		return mockFile;
+            	}
+            	
+            	@Override
+            	protected String getDirectAttachmentOption() {
+            		return "xml";
+            	}
+            	
+            	@Override
+            	protected MimeBodyPart getMimeBodyPart() {
+            		return mockMimeBodyPart;
+            	}
+            };
+            
+            testSubject.messageId("1234");
+            testSubject.documents(mockDocs);
+            testSubject.text("Some test text");
+            
+            doThrow(new RuntimeException("*** Ignore, thrown for unit test ***"))
+            	.when(mockBufferedOutputStream).write(someText.getBytes());
+            
+            @SuppressWarnings("unused")
+			MimeMessage result = testSubject.build();
+ 			
+    }        
+    
+    
+    
 }
