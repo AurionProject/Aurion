@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS auditrepo.auditrepository
     id BIGINT NOT NULL AUTO_INCREMENT,
     audit_timestamp DATETIME,
     eventId BIGINT NOT NULL,
-    userId VARCHAR(100),
+    userId VARCHAR(400),
     participationTypeCode SMALLINT,
     participationTypeCodeRole SMALLINT,
     participationIDTypeCode VARCHAR(100),
