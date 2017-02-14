@@ -29,12 +29,15 @@ package gov.hhs.fha.nhinc.gateway.servlet;
 import gov.hhs.fha.nhinc.configuration.jmx.AbstractPassthruRegistryEnabledServlet;
 import gov.hhs.fha.nhinc.configuration.jmx.WebServicesMXBean;
 import gov.hhs.fha.nhinc.docquery.configuration.jmx.DocumentQuery20WebServices;
+import gov.hhs.fha.nhinc.docquery.entity.AggregationStrategy;
 import gov.hhs.fha.nhinc.gateway.executorservice.ExecutorServiceHelper;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -56,7 +59,8 @@ import org.apache.log4j.Logger;
  * @author paul.eftis, msw
  */
 public class InitServlet extends AbstractPassthruRegistryEnabledServlet {
-
+	private static final String DOCUMENT_QUERY_V20_THREAD_POOL_NAME = "DocQuery-v20-ThreadPool-";
+	
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -4229185731377926278L;
 
@@ -68,7 +72,35 @@ public class InitServlet extends AbstractPassthruRegistryEnabledServlet {
 
     /** The large job executor. */
     private static ExecutorService largeJobExecutor = null;
+   
+    // Class to override the "thread factory" to allow us to "name" the thread pool
+    static class DQv20ThreadFactory implements ThreadFactory {
+        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
 
+        DQv20ThreadFactory() {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() :
+                                  Thread.currentThread().getThreadGroup();
+            namePrefix = DOCUMENT_QUERY_V20_THREAD_POOL_NAME +
+                          poolNumber.getAndIncrement() +
+                         "-thread-";
+        }
+
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r,
+                                  namePrefix + threadNumber.getAndIncrement(),
+                                  0);
+            if (t.isDaemon())
+                t.setDaemon(false);
+            if (t.getPriority() != Thread.NORM_PRIORITY)
+                t.setPriority(Thread.NORM_PRIORITY);
+            return t;
+        }
+    }
+    
     /**
      * Inits the servlet, first initializes the parallel fanout executors, then calls super.init().
      * 
@@ -80,10 +112,15 @@ public class InitServlet extends AbstractPassthruRegistryEnabledServlet {
     @SuppressWarnings("static-access")
     public void init(ServletConfig config) throws ServletException {
         LOG.debug("InitServlet start...");
-        executor = Executors.newFixedThreadPool(ExecutorServiceHelper.getInstance().getExecutorPoolSize());
+         
+        executor = Executors.newFixedThreadPool(ExecutorServiceHelper.getInstance().getExecutorPoolSize(), new DQv20ThreadFactory());
         largeJobExecutor = Executors.newFixedThreadPool(ExecutorServiceHelper.getInstance()
-                .getLargeJobExecutorPoolSize());
+                .getLargeJobExecutorPoolSize(), new DQv20ThreadFactory());
 
+        // Need to initialize thread pool executors of the class that handles the processing of outbound document query messages.
+        // Date: 02/13/2017 -  This fix is needed to avoid creating new Executor thread pools on EVERY document query request.
+        AggregationStrategy.initializeSystemlevelExecutors(executor);       
+        
         super.init(config);
     }
 

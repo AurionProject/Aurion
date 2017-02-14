@@ -36,7 +36,10 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
@@ -49,11 +52,53 @@ import org.apache.log4j.Logger;
  * 
  */
 public class AggregationStrategy {
-
+	private static final String AGGREGATION_STRATEGY_THREAD_POOL_NAME = "AggregationStrategy-ThreadPool-";
+	
     private static final Logger LOG = Logger.getLogger(AggregationStrategy.class);
+    private static Executor executor;
+    
+    // Class to override the "thread factory" to allow us to "name" the thread pool
+    static class AggStrategyThreadFactory implements ThreadFactory {
+        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;   
 
-    public void execute(Aggregate aggregate) {
-        Executor executor = Executors.newCachedThreadPool();
+        AggStrategyThreadFactory() {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() :
+                                  Thread.currentThread().getThreadGroup();
+            namePrefix = AGGREGATION_STRATEGY_THREAD_POOL_NAME +
+                          poolNumber.getAndIncrement() +
+                         "-thread-";
+        }
+
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r,
+                                  namePrefix + threadNumber.getAndIncrement(),
+                                  0);
+            if (t.isDaemon())
+                t.setDaemon(false);
+            if (t.getPriority() != Thread.NORM_PRIORITY)
+                t.setPriority(Thread.NORM_PRIORITY);
+            return t;
+        }
+    }   
+    
+    /**
+     * Sets the executor services to be used for fan out.
+     *
+     * @param regExecutor
+     */    
+    public static void initializeSystemlevelExecutors(ExecutorService regExecutor) {
+    	executor = regExecutor;
+    }
+    
+    public void execute(Aggregate aggregate) {    	
+    	if (executor == null) {
+    		executor = Executors.newCachedThreadPool(new AggStrategyThreadFactory());
+		}
+    	
         CompletionService<OutboundOrchestratable> completionService = new ExecutorCompletionService<OutboundOrchestratable>(executor);
         Collection<OutboundOrchestratable> aggregationRequests = aggregate.getAggregateRequests();
         

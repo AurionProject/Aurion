@@ -71,6 +71,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.hl7.v3.CommunityPRPAIN201306UV02ResponseType;
@@ -80,24 +82,54 @@ import org.hl7.v3.RespondingGatewayPRPAIN201305UV02RequestType;
 import org.hl7.v3.RespondingGatewayPRPAIN201306UV02ResponseType;
 
 import com.google.common.base.Optional;
-import gov.hhs.fha.nhinc.util.HomeCommunityMap;
 
 public class StandardOutboundPatientDiscovery implements OutboundPatientDiscovery {
-
+	private static final String STANDARD_OUTBOUND_PATIENT_DISCOVERY_THREAD_POOL_NAME = "StandardOutboundPD-ThreadPool-";
+	
     private static final Logger LOG = Logger.getLogger(StandardOutboundPatientDiscovery.class);
-    private ExecutorService regularExecutor = null;
-    private ExecutorService largejobExecutor = null;
+    private static ExecutorService regularExecutor = null;
+    private static ExecutorService largejobExecutor = null;
     private TransactionLogger transactionLogger = new TransactionLogger();
+    
+    // Class to override the "thread factory" to allow us to "name" the thread pool
+    static class PDThreadFactory implements ThreadFactory {
+        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
 
+        PDThreadFactory() {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() :
+                                  Thread.currentThread().getThreadGroup();
+            namePrefix = STANDARD_OUTBOUND_PATIENT_DISCOVERY_THREAD_POOL_NAME +
+                          poolNumber.getAndIncrement() +
+                         "-thread-";
+        }
+
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r,
+                                  namePrefix + threadNumber.getAndIncrement(),
+                                  0);
+            if (t.isDaemon())
+                t.setDaemon(false);
+            if (t.getPriority() != Thread.NORM_PRIORITY)
+                t.setPriority(Thread.NORM_PRIORITY);
+            return t;
+        }
+    }
+    
     /**
      * Add default constructor that is used by test cases Note that implementations should always use constructor that
      * takes the executor services as input
      */
     public StandardOutboundPatientDiscovery() {
-        regularExecutor = Executors.newFixedThreadPool(1);
-        largejobExecutor = Executors.newFixedThreadPool(1);
+    	if (regularExecutor == null && largejobExecutor == null) {
+            regularExecutor = Executors.newCachedThreadPool(new PDThreadFactory());
+            largejobExecutor = Executors.newCachedThreadPool(new PDThreadFactory());			
+		}
     }
-
+   
     /**
      * We construct the orch impl class with references to both executor services that could be used for this particular
      * orchestration instance. Determination of which executor service to use (largejob or regular) is based on the size
@@ -113,9 +145,20 @@ public class StandardOutboundPatientDiscovery implements OutboundPatientDiscover
      * @param regularExecutor
      * @param largeJobExecutor
      */
-    public void setExecutorService(ExecutorService regularExecutor, ExecutorService largeJobExecutor) {
-        this.regularExecutor = regularExecutor;
-        this.largejobExecutor = largeJobExecutor;
+    public static void initializeSystemlevelExecutors(ExecutorService regExecutor, ExecutorService largeExecutor) {
+        regularExecutor = regExecutor;
+        largejobExecutor = largeExecutor;
+    }
+    
+    /**
+     * Sets the executor services to be used for fan out.
+     *
+     * @param regularExecutor
+     * @param largeJobExecutor
+     */
+    public void setExecutorService(ExecutorService regExecutor, ExecutorService largeExecutor) {
+        regularExecutor = regExecutor;
+        largejobExecutor = largeExecutor;
     }
 
     @Override

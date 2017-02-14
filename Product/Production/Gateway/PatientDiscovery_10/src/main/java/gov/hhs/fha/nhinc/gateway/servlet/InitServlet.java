@@ -32,11 +32,14 @@ import gov.hhs.fha.nhinc.gateway.executorservice.ExecutorServiceHelper;
 import gov.hhs.fha.nhinc.patientdiscovery.configuration.jmx.PatientDiscovery10WebServices;
 import gov.hhs.fha.nhinc.patientdiscovery.configuration.jmx.PatientDiscoveryDeferredReq10WebServices;
 import gov.hhs.fha.nhinc.patientdiscovery.configuration.jmx.PatientDiscoveryDeferredResp10WebServices;
+import gov.hhs.fha.nhinc.patientdiscovery.outbound.StandardOutboundPatientDiscovery;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -58,6 +61,7 @@ import org.apache.log4j.Logger;
  * @author paul.eftis, msw
  */
 public class InitServlet extends AbstractPassthruRegistryEnabledServlet {
+	private static final String PATIENT_DISCOVERY_THREAD_POOL_NAME = "PatientDiscovery-ThreadPool-";
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -4229185731377926278L;
@@ -71,6 +75,34 @@ public class InitServlet extends AbstractPassthruRegistryEnabledServlet {
     /** The large job executor. */
     private static ExecutorService largeJobExecutor = null;
 
+    // Class to override the "thread factory" to allow us to "name" the thread pool
+    static class PDThreadFactory implements ThreadFactory {
+        private static final AtomicInteger poolNumber = new AtomicInteger(1);
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        PDThreadFactory() {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() :
+                                  Thread.currentThread().getThreadGroup();
+            namePrefix = PATIENT_DISCOVERY_THREAD_POOL_NAME +
+                          poolNumber.getAndIncrement() +
+                         "-thread-";
+        }
+
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r,
+                                  namePrefix + threadNumber.getAndIncrement(),
+                                  0);
+            if (t.isDaemon())
+                t.setDaemon(false);
+            if (t.getPriority() != Thread.NORM_PRIORITY)
+                t.setPriority(Thread.NORM_PRIORITY);
+            return t;
+        }
+    }    
+    
     /**
      * Initializes the servlet with parallel fanout executors as well as calling super.init().
      * 
@@ -82,13 +114,18 @@ public class InitServlet extends AbstractPassthruRegistryEnabledServlet {
     @SuppressWarnings("static-access")
     public void init(ServletConfig config) throws ServletException {
         LOG.debug("InitServlet start...");
-        executor = Executors.newFixedThreadPool(ExecutorServiceHelper.getInstance().getExecutorPoolSize());
+        
+        executor = Executors.newFixedThreadPool(ExecutorServiceHelper.getInstance().getExecutorPoolSize(), new PDThreadFactory());
         largeJobExecutor = Executors.newFixedThreadPool(ExecutorServiceHelper.getInstance()
-                .getLargeJobExecutorPoolSize());
+                .getLargeJobExecutorPoolSize(), new PDThreadFactory());
 
+        // Need to initialize thread pool executors of the class that handles the processing of outbound patient discovery messages.
+        // Date: 02/13/2017 -  This fix is needed to avoid creating new Executor thread pools on EVERY patient discovery request.
+        StandardOutboundPatientDiscovery.initializeSystemlevelExecutors(executor, largeJobExecutor);
+        
         super.init(config);
-    }
-
+    }    
+    
     /**
      * Gets the executor service.
      * 
