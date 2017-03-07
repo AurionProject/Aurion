@@ -67,6 +67,7 @@ public class MimeMessageBuilder {
     private String messageId;
     private Document attachment;
     private String attachmentName;
+    private AttachmentHandler attachmentHandler;
 
     /**
      * Construct the Mime Message builder with required fields.
@@ -228,7 +229,10 @@ public class MimeMessageBuilder {
 	 * 		Returns a handle to a AttachmentHandler object.
 	 */
 	protected AttachmentHandler getAttachmentHandler() {
-		return new AttachmentHandler();
+		if (attachmentHandler == null)
+			attachmentHandler = new AttachmentHandler();
+		
+		return attachmentHandler;
 	}
 
     private MimeBodyPart createAttachmentFromSOAPRequest(Document data, String name) throws MessagingException,
