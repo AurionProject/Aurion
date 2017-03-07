@@ -31,6 +31,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import gov.hhs.fha.nhinc.mail.MailUtils;
 import ihe.iti.xds_b._2007.ProvideAndRegisterDocumentSetRequestType.Document;
 
@@ -42,16 +43,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import javax.activation.DataHandler;
 import javax.mail.Address;
-import javax.mail.Flags;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 
@@ -241,12 +243,44 @@ public class DirectUnitTestUtil {
      * @throws IOException on io error.
      */
     public static MimeMessageBuilder getMimeMessageBuilder(Session session) throws IOException {
-        MimeMessageBuilder testBuilder = new MimeMessageBuilder(session, getSender(), getRecipients());
+    	final AttachmentHandler mockAttachmentHandler = mock(AttachmentHandler.class);
+    	
+        MimeMessageBuilder testBuilder = new MimeMessageBuilder(session, getSender(), getRecipients()){
+        	protected AttachmentHandler getAttachmentHandler() {
+        		return mockAttachmentHandler;
+        	}  
+        };
         testBuilder.text("text").subject("subject").attachment(getMockDocument()).attachmentName("attachmentName")
                 .documents(getMockDirectDocuments()).messageId("1234");
         return testBuilder;
-    }
+    }   
+    
+    public static MimeMessageBuilder getMimeMessageBuilderForXDM(Session session) throws IOException {
+    	final AttachmentHandler mockAttachmentHandler = mock(AttachmentHandler.class);
+    	final MimeBodyPart mockMimeBodyPart = new MimeBodyPart();
+    	List<MimeBodyPart> attachments = new ArrayList<MimeBodyPart>();
+    	
+    	try {
+			mockMimeBodyPart.setHeader("Content-Type", "application/octet-stream");
 
+			when(mockAttachmentHandler.createDirectAttachments(any(DirectDocuments.class), any(String.class), any(Address.class))).thenReturn(attachments);
+		} catch (MessagingException e1) {
+			e1.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+        MimeMessageBuilder testBuilder = new MimeMessageBuilder(session, getSender(), getRecipients()){
+        	protected AttachmentHandler getAttachmentHandler() {
+        		return mockAttachmentHandler;
+        	}  
+        };
+        
+        testBuilder.text("text").subject("subject").attachment(getMockDocument()).attachmentName("attachmentName")
+                .documents(getMockDirectDocuments()).messageId("1234");
+        return testBuilder;
+    }   
+ 
     private static InternetAddress toInternetAddress(String email) {
         InternetAddress address = null;
         try {
