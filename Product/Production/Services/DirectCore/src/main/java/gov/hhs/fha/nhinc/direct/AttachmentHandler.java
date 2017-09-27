@@ -14,6 +14,7 @@ import javax.mail.Address;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.util.ByteArrayDataSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.nhindirect.xd.common.DirectDocument2;
 import org.nhindirect.xd.common.DirectDocuments;
@@ -30,8 +31,7 @@ import gov.hhs.fha.nhinc.properties.PropertyAccessor;
  */
 public class AttachmentHandler {
 	private static final String DIRECT_ATTACHMENT_DIRECTORY = "directAttachments";
-	private static final String DIRECT_ATTACHMENT_OPTION = "direct_attachment_option";
-	private static final String DOMAINS_WANTING_DIRECT_ATTACHMENT_AS_ZIP = "domains_wanting_direct_attachment_as_zip";
+	private static final String DIRECT_ATTACHMENT_FILE_PREFIX = "OUTBOUND-DIRECT-";
 	private static final String PERSIST_DIRECT_ATTACHMENTS_TO_FILE = "persist_direct_attachments_to_file";
 	private static final String GATEWAY_PROPERTIES_FILE = "gateway";	
 	
@@ -41,30 +41,92 @@ public class AttachmentHandler {
 	/**
 	 * Enum for the types of supported Direct attachments 
 	 */
-	public static enum DirectAttachmentOption {
-		XML("xml"),
-		XDM("xdm"),
-		ZIP("zip");
-		
-		private String description;
-		
-		DirectAttachmentOption(String description) {
-			this.description = description;
+	public static enum DirectMimeType {
+		TEXT_PLAIN("text/plain", "txt"), 
+		TEXT_XML("text/xml", "xml"), 
+		TEXT_HTML("text/html", "html"), 
+		TEXT_CDA_XML("text/cda+xml", "xml"), 
+		APPLICATION_CCR("application/ccr", "xml"), 
+		APPLICATION_XML("application/xml", "xml"), 
+		APPLICATION_PDF("application/pdf", "pdf"), 
+		APPLICATION_ZIP("application/zip", "zip"), 
+		MDN("message/disposition-notification", "txt"),
+		UNKNOWN("application/octet-stream", "zip");
+
+		private String type;
+		private String suffix;
+
+		/**
+		 * Enumeration constructor.
+		 * 
+		 * @param type
+		 *            Contains the MIME type.
+		 * @param suffix
+		 *            Contains the file suffix.
+		 */
+		private DirectMimeType(String type, String suffix) {
+			this.type = type;
+			this.suffix = suffix;
 		}
-		
-		public String getDescription() {
-			return description;
-		}
-		
-		public static DirectAttachmentOption fromString(String text) {
-			for (DirectAttachmentOption enumItem : DirectAttachmentOption.values()) {
-				if (enumItem.description.equalsIgnoreCase(text)) {
-					return enumItem;
-				}
-			}
+
+		/**
+		 * Determine if the input matches or contains the current element by first comparing
+		 * equalsIgnoreCase and then comparing startsWith.
+		 * 
+		 * @param type
+		 *            Contains the MIME type to compare.
+		 * @return true if the string is a reasonable match, false otherwise.
+		 */
+		public boolean matches(String type) {
+			if (StringUtils.containsIgnoreCase(type, this.type))
+				return true;		
 			
-			return null;
-		}			
+			return false;
+		}
+
+		/**
+		 * Lookup a MimeType enumeration by type.
+		 * 
+		 * @param type
+		 *            The type to use for lookup.
+		 * @return the matching MimeType or UNKNOWN if not found.
+		 */
+		public static DirectMimeType lookup(String type) {
+			for (DirectMimeType m : values()) {
+				if (m.matches(type))
+					return m;
+			}
+
+			return UNKNOWN;
+		}
+
+		/**
+		 * Return the type.
+		 * 
+		 * @return the type.
+		 */
+		public String getType() {
+			return type;
+		}
+
+		/**
+		 * Return the suffix.
+		 * 
+		 * @return the suffix.
+		 */
+		public String getSuffix() {
+			return suffix;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString() {
+			return type;
+		}		
 	}
 	
 	/**
@@ -89,85 +151,7 @@ public class AttachmentHandler {
 			return true;
 		else
 			return false;
-	}	
-	
-	/**
-	 * Get the default Direct attachment option from a properties file.
-	 * 
-	 * @return
-	 * 		Returns a DirectAttachmentOption enum for the direct attachment option.
-	 */
-	protected DirectAttachmentOption getDefaultDirectAttachmentOption() {
-		String propertyFileValue = "";
-		StringBuilder buf = new StringBuilder();
-		
-		try {
-			propertyFileValue = PropertyAccessor.getInstance(GATEWAY_PROPERTIES_FILE).getProperty(DIRECT_ATTACHMENT_OPTION);
-		} catch (PropertyAccessException e) {
-			e.printStackTrace();
-			LOG.warn("Error occured in retrieving the property: '" + DIRECT_ATTACHMENT_OPTION + "'. Defaulting to 'xml'.");
-			
-			propertyFileValue = "xml";
-		}
-		
-		DirectAttachmentOption retVal = DirectAttachmentOption.fromString(propertyFileValue);
-		
-		if (retVal == null) {
-			buf = new StringBuilder();
-			buf.append("\nUnsupported Direct attachment option for property value: '").append(propertyFileValue).append("'. ");
-			buf.append("Defaulting to XML as the default attachment option.");
-			
-			LOG.warn(buf.toString());
-			
-			retVal = DirectAttachmentOption.XML;
-		}
-		
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("\nDefault Direct attachment option is: '" + retVal + "'");
-		}
-		
-		return retVal;
-	}	
-	
-	/**
-	 * Determines if the recipient "domains" wants ZIP attachments for their Direct attachment option.
-	 * 
-	 * @param recipientDomain
-	 * 		Contains the "domain" of the recipients email address.
-	 * @return
-	 * 		Returns true if the domain wants ZIP attachments, false otherwise.
-	 */
-	protected boolean doesRecipientDomainWantZipAttachments(String recipientDomain) {
-		String zipAttachmentDomains = null;
-		
-		if (NullChecker.isNotNullish(recipientDomain)) {
-			try {
-				zipAttachmentDomains = PropertyAccessor.getInstance(GATEWAY_PROPERTIES_FILE).getProperty(DOMAINS_WANTING_DIRECT_ATTACHMENT_AS_ZIP);
-			} catch (PropertyAccessException e) {
-				e.printStackTrace();
-				LOG.warn("\nError occured in retrieving the property: '" + DOMAINS_WANTING_DIRECT_ATTACHMENT_AS_ZIP + "'. Defaulting to FALSE.");
-				
-				return false;
-			}		
-			
-			if (NullChecker.isNotNullish(zipAttachmentDomains)) {
-				// The value from the properties file is a comma separated list of "domains"
-				String[] domainsWantingZip = zipAttachmentDomains.split(",");
-				
-				for (int i = 0; i < domainsWantingZip.length; i++) {
-					if (recipientDomain.equalsIgnoreCase(domainsWantingZip[i])) {
-						LOG.info("\nEmail domain: '" + recipientDomain + "' wants to receive Direct attachments as ZIP files");
-						
-						return true;
-					}
-				}
-			}
-			
-			return false;
-		} else {
-			return false;
-		}
-	}		
+	}			
 	
     /**
      *  Determines the absolute file path where the passed in attachment file will be stored.
@@ -260,68 +244,44 @@ public class AttachmentHandler {
 		
 		List<MimeBodyPart> attachmentParts = new ArrayList<MimeBodyPart>();
 		
-		validateParams(directDocuments, messageId);		
-		DirectAttachmentOption attachmentOption = getDirectAttachmentOption(recipient);
-				
-		if (attachmentOption.equals(DirectAttachmentOption.XML) ||
-				attachmentOption.equals(DirectAttachmentOption.ZIP)) {
-			
-			for (DirectDocument2 document2 : directDocuments.getDocuments()) {
-				if (document2.getData() != null) {
-					attachmentParts.add(createAttachmentPart(document2, attachmentOption));
-				}
+		validateParams(directDocuments, messageId);	
+		
+		for (DirectDocument2 document2 : directDocuments.getDocuments()) {
+			if (document2.getData() != null) {					
+				attachmentParts.add(createAttachmentPart(document2));
 			}
-		} else if (attachmentOption.equals(DirectAttachmentOption.XDM)) {
-			String formattedMessageId = formatMessageIdForXDMAttachmentName(messageId);						
-			File xdmPackageFile = generateXdmPackageFile(directDocuments, formattedMessageId);	
-			MimeBodyPart attachmentPart = new MimeBodyPart();
-			
-			attachmentPart.attachFile(xdmPackageFile);		
-			attachmentParts.add(attachmentPart);	
-			
-			logXdmAttachment(xdmPackageFile);
-		} 	
+		}		
+		
+		// We are not sure how we are going to flag attachments of type XDM. Keep this commented out code for now
+		// until we design how to handle this.
+/*		String formattedMessageId = formatMessageIdForXDMAttachmentName(messageId);						
+		File xdmPackageFile = generateXdmPackageFile(directDocuments, formattedMessageId);	
+		MimeBodyPart attachmentPart = new MimeBodyPart();
+		
+		attachmentPart.attachFile(xdmPackageFile);		
+		attachmentParts.add(attachmentPart);*/		
 		
 		return attachmentParts;
 	}
-
-    /**
-     * Log information about the Direct attachment.
-     * 
-     * @param attachmentFile
-     * 		Contains the Direct attachment file.
-     */
-    private void logXdmAttachment(File attachmentFile) {
-    	if (attachmentFile != null) {
-            LOG.info("\nAdded Direct XDM attachment: '" + attachmentFile.getAbsolutePath() + "' to the message");			
-		} 
-	}
-
+    
 	/**
      * Creates the Direct message attachment part.
      * 
      * @param document2
      * 		Contains the Direct document for which to create an attachment part.
-     * @param attachmentOption
-     * 		Contains an enum for the attachment option (i.e. .xml, .zip, etc.)
      * @return
      * 		Returns a MimeBodyPart object for the attachment item.
      */
-    private MimeBodyPart createAttachmentPart(DirectDocument2 document2, DirectAttachmentOption attachmentOption) {  	    	
-    	MimeBodyPart attachmentPart = new MimeBodyPart();    	
-    	String fileName = formatAttachmentFileName(document2, attachmentOption);
+    private MimeBodyPart createAttachmentPart(DirectDocument2 document2) {  	    	
+    	MimeBodyPart attachmentPart = new MimeBodyPart(); 
+    	DirectMimeType directMimeType = getDirectMimeType(document2);
+    	String fileName = formatAttachmentFileName(document2, directMimeType);
     	BufferedOutputStream bufferedOutput = null;
     	
 		try {
-			String attachmentMimeType = null;
+			LOG.info("\nMime-type of Direct document attachment: '" + directMimeType.getType() + "'\n");
 			
-			if (DirectAttachmentOption.XML.equals(attachmentOption)) {
-				attachmentMimeType = "application/xml";
-			} else if(DirectAttachmentOption.ZIP.equals(attachmentOption)) {
-				attachmentMimeType = "application/zip";
-			}
-			
-			DataSource ds = new ByteArrayDataSource(document2.getData(), attachmentMimeType);
+			DataSource ds = new ByteArrayDataSource(document2.getData(), directMimeType.getType());
 			attachmentPart.setDataHandler(new DataHandler(ds));
 			attachmentPart.setFileName(fileName);
 			
@@ -330,7 +290,7 @@ public class AttachmentHandler {
 	        //		 attached by the code above this line.
 			//---------------------------------------------------------------------------------------------------------------
 			attachmentPart.setHeader("Content-Transfer-Encoding", "base64");
-			attachmentPart.setHeader("Content-Type", attachmentMimeType);	
+			attachmentPart.setHeader("Content-Type", directMimeType.getType());	
 			
 			LOG.info("\nAttached Direct message: '" + fileName + "'");			
 			
@@ -347,7 +307,7 @@ public class AttachmentHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 			
-			String errMessage = "Direct: Error occurred writing xml/zip attachment to bufferedOutputStream. " + e.getMessage();
+			String errMessage = "Direct: Error occurred writing Direct attachment to bufferedOutputStream. " + e.getMessage();
 			LOG.error(errMessage);
 						
 			throw new DirectException(errMessage, e);
@@ -369,6 +329,22 @@ public class AttachmentHandler {
 	}
 
 	/**
+	 * Looks up the "DirectMimeType" for the passed in "DirectDocument2" object.
+	 * 
+	 * @param document2
+	 * 		Contains the "DirectDocument2" object for which to look up the "DirectMimeType".
+	 * @return
+	 * 		Returns a DirectMimeType enum.
+	 */
+	private DirectMimeType getDirectMimeType(DirectDocument2 document2) {		
+		if (document2.getMetadata() != null && 
+				document2.getMetadata().getMimeType() != null) 
+			return DirectMimeType.lookup(document2.getMetadata().getMimeType());
+		else 
+			return DirectMimeType.UNKNOWN;
+	}
+
+	/**
      * Formats the Direct attachment file name.
      * 
      * @param document2
@@ -378,13 +354,13 @@ public class AttachmentHandler {
      * @return
      * 		Returns the absolute path for the file name for the Direct attachment.
      */
-    private String formatAttachmentFileName(DirectDocument2 document2, DirectAttachmentOption attachmentOption) {
-		String formattedFileName = document2.getMetadata().getId();	
+    private String formatAttachmentFileName(DirectDocument2 document2, DirectMimeType directMimeType) {
+		String formattedFileName = DIRECT_ATTACHMENT_FILE_PREFIX + document2.getMetadata().getId();	
 		
 		formattedFileName = formattedFileName.replace("urn:uuid:", "");
 		
-		if (!formattedFileName.endsWith("." + attachmentOption.getDescription())) {
-			formattedFileName = formattedFileName + "." + attachmentOption.getDescription();
+		if (!formattedFileName.endsWith("." + directMimeType.getSuffix())) {
+			formattedFileName = formattedFileName + "." + directMimeType.getSuffix();
 		}
 		
 		return formattedFileName;
@@ -414,47 +390,6 @@ public class AttachmentHandler {
 		}
      	
 		return formattedMessageId;
-	}
-
-	/**
-	 * Determines the Direct attachment "type" that is needed.
-	 * 
-	 * @param recipient
-	 * 		Contains the email address of the recipient.
-	 * @return
-	 * 		Returns a DirectAttachmentOption enum signifying the Direct attachment type.
-	 */
-	private DirectAttachmentOption getDirectAttachmentOption(Address recipient) {
-		String recipientDomain = extractRecipientDomain(recipient);
-		
-		if (doesRecipientDomainWantZipAttachments(recipientDomain)) {			
-			return DirectAttachmentOption.ZIP;
-		} else {
-			return getDefaultDirectAttachmentOption();
-		}
-	}
-
-	/**
-	 * Parse out the email "domain" of the Direct recipient.
-	 * 
-	 * @param recipient	
-	 * 		Contains the email address of the recipient.
-	 * @return
-	 * 		Returns the "domain" portion of the email, i.e. the part 
-	 * 		after the "@" character.
-	 */
-	private String extractRecipientDomain(Address recipient) {
-		String domain = null;
-		
-		if (recipient != null) {
-			int emailAtIndex = recipient.toString().indexOf("@");
-			
-			if (emailAtIndex != -1) {
-				domain = recipient.toString().substring(emailAtIndex + 1);
-			}
-		}
-
-		return domain;
 	}
 
 	/**

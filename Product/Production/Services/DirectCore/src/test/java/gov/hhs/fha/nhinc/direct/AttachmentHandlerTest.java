@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.nhindirect.xd.common.DirectDocument2;
+import org.nhindirect.xd.common.DirectDocument2.Metadata;
 import org.nhindirect.xd.common.DirectDocuments;
 
 /**
@@ -59,7 +60,7 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testAddAttachments_WithNullDirectDocuments() throws Exception {
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, false, false);
+		AttachmentHandler testSubject = createTestSubject(false);
 
 		DirectDocuments directDocuments = null;
 		Address recipient = new InternetAddress();
@@ -70,7 +71,7 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testAddAttachments_WithNullDirectDocumentList() throws Exception {
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, false, false);
+		AttachmentHandler testSubject = createTestSubject(false);
 
 		DirectDocuments directDocuments = new DirectDocuments();
 		Address recipient = new InternetAddress();
@@ -81,7 +82,7 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testAddAttachments_WithNullMessageId() throws Exception {
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, false, false);
+		AttachmentHandler testSubject = createTestSubject(false);
 
 		DirectDocuments directDocuments = createDirectDocumentsWithNullData();
 		Address recipient = new InternetAddress();
@@ -92,7 +93,7 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testAddAttachments_WithBlankMessageId() throws Exception {
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, false, false);
+		AttachmentHandler testSubject = createTestSubject(false);
 
 		DirectDocuments directDocuments = createDirectDocumentsWithNullData();
 		Address recipient = new InternetAddress();
@@ -102,32 +103,12 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 	}
 	
 	@Test
-	public void testAddAttachments_WithXDMAttachmentOption() throws Exception {
+	public void testAddAttachments_WithNullDocumentData() throws Exception {
 		DirectDocuments directDocuments = createDirectDocumentsWithNullData();
 		Address recipient = createRecipient("johh.smith@intermountain.org");
 		
-		boolean domainWantsZip = false;
 		boolean persistAttachment = false;
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XDM, domainWantsZip, persistAttachment);
-
-		List<MimeBodyPart> attachmentParts = testSubject.createDirectAttachments(directDocuments, MESSAGE_ID, recipient);
-		
-		assertNotNull(attachmentParts);
-		assertEquals(1, attachmentParts.size());	
-		
-		verify(mockFile).getName();
-		verify(mockFile).getAbsolutePath();
-		verifyNoMoreInteractions(mockFile);
-	}	
-	
-	@Test
-	public void testAddAttachments_WithXMLAttachmentOptionAndNullDocumentData() throws Exception {
-		DirectDocuments directDocuments = createDirectDocumentsWithNullData();
-		Address recipient = createRecipient("johh.smith@intermountain.org");
-		
-		boolean domainWantsZip = false;
-		boolean persistAttachment = false;
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, domainWantsZip, persistAttachment);
+		AttachmentHandler testSubject = createTestSubject(persistAttachment);
 		
 		List<MimeBodyPart> attachmentParts = testSubject.createDirectAttachments(directDocuments, MESSAGE_ID, recipient);
 		
@@ -138,39 +119,37 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 	}	
 	
 	@Test
-	public void testAddAttachments_WithXMLAttachmentOptionAndDocumentData() throws Exception {
-		DirectDocuments directDocuments = createDirectDocumentsWithData();
+	public void testAddAttachments_WithXMLAttachmentDocumentDataAndNotPersistingData() throws Exception {
+		DirectDocuments directDocuments = createDirectDocumentsWithData(AttachmentHandler.DirectMimeType.TEXT_XML.getType());
 		Address recipient = createRecipient("johh.smith@intermountain.org");
 		
-		boolean domainWantsZip = false;
 		boolean persistAttachment = false;
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, domainWantsZip, persistAttachment);
+		AttachmentHandler testSubject = createTestSubject(persistAttachment);
 
 		List<MimeBodyPart> attachmentParts = testSubject.createDirectAttachments(directDocuments, MESSAGE_ID, recipient);
 		
 		assertNotNull(attachmentParts);
 		assertEquals(1, attachmentParts.size());	
 		assertEquals(1, attachmentParts.get(0).getHeader("Content-Type").length);
-		assertEquals("application/xml", attachmentParts.get(0).getHeader("Content-Type")[0]);
+		assertEquals(AttachmentHandler.DirectMimeType.TEXT_XML.getType(), attachmentParts.get(0).getHeader("Content-Type")[0]);
 		
 		verifyNoMoreInteractions(mockFile);
 	}		
 	
 	@Test
-	public void testAddAttachments_WithXMLAttachmentOptionAndPersistingDocument() throws Exception {
-		DirectDocuments directDocuments = createDirectDocumentsWithData();
+	public void testAddAttachments_WithXMLAttachmentAndPersistingDocument() throws Exception {
+		DirectDocuments directDocuments = createDirectDocumentsWithData(AttachmentHandler.DirectMimeType.TEXT_XML.getType());
 		Address recipient = createRecipient("johh.smith@intermountain.org");
 		
-		boolean domainWantsZip = false;
 		boolean persistAttachment = true;
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, domainWantsZip, persistAttachment);
+		AttachmentHandler testSubject = createTestSubject(persistAttachment);
 
 		List<MimeBodyPart> attachmentParts = testSubject.createDirectAttachments(directDocuments, MESSAGE_ID, recipient);
 		
 		assertNotNull(attachmentParts);
 		assertEquals(1, attachmentParts.size());	
 		assertEquals(1, attachmentParts.get(0).getHeader("Content-Type").length);
-		assertEquals("application/xml", attachmentParts.get(0).getHeader("Content-Type")[0]);
+		assertEquals(AttachmentHandler.DirectMimeType.TEXT_XML.getType(), attachmentParts.get(0).getHeader("Content-Type")[0]);
 		
 		verify(mockBufferedOutputStream).write(SAMPLE_DOCUMENT.getBytes());
 		verify(mockBufferedOutputStream).flush();
@@ -180,56 +159,32 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 	
 	@Test
 	public void testAddAttachments_WithZipAttachmentAndPersistingDocument() throws Exception {
-		DirectDocuments directDocuments = createDirectDocumentsWithData();
+		DirectDocuments directDocuments = createDirectDocumentsWithData(AttachmentHandler.DirectMimeType.APPLICATION_ZIP.getType());
 		Address recipient = createRecipient("johh.smith@intermountain.org");
 		
-		boolean domainWantsZip = true;
 		boolean persistAttachment = true;
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, domainWantsZip, persistAttachment);
+		AttachmentHandler testSubject = createTestSubject(persistAttachment);
 
 		List<MimeBodyPart> attachmentParts = testSubject.createDirectAttachments(directDocuments, MESSAGE_ID, recipient);
 		
 		assertNotNull(attachmentParts);
 		assertEquals(1, attachmentParts.size());	
 		assertEquals(1, attachmentParts.get(0).getHeader("Content-Type").length);
-		assertEquals("application/zip", attachmentParts.get(0).getHeader("Content-Type")[0]);
+		assertEquals(AttachmentHandler.DirectMimeType.APPLICATION_ZIP.getType(), attachmentParts.get(0).getHeader("Content-Type")[0]);
 		
 		verify(mockBufferedOutputStream).write(SAMPLE_DOCUMENT.getBytes());
 		verify(mockBufferedOutputStream).flush();
-		verify(mockBufferedOutputStream).close();		
-		verifyNoMoreInteractions(mockFile, mockBufferedOutputStream);
-	}		
-	
-	@Test
-	public void testAddAttachments_WithZipAttachmentAndNotPersistingDocument() throws Exception {
-		DirectDocuments directDocuments = createDirectDocumentsWithData();
-		Address recipient = createRecipient("johh.smith@intermountain.org");
-		
-		boolean domainWantsZip = true;
-		boolean persistAttachment = false;
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, domainWantsZip, persistAttachment);
-
-		List<MimeBodyPart> attachmentParts = testSubject.createDirectAttachments(directDocuments, MESSAGE_ID, recipient);
-		
-		assertNotNull(attachmentParts);
-		assertEquals(1, attachmentParts.size());	
-		assertEquals(1, attachmentParts.get(0).getHeader("Content-Type").length);
-		assertEquals("application/zip", attachmentParts.get(0).getHeader("Content-Type")[0]);
-		
-		verify(mockBufferedOutputStream, times(0)).write(SAMPLE_DOCUMENT.getBytes());
-		verify(mockBufferedOutputStream, times(0)).flush();
-		verify(mockBufferedOutputStream, times(0)).close();		
-		verifyNoMoreInteractions(mockFile, mockBufferedOutputStream);
-	}		
+		verify(mockBufferedOutputStream).close();	
+		verifyNoMoreInteractions(mockFile, mockBufferedOutputStream); 	
+	}	
 	
 	@Test(expected=DirectException.class)
-	public void testAddAttachments_WithXMLAttachmentOptionAndThrowingErrorOnBufferedStreamWrite() throws Exception {
-		DirectDocuments directDocuments = createDirectDocumentsWithData();
+	public void testAddAttachments_WithXMLAttachmentAndThrowingErrorOnBufferedStreamWrite() throws Exception {
+		DirectDocuments directDocuments = createDirectDocumentsWithData(AttachmentHandler.DirectMimeType.TEXT_XML.getType());
 		Address recipient = createRecipient("johh.smith@intermountain.org");
 		
-		boolean domainWantsZip = true;
 		boolean persistAttachment = true;
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, domainWantsZip, persistAttachment);
+		AttachmentHandler testSubject = createTestSubject(persistAttachment);
 			
 		doThrow(new DirectException("*** Ignored, thrown for unit test ***")).when(mockBufferedOutputStream).write(SAMPLE_DOCUMENT.getBytes());
 
@@ -238,13 +193,12 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 	}		
 	
 	@Test
-	public void testAddAttachments_WithXMLAttachmentOptionAndThrowingErrorOnBufferedStreamClose() throws Exception {
-		DirectDocuments directDocuments = createDirectDocumentsWithData();
+	public void testAddAttachments_WithXMLAttachmentAndThrowingErrorOnBufferedStreamClose() throws Exception {
+		DirectDocuments directDocuments = createDirectDocumentsWithData(AttachmentHandler.DirectMimeType.TEXT_XML.getType());
 		Address recipient = createRecipient("johh.smith@intermountain.org");
 		
-		boolean domainWantsZip = true;
 		boolean persistAttachment = true;
-		AttachmentHandler testSubject = createTestSubject(AttachmentHandler.DirectAttachmentOption.XML, domainWantsZip, persistAttachment);
+		AttachmentHandler testSubject = createTestSubject(persistAttachment);
 					
 		doThrow(new IOException("*** Ignored, thrown for unit test ***")).when(mockBufferedOutputStream).close();
 
@@ -253,7 +207,7 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 		assertNotNull(attachmentParts);
 		assertEquals(1, attachmentParts.size());	
 		assertEquals(1, attachmentParts.get(0).getHeader("Content-Type").length);
-		assertEquals("application/zip", attachmentParts.get(0).getHeader("Content-Type")[0]);
+		assertEquals(AttachmentHandler.DirectMimeType.TEXT_XML.getType(), attachmentParts.get(0).getHeader("Content-Type")[0]);
 		
 		verify(mockBufferedOutputStream).write(SAMPLE_DOCUMENT.getBytes());
 		verify(mockBufferedOutputStream).flush();
@@ -271,28 +225,13 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 	/**
 	 * Create a "testSubject" object and override methods that access external resources (files, database, etc.).
 	 * 
-	 * @param defaultOption
-	 * 		Contains the value to use for the "default" attachment option.
-	 * @param domainWantsZip
-	 * 		True if the domain wants the Direct attachment as a zip file, false otherwise.
 	 * @param persistDirectAttachment
 	 * 		True if the Direct attachment is supposed to be persisted, false otherwise.
 	 * @return
 	 * 		Returns a "AttachmentHandler" class with some methods overridden.
 	 */
-	private AttachmentHandler createTestSubject(final AttachmentHandler.DirectAttachmentOption defaultOption, final boolean domainWantsZip,
-			final boolean persistDirectAttachment) {
+	private AttachmentHandler createTestSubject(final boolean persistDirectAttachment) {
 		AttachmentHandler testItem = new AttachmentHandler() {
-			@Override
-			protected boolean doesRecipientDomainWantZipAttachments(String recipientDomain) {
-				return domainWantsZip;
-			}
-			
-			@Override
-			protected DirectAttachmentOption getDefaultDirectAttachmentOption() {
-				return defaultOption;
-			}	
-			
 			@Override
 			protected boolean persistDirectAttachmentsToFile() {
 				return persistDirectAttachment;
@@ -346,10 +285,13 @@ public class AttachmentHandlerTest extends DirectBaseTest {
 		return retVal;
 	}	
 	
-	private DirectDocuments createDirectDocumentsWithData() {
+	private DirectDocuments createDirectDocumentsWithData(String dataMimeType) {
 		DirectDocuments retVal = new DirectDocuments();
 		DirectDocument2 doc2 = new DirectDocument2();
 		List<DirectDocument2> docList = new ArrayList<DirectDocument2>();
+		
+		doc2.setMetadata(new Metadata());
+		doc2.getMetadata().setMimeType(dataMimeType);
 		
 		doc2.setData(SAMPLE_DOCUMENT.getBytes());
 		
